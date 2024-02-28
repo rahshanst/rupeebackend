@@ -1,0 +1,1482 @@
+swagger: "2.0"
+info:
+  title: RupeeStore API
+  description: API for managing rupee store
+  version: 1.0.0
+
+basePath: /api/
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: Bearer token for authentication
+
+paths:
+
+  /initiateSession:
+    post:
+      summary: user validation
+      description: ruppee store authentication
+      operationId: initiateSession
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - User
+      parameters:
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /addCategory:
+    post:
+      summary: category adding
+      description: ruppee store addcategory
+      operationId: addCategory
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getCategories:
+    get:
+      summary: Get all categories
+      description: Get a list of all categories
+      operationId: getCategories
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /addOffer:
+    post:
+      summary: offer adding
+      description: add rupee offer
+      operationId: addOffer
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getOffers:
+    get:
+      summary: Get offers
+      description: Get a list of offers
+      operationId: getOffers
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getOfferDetails:
+    post:
+      summary: Offer details
+      description: details of particular offer
+      operationId: getOfferDetails
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /getCouponcode:
+    post:
+      summary: coupon generate
+      description: coupon for particular offer
+      operationId: getCouponcode
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /GetPwaRewards:
+    get:
+      summary: Get Date
+      description: Create a new trip with authentication
+      operationId: GetPwaRewards
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Cookie
+          type: string
+          format: cookie
+          required: false
+          description: The cookie containing the ARRAffinity value.
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /GetPWAWalletPoints:
+    get:
+      summary: Get Date
+      description: Create a new trip with authentication
+      operationId: GetPWAWalletPoints
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - name: Cookie
+          in: header
+          required: false
+          type: string
+          description: The cookie containing the ARRAffinity value.
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /DeductWalletPoints:
+    post:
+      summary: Get Date
+      description: Create a new trip with authentication
+      operationId: DeductWalletPoints
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - name: Cookie
+          in: header
+          required: false
+          type: string
+          description: The cookie containing the ARRAffinity value.
+        - in: body
+          name: DeductWalletPoints
+          description: DeductWalletPoints
+          required: true
+          schema:
+            $ref: "#/definitions/DeductWalletPointsData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /RefundPoints:
+    post:
+      summary: Get Date
+      description: Create a new trip with authentication
+      operationId: RefundPoints
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - name: Cookie
+          in: header
+          required: true
+          type: string
+          description: The cookie containing the ARRAffinity value.
+        - in: body
+          name: RefundPoints
+          description: RefundPoints
+          required: true
+          schema:
+            $ref: "#/definitions/DeductWalletPointsData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getAutoSuggest:
+    post:
+      summary: getAutoSuggest
+      description: getAutoSuggest
+      operationId: getAutoSuggest
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Airpot Details
+      parameters:
+        - in: body
+          name: Get Prefix
+          description: PrefixData
+          required: true
+          schema:
+            $ref: "#/definitions/PrefixData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  
+  /addTrip:
+    post:
+      summary: Create a new trip
+      description: Create a new trip with authentication
+      operationId: addTrip
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Trip
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: trip
+          description: Trip object
+          required: true
+          schema:
+            $ref: "#/definitions/Trip"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getTrips:
+    get:
+      summary: Get all trips
+      description: Get a list of all trips with authentication
+      operationId: getTrips
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Trip
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getTripById:
+    post:
+      summary: Get a trip by ID
+      description: Get detailed information about a specific trip with authentication
+      operationId: getTripById
+      x-swagger-router-controller: tripController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Trip
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: tripId
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/TripIdData"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /searchFlight:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: searchFlight
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: SearchFlightRequest
+          description: SearchFlightRequest
+          required: true
+          schema:
+            $ref: "#/definitions/SearchFlightRequest"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /repriceFlight:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: repriceFlight
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: FlightAvailabilityRQ
+          description: FlightAvailabilityRQ
+          required: true
+          schema:
+            $ref: "#/definitions/FlightAvailabilityRQ"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getBookingFlight:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: getBookingFlight
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: transactionScreenId
+          description: transactionScreenId
+          required: true
+          schema:
+            $ref: "#/definitions/transactionScreenId"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /bookFlight:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: bookFlight
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: FlightBookingRequest
+          description: FlightBookingRequest
+          required: true
+          schema:
+            $ref: "#/definitions/FlightBookingRequest"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /seatMealBaggeFlight:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: seatMealBaggeFlight
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: seatMealBaggeFlightdATA
+          description: seatMealBaggeFlightdATA
+          required: true
+          schema:
+            $ref: "#/definitions/seatMealBaggeFlightdATA"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+   
+  /getBookingBalance:
+    post:
+      summary: Search for a flight
+      description: Search for a flight with authentication
+      operationId: getBookingBalance
+      x-swagger-router-controller: flightController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Flight
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BookingBalanceData
+          description: BookingBalanceData
+          required: true
+          schema:
+            $ref: "#/definitions/BookingBalanceData"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
+  /addFlightTravellDetails:
+    post:
+      operationId: addFlightTravellDetails
+      x-swagger-router-controller: travelController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Travel
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: FlightTravellDetails
+          schema:
+            $ref: "#/definitions/FlightTravellDetails"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getFlightTravellDetails:
+    post:
+      summary: Get Flight Travell Details by ID
+      description: Get details of a specific flight travel by ID.
+      operationId: getFlightTravellDetailsById
+      x-swagger-router-controller: travelController
+      produces:
+        - application/json
+      tags:
+        - Travel
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: tripId
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/GetById"
+      responses:
+        200:
+          description: Successful operation
+        500:
+          description: Internal Server Error
+
+  /updateFlightTravellDetails:
+    post:
+      summary: Update Flight Travell Details by ID
+      description: Update details of a specific flight travel by ID.
+      operationId: updateFlightTravellDetails
+      x-swagger-router-controller: travelController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Travel
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: updatedDetails
+          description: Updated Flight Travell Details object
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateFlightTravellDetails"
+      responses:
+        200:
+          description: Flight Travell Details updated successfully
+        500:
+          description: Internal Server Error
+
+  /addflightTravellerDetails:
+    post:
+      summary: Create Flight Traveller Details
+      description: Create a new record for Flight Traveller Details
+      operationId: addFlightTravellerDetails
+      x-swagger-router-controller: travelController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Traveller
+      parameters:
+        - in: body
+          name: flightTravellerDetails
+          description: Flight Traveller Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightTravellerDetails"
+      responses:
+        201:
+          description: Flight Traveller Details created successfully
+        500:
+          description: Internal Server Error
+
+  /getFlightTravellerDetails:
+    post:
+      summary: Get Flight Traveller Details by ID
+      description: Get details of a specific flight traveller by ID.
+      operationId: getFlightTravellerDetails
+      x-swagger-router-controller: travelController
+      produces:
+        - application/json
+      tags:
+        - Traveller
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: id
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/GetById"
+      responses:
+        200:
+          description: Successful operation
+        500:
+          description: Internal Server Error
+
+  /updateFlightTravellerDetails:
+    post:
+      summary: Update Flight Traveller Details by ID
+      description: Update details of a specific flight traveller by ID.
+      operationId: updateFlightTravellerDetails
+      x-swagger-router-controller: travelController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Traveller
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: updatedDetails
+          description: Updated Flight Traveller Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightTravellerDetails"
+      responses:
+        200:
+          description: Flight Traveller Details updated successfully
+        500:
+          description: Internal Server Error
+
+  /addFlightPaymentDetails:
+    post:
+      summary: Add Flight Payment Details
+      description: Add details of flight payment.
+      operationId: addFlightPaymentDetails
+      x-swagger-router-controller: paymentController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Payment
+      parameters:
+        - in: body
+          name: flightPaymentDetails
+          description: Flight Payment Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightPaymentDetails"
+      responses:
+        201:
+          description: Flight Payment Details added successfully
+        500:
+          description: Internal Server Error
+
+  /updateFlightPaymentDetails:
+    post:
+      summary: Add Flight Payment Details
+      description: Add details of flight payment.
+      operationId: updateFlightPaymentDetails
+      x-swagger-router-controller: paymentController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Payment
+      parameters:
+        - in: body
+          name: flightPaymentDetails
+          description: Flight Payment Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightPaymentDetails"
+      responses:
+        201:
+          description: Flight Payment Details added successfully
+        500:
+          description: Internal Server Error
+
+  /getFlightPaymentDetails:
+    post:
+      summary: Get Flight Payment Details by ID
+      description: Get details of a specific flight payment by ID.
+      operationId: getFlightPaymentDetails
+      x-swagger-router-controller: paymentController
+      produces:
+        - application/json
+      tags:
+        - Payment
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: tripId
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/GetById"
+      responses:
+        200:
+          description: Successful operation
+        500:
+          description: Internal Server Error
+
+  /getAllFlightTransactions:
+    post:
+      summary: Get all flight transactions
+      description: Get a list of all flight transactions.
+      operationId: getAllFlightTransactions
+      x-swagger-router-controller: paymentController
+      produces:
+        - application/json
+      tags:
+        - Transaction
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: tripId
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/GetById"
+      responses:
+        200:
+          description: Successful operation
+        500:
+          description: Internal Server Error
+
+  /getFlightTransactionDetails:
+    post:
+      summary: Get Flight Transaction Details by ID
+      description: Get details of a specific flight transaction by ID.
+      operationId: getFlightTransactionDetails
+      x-swagger-router-controller: paymentController
+      produces:
+        - application/json
+      tags:
+        - Transaction
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: tripId
+          description: ID of the trip to retrieve
+          required: true
+          schema:
+            $ref: "#/definitions/GetById"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /addFlightTransactionDetails:
+    post:
+      summary: Update Flight Transaction Details by ID
+      description: Update details of a specific flight transaction by ID.
+      operationId: addFlightTransactionDetails
+      x-swagger-router-controller: paymentController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Transaction
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: updatedDetails
+          description: Updated Flight Transaction Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightTransactionDetails"
+      responses:
+        200:
+          description: Flight Transaction Details updated successfully
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /updateFlightTransactionDetails:
+    post:
+      summary: Update Flight Transaction Details by ID
+      description: Update details of a specific flight transaction by ID.
+      operationId: updateFlightTransactionDetails
+      x-swagger-router-controller: paymentController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Transaction
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: updatedDetails
+          description: Updated Flight Transaction Details object
+          required: true
+          schema:
+            $ref: "#/definitions/FlightTransactionDetails"
+      responses:
+        200:
+          description: Flight Transaction Details updated successfully
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  FlightPaymentDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+      id_user:
+        type: integer
+      id_trip:
+        type: integer
+      id_travel:
+        type: integer
+      id_booking:
+        type: integer
+      paymentStatus:
+        type: string
+      paymentAmount:
+        type: number
+        format: float
+      paymentMethod:
+        type: string
+      paymentTransactionId:
+        type: string
+      createdBy:
+        type: integer
+      updatedBy:
+        type: integer
+
+  Trip:
+    type: object
+    properties:
+      tripId:
+        type: integer
+        format: int64
+      userId:
+        type: integer
+        format: int64
+      tripType:
+        type: string
+      tripFrom:
+        type: string
+      tripTo:
+        type: string
+      tripDeparture:
+        type: string
+        format: date-time
+      tripReturn:
+        type: string
+        format: date-time
+      travellersNum:
+        type: integer
+        format: int32
+      adults:
+        type: integer
+        format: int32
+      childrens:
+        type: integer
+        format: int32
+      class:
+        type: string
+      createdBy:
+        type: integer
+        format: int64
+      updatedBy:
+        type: integer
+        format: int64
+
+  TripIdData:
+    type: object
+    properties:
+      tripId:
+        type: integer
+        format: int64
+
+  GetById:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+
+  transactionScreenId:
+    type: object
+    properties:
+      transactionScreenId:
+        type: string
+
+  SearchFlightRequest:
+    type: object
+    properties:
+      Adults:
+        type: integer
+      Cabin:
+        type: integer
+      Childs:
+        type: integer
+      FlightSearchDetails:
+        type: array
+        items:
+          type: object
+          properties:
+            BeginDate:
+              type: string
+              format: date
+            Origin:
+              type: string
+            Destination:
+              type: string
+      Infants:
+        type: integer
+      TraceId:
+        type: string
+      TripType:
+        type: integer
+
+  FlightTravellDetails:
+    type: object
+    properties:
+      id_user:
+        type: string
+      id_trip:
+        type: string
+      contact_email:
+        type: string
+      contact_mobile:
+        type: string
+      isWhatsAppEnabled:
+        type: boolean
+      isGstEnabled:
+        type: boolean
+      isActive:
+        type: boolean
+      createdBy:
+        type: string
+      updatedBy:
+        type: string
+
+  UpdateFlightTravellDetails:
+    type: object
+    properties:
+      id:
+        type: string
+      id_user:
+        type: string
+      id_trip:
+        type: string
+      contact_email:
+        type: string
+      contact_mobile:
+        type: string
+      isWhatsAppEnabled:
+        type: boolean
+      isGstEnabled:
+        type: boolean
+      isActive:
+        type: boolean
+      createdBy:
+        type: string
+      updatedBy:
+        type: string
+
+  FlightTravellerDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+      id_user:
+        type: string
+      id_trip:
+        type: string
+      id_travel:
+        type: string
+      traveller_type:
+        type: string
+      name_title:
+        type: string
+      first_middle_name:
+        type: string
+      last_name:
+        type: string
+      date_of_birth:
+        type: string
+        format: date
+      createdBy:
+        type: string
+      updatedBy:
+        type: string
+
+  FlightTransactionDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      id_user:
+        type: integer
+        format: int64
+      id_trip:
+        type: integer
+        format: int64
+      id_travel:
+        type: integer
+        format: int64
+      id_booking:
+        type: integer
+        format: int64
+      id_payment:
+        type: integer
+        format: int64
+      reference_id:
+        type: string
+      paid_amnt:
+        type: number
+        format: double
+      discounted_amnt:
+        type: number
+        format: double
+      desc_percentage:
+        type: number
+        format: double
+      actual_amnt:
+        type: number
+        format: double
+      promo_code:
+        type: string
+      createdBy:
+        type: integer
+        format: int64
+      updatedBy:
+        type: integer
+        format: int64
+
+  FlightBookingRequest:
+    type: object
+    properties:
+      BookSegment:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      Cabin:
+        type: integer
+        description: Cabin class (0 for Economy, 1 for Business, etc.)
+      ConvenienceFee:
+        type: integer
+      CouponAmt:
+        type: integer
+      InsuranceCharge:
+        type: number
+      TravelInsuranceProvider:
+        type: integer
+      InsuranceStatus:
+        type: boolean
+      InsuranceDay:
+        type: integer
+      Insurancedetails:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      FlightSearchDetails:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      PaymentDetails:
+        type: object
+        properties:
+          BookingAmount:
+            type: number
+          BookingCurrencyCode:
+            type: string
+      TraceId:
+        type: string
+        description: Unique trace identifier
+      TransactionId:
+        type: string
+        description: Unique transaction identifier
+      GSTDetail:
+        type: object
+        properties:
+          Address:
+            type: string
+          CompanyName:
+            type: string
+          Email:
+            type: string
+          GSTNumber:
+            type: string
+          Phone:
+            type: string
+      Traveller:
+        type: object
+        properties:
+          AdultTraveller:
+            type: array
+            items:
+              type: object
+              additionalProperties: true
+      TripType:
+        type: integer
+        description: Type of trip (0 for one-way, 1 for round trip, etc.)
+
+  seatMealBaggeFlightdATA:
+    type: object
+    properties:
+      AdultCount:
+        type: integer
+      ChildCount:
+        type: integer
+      InfantCount:
+        type: integer
+      BookSegment:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      TraceId:
+        type: string
+        description: Unique trace identifier
+
+  BookingBalanceData:
+    type: object
+    properties:
+      Adults:
+        type: integer
+      Cabin:
+        type: integer
+      Childs:
+        type: integer
+      FlightSearchDetails:
+        type: array
+        items:
+          type: object
+          properties:
+            BeginDate:
+              type: string
+            CurrencyCode:
+              type: string
+            Origin:
+              type: string
+            Destination:
+              type: string
+      Infants:
+        type: integer
+      TripType:
+        type: integer
+
+  FlightAvailabilityRQ:
+      type: object
+      properties:
+        FlightAvailabilityRQ:
+          type: object
+          properties:
+            Adults:
+              type: integer
+            Cabin:
+              type: integer
+              description: Cabin class (0 for Economy, 1 for Business, etc.)
+            Childs:
+              type: integer
+            EngineID:
+              type: array
+              items:
+                type: integer
+            FlightSearchDetails:
+              type: array
+              items:
+                type: object
+                properties:
+                  BeginDate:
+                    type: string
+                    format: date
+                  Origin:
+                    type: string
+                  Destination:
+                    type: string
+            AirpricePosition:
+              type: string
+            SaveSessionStatus:
+              type: boolean
+            TraceId:
+              type: string
+            Infants:
+              type: integer
+            TripType:
+              type: integer
+              description: Type of trip (0 for one-way, 1 for round trip, etc.)
+        BookSegment:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  PrefixData:
+    type: object
+    properties:
+      Prefix:
+        type: string
+   
+  initiateData:
+    type: object
+    properties:
+      # uuid:
+      #   type: string
+      id_user:
+        type: string
+      bank_name:
+        type: string
+      bank_token:
+        type: string
+      # token:
+      #   type: string
+      ticket_module:
+        type: string
+      # last_login:
+      #   type: string
+      #   format: date-time
+      # updatedAt:
+      #   type: string
+      #   format: date-time
+
+  DeductWalletPointsData:
+    type: object
+    properties:
+      rewardPoint:
+        type: string
+    
+
+  AnyObject:
+    type: object
+    properties: {}
+
+  ErrorResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+
+externalDocs:
+  description: "Figma URL"
+  url: "https://www.figma.com/file/dPG5skUZxbXEalReKB6841/Cheggout-App-UI-Design-V0.2?type=design&mode=design&t=swh1VuUN35hYCExR-0"
