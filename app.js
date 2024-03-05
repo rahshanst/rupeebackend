@@ -55,9 +55,7 @@ swaggerTools.initializeMiddleware(swaggerSpec, (middleware) => {
 const server = http.createServer(app).listen(serverPort, () => {
   const checkDate = new Date();
   console.log(`Your server is listening on port %d (http://localhost:%d) date time ${checkDate}`, serverPort, serverPort);
-  console.log('Swagger-ui is available for flight on http://localhost:%d/flight_ticket/docs/', serverPort);
-  console.log('Swagger-ui is available for Hotel on http://localhost:%d/hotel_ticket/docs/', serverPort);
-  console.log('Swagger-ui is available for Admin on http://localhost:%d/admin_api/docs/', serverPort);
+  console.log('Swagger-ui is available for flight on http://localhost:%d/rupee_store/docs/', serverPort);
 });
 
 server.keepAliveTimeout = 310 * 10000;
