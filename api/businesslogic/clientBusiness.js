@@ -169,7 +169,7 @@ const getOffers = (req, res) => {
         
         result.recordset.forEach(element => {
           if(element.offer_banner_sm){
-          element.offer_banner_sm =  "localhost:9000/uploads/"+element?.offer_banner_sm;
+          element.offer_banner_sm =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_sm;
           }
         });
 
@@ -198,10 +198,10 @@ const getOfferDetails =  (req, res) => {
 
         result.recordset.forEach(element => {
           if(element.offer_banner_lg){
-          element.offer_banner_lg =  "localhost:9000/uploads/"+element?.offer_banner_lg;
+          element.offer_banner_lg =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_lg;
           }
           if(element.offer_banner_xl){
-            element.offer_banner_xl =  "localhost:9000/uploads/"+element?.offer_banner_xl;
+            element.offer_banner_xl =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_xl;
             }
         });
 
