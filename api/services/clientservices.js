@@ -75,7 +75,7 @@ async function getOffers() {
 }
 
 async function getOfferDetails(incomingData) {
-  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_banner_lg, offer_banner_xl, offer_category, offer_type, tnc FROM offers WHERE id='${incomingData.offer_id}'`;
+  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_banner_lg, offer_banner_xl, offer_category, offer_type, tnc, up_color, down_color FROM offers WHERE id='${incomingData.offer_id}'`;
 
   return executeQuery(query);
 }
