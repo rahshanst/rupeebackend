@@ -69,7 +69,7 @@ async function getCategories() {
 }
 
 async function getOffers() {
-  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, offer_banner_lg, offer_category, offer_type, up_color, down_color FROM offers";
+  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, offer_banner_lg, offer_category, offer_type, down_color, up_color FROM offers";
 
   return executeQuery(query);
 }

@@ -164,13 +164,14 @@ const getCategories = (req, res) => {
 const getOffers = (req, res) => {
   return new Promise((resolve, reject) => {
     userServices.getOffers().then((result) => {
-      console.log(result.recordset)
+      console.log("ele",result.recordset)
       if (result.recordset[0]) {
         
         result.recordset.forEach(element => {
           if(element.brand_logo){
           element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
           }
+          
           if(element.offer_banner_lg){
             element.offer_banner_lg =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_lg;
             }
