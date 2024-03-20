@@ -168,9 +168,12 @@ const getOffers = (req, res) => {
       if (result.recordset[0]) {
         
         result.recordset.forEach(element => {
-          if(element.offer_banner_sm){
-          element.offer_banner_sm =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_sm;
+          if(element.brand_logo){
+          element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
           }
+          if(element.offer_banner_lg){
+            element.offer_banner_lg =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.offer_banner_lg;
+            }
         });
 
         resolve({
