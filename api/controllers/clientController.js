@@ -73,6 +73,18 @@ const getCouponcode = (req, res) => {
   });
 };
 
+const validationCheck = (req, res) => {
+  clientBusiness.validationCheck(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const checkPaymentStatus = (req, res) => {
+  clientBusiness.checkPaymentStatus(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -82,6 +94,8 @@ module.exports = {
   getOffers,
   getOfferDetails,
   getCouponcode,
+  validationCheck,
+  checkPaymentStatus,
  // GetPwaRewards,
  // GetPWAWalletPoints,
  // DeductWalletPoints,

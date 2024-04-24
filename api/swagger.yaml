@@ -182,6 +182,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
   /getCouponcode:
     post:
       summary: coupon generate
@@ -207,6 +208,68 @@ paths:
           required: true
           schema:
             $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /validationCheck:
+    post:
+      summary: GenerateSwinkPayOrderID
+      description: validationCheck
+      operationId: validationCheck
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get Prefix
+          description: PrefixData
+          required: true
+          schema:
+            $ref: "#/definitions/CheckVerifyData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /checkPaymentStatus:
+    post:
+      summary: GenerateSwinkPayOrderID
+      description: validationCheck
+      operationId: checkPaymentStatus
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get Prefix
+          description: PrefixData
+          required: true
+          schema:
+            $ref: "#/definitions/checkPaymentStatus"
       responses:
         default:
           description: Error
@@ -1039,6 +1102,45 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
 definitions:
+
+  CheckVerifyData:
+    type: object
+    properties:
+      bookingId:
+        type: string
+      searchId:
+        type: string
+      emailId:
+        type: string
+      mode:
+        type: string
+      payableAmount:
+        type: string 
+      walletAmount:
+        type: string
+    example:
+      bookingId: "BOOKING1000"
+      searchId: "9be258be-44fc-43f8-8424-09f414e9378d"
+      emailId: "a@a.com"
+      mode: "flightBooking"
+      payableAmount: "1000"
+      walletAmount: "100"
+
+  
+  checkPaymentStatus:
+    type: object
+    properties:
+      order_id:
+        type: string
+      razorpay_payment_id:
+        type: string
+      razorpay_amount:
+        type: string
+    example:
+      order_id: "1701769750893887"
+      razorpay_payment_id: "SPNb4lnVmPV61wP9tFUI"
+      razorpay_amount: "1.0"
+      
   FlightPaymentDetails:
     type: object
     properties:
