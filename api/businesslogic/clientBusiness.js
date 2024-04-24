@@ -3,6 +3,10 @@ const userServices = require("../services/clientservices");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
+const {
+  GEN_SWINKPAY_ORDER_ID,
+  CHECK_SWINKPAY_STATUS
+} = require("../apiconstants");
 
 /*const {
   GET_PWA_REWARDS,
@@ -248,6 +252,85 @@ const getCouponcode =  (req, res) => {
     });
   });
 };
+
+const validationCheck = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    const postData = {
+      payableAmount: 1, //parseInt(req.body.payableAmount),
+      channel: "flight", //req.body.mode,
+    };
+    const authorizationHeader = req.headers["authorization"];
+    const Cookie =
+      "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
+      Cookie,
+    };
+
+    try {
+      const apiData = {
+        url: GEN_SWINKPAY_ORDER_ID,
+        method: "post",
+        headers,
+        data: postData,
+      };
+      const response = await axios(apiData);
+      console.log(response.data);
+      resolve({
+        status: 200,
+        data: response.data,
+        message: "Data fetched Successfully",
+      });
+    } catch (error) {
+      console.error("Error making API request:", error.message);
+      resolve({
+        status: 500,
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+
+const checkPaymentStatus = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    const postData = req.body;
+    const authorizationHeader = req.headers["authorization"];
+    const Cookie =
+      "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
+      Cookie,
+    };
+
+    try {
+      const apiData = {
+        url: CHECK_SWINKPAY_STATUS,
+        method: "post",
+        headers,
+        data: postData,
+      };
+      const response = await axios(apiData);
+      console.log(response.data);
+      resolve({
+        status: 200,
+        data: response.data,
+        message: "Data fetched Successfully",
+      });
+    } catch (error) {
+      console.error("Error making API request:", error.message);
+      resolve({
+        status: 500,
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
 /*
 const GetPwaRewards = (req, res) => {
   return new Promise(async (resolve, reject) => {
@@ -424,6 +507,8 @@ module.exports = {
   getOffers,
   getOfferDetails,
   getCouponcode,
+  validationCheck,
+  checkPaymentStatus,
  // GetPwaRewards,
  // GetPWAWalletPoints,
  // DeductWalletPoints,
