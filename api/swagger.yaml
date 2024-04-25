@@ -15,6 +15,33 @@ securityDefinitions:
 
 paths:
 
+  /login:
+    post:
+      summary: loginData
+      description: loginData
+      operationId: login
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Auth
+      parameters:
+        - in: body
+          name: loginData
+          description: loginData
+          required: true
+          schema:
+            $ref: '#/definitions/loginData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /initiateSession:
     post:
       summary: user validation
@@ -71,6 +98,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
+
   /getCategories:
     get:
       summary: Get all categories
@@ -1469,6 +1497,14 @@ definitions:
   AnyObject:
     type: object
     properties: {}
+  
+  loginData:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
 
   ErrorResponse:
     type: object

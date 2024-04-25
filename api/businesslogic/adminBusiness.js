@@ -3,6 +3,7 @@ const adminServices = require("../services/adminservices");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
+const { uploadFile } = require("../../utils/azureBlobFile");
 //const multer  = require('multer')
 
 /*const {

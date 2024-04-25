@@ -44,11 +44,12 @@ async function addCategory(incomingData) {
   console.log({ incomingData });
   const query = `
   INSERT INTO categories 
-  (category_name, category_icon, created_at, updated_at) 
+  (category_name, category_icon, file_data,created_at, updated_at) 
   VALUES 
   (
       '${incomingData.category_name}',
       '${incomingData.category_icon}',
+      '${incomingData.file_data}',
       GETDATE(), 
       GETDATE()
   )
