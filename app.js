@@ -42,6 +42,8 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Swagger middleware initialization
 swaggerTools.initializeMiddleware(swaggerSpec, (middleware) => {
   app.use(middleware.swaggerMetadata());
@@ -51,11 +53,27 @@ swaggerTools.initializeMiddleware(swaggerSpec, (middleware) => {
   app.use('/rupee_store', middleware.swaggerUi());
 });
 
+const swaggerSpecForAdmin = jsyaml.load(fs.readFileSync(path.join(__dirname, 'adminAPI/swagger.yaml'), 'utf8'));
+const swaggerOptionsForAdmin = {
+  swaggerUi: path.join(__dirname, '/swagger.json'),
+  controllers: path.join(__dirname, './adminAPI/controllers'),
+  useStubs: process.env.APP_ENV === 'dev',
+};
+// Swagger middleware initialization
+swaggerTools.initializeMiddleware(swaggerSpecForAdmin, (middleware) => {
+  app.use(middleware.swaggerMetadata());
+  app.use(middleware.swaggerValidator());
+  app.use(middleware.swaggerRouter(swaggerOptionsForAdmin));
+  // Serve the Swagger documents and Swagger UI
+  app.use('/admin_api', middleware.swaggerUi());
+});
+
 
 const server = http.createServer(app).listen(serverPort, () => {
   const checkDate = new Date();
   console.log(`Your server is listening on port %d (http://localhost:%d) date time ${checkDate}`, serverPort, serverPort);
   console.log('Swagger-ui is available for flight on http://localhost:%d/rupee_store/docs/', serverPort);
+  console.log('Swagger-ui is available for flight on http://localhost:%d/admin_api/docs/', serverPort);
 });
 
 server.keepAliveTimeout = 310 * 10000;

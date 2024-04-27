@@ -1,0 +1,17 @@
+{
+    "APP_ENV": "prod",
+    "DB_USER": "ticketAdmin",
+    "DB_PASSWORD": "LfFJMH0EFeHc6hKHcEMP",
+    "DB_SERVER": "ticket-booking.database.windows.net",
+    "DB_DATABASE": "ticket_db_prod",
+    "SECRET_KEY": "FXXTXXCXX",
+    "CHEGGOUT_URL": "https://restapi.cheggout.com/api/v1.1",
+    "FLIGHT_URL": "https://stagingapi.easemytrip.com",
+    "HOTEL_URL": "https://hotelapita.easemytrip.com",
+    "HOTEL_USERNAME": "HotelCheggOut",
+    "HOTEL_PASSWORD": "chegg8KbmljxTT2IGYhms4uAjygA7oT",
+    "FLIGHT_USERNAME": "EMT@uytrFYTREt",
+    "FLIGHT_PASSWORD": "EMTB2B",
+    "CHEGGOUT_URL_VERSION": "1.1"
+  }
+  

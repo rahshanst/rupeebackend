@@ -1,0 +1,743 @@
+swagger: "2.0"
+info:
+  title: Admin API
+  description: API for managing admin 
+  version: 1.0.0
+
+basePath: /api/admin
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: Bearer token for authentication
+
+paths:
+  /login:
+    post:
+      summary: Search for a hotel
+      description: Search for a hotel with authentication
+      operationId: login
+      x-swagger-router-controller: authController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags: 
+        -  Auth
+      parameters:
+        - in: body
+          name: loginData
+          description: loginData
+          required: true
+          schema:
+            $ref: '#/definitions/loginData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getDashboardCount:
+    post:
+      summary: getDashboardCount
+      description: getDashboardCount
+      operationId: getDashboardCount
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Bank Config
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BankConfig
+          description: BankConfig
+          required: true
+          schema:
+            $ref: '#/definitions/dashboardData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getConstantValue:
+    get:
+      summary: Search for a hotel
+      description: Search for a hotel with authentication
+      operationId: getConstantValue
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getCategoryDetails:
+    get:
+      operationId: getCategoryDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getBannerDetails:
+    get:
+      operationId: getBannerDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getBrandDetails:
+    get:
+      operationId: getBrandDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /addBrandsDetails:
+    post:
+      operationId: addBrandDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /addDeals:
+    post:
+      operationId: addDeals
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/addDealsData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getBrands:
+    get:
+      operationId: getBrands
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getBrandsDtls:
+    get:
+      operationId: getBrands
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+
+  /getDealsDetails:
+    get:
+      operationId: getDetalsDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getBannerFile:
+    post:
+      summary: getBannerFile
+      description: getBannerFile
+      operationId: getBannerFile
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Bank Config
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BankConfig
+          description: BankConfig
+          required: true
+          schema:
+            $ref: '#/definitions/getBannerFile'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getBannerFileAdmin:
+    post:
+      summary: getBannerFile
+      description: getBannerFile
+      operationId: getBannerFileAdmin
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Bank Config
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BankConfig
+          description: BankConfig
+          required: true
+          schema:
+            $ref: '#/definitions/getBannerFile'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /addBannerFile:
+    post:
+      summary: addBannerFile
+      description: addBannerFile
+      operationId: addBannerFile
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Bank Config
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BankConfig
+          description: BankConfig
+          required: true
+          schema:
+            $ref: '#/definitions/BannerFile'
+        
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /deleteBannerFile:
+    post:
+      summary: deleteBannerFile
+      description: deleteBannerFile
+      operationId: deleteBannerFile
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Bank Config
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: BankConfig
+          description: BankConfig
+          required: true
+          schema:
+            $ref: '#/definitions/BannerFile'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  AnyObject:
+    type: object
+    properties: {}
+  
+  loginData:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  DashboardCountData:
+    type: object
+    properties:
+      bank_name:
+        type: string
+
+  GetAllBookingData:
+    type: object
+    properties:
+      bank_name:
+        type: string
+        example: "BOM"
+      provider_name:
+        type: string
+        example: "Provider XYZ"
+      date:
+        type: string
+        example: "2023-12-31"
+      location:
+        type: string
+        example: "City Center"
+      booking_type:
+        type: string
+        example: "Online"
+      range_start:
+        type: string
+        example: "100"
+      range_end:
+        type: string
+        example: "200"
+      point_start:
+        type: string
+        example: "10"
+      points_end:
+        type: string
+        example: "10"
+      offer_amnt_start:
+        type: string
+        example: "50"
+      offer_amnt_end:
+        type: string
+        example: "100"
+      page_number:
+        type: string
+        example: "1"
+      page_size:
+        type: string
+        example: "10"
+
+  GetAllTrxData:
+    type: object
+    properties:
+      bank_name:
+        type: string
+        example: "BOB"
+      date:
+        type: string
+        example: "2023-12-31"
+      booking_type:
+        type: string
+        example: ""
+      PaymentTrxId:
+        type: string
+        example: "wf4ykdm"
+      status:
+        type: string
+        example: "Booked"
+      range_start:
+        type: string
+        example: "100"
+      range_end:
+        type: string
+        example: "200"
+      page_number:
+        type: string
+        example: "1"
+      page_size:
+        type: string
+        example: "10"
+
+  BankConfig:
+    type: object
+    properties:
+      id_user:
+        type: integer
+        description: The ID of the user associated with the bank configuration.
+        example: 123
+      bankName:
+        type: string
+        description: Name of the bank associated with the configuration.
+        example: "ABC Bank"
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "Hotel"
+      primaryColor:
+        type: string
+        description: Primary color for the bank's branding.
+        example: "#336699"
+      secondaryColor:
+        type: string
+        description: Secondary color for the bank's branding.
+        example: "#CCCCCC"
+      logoColor:
+        type: string
+        description: Color of the bank's logo.
+        example: "#FFA500"
+      interNationalCashbackAmount:
+        type: number
+        format: double
+        description: International cashback amount for .
+        example: 15.25
+      nationalCashbackAmount:
+        type: number
+        format: double
+        description: National cashback amount for .
+        example: 12.00
+      NewCustInterNationalCashbackAmount:
+        type: number
+        format: double
+        description: New customer international cashback amount for .
+        example: 25.00
+      NewCustNationalCashbackAmount:
+        type: number
+        format: double
+        description: New customer national cashback amount for .
+        example: 20.50
+      createdBy:
+        type: string
+        description: Creator of the bank configuration.
+        example: "John Doe"
+      updatedBy:
+        type: string
+        description: User who last updated the bank configuration.
+        example: "Jane Doe"
+        
+  BannerFile:
+    type: object
+    properties:
+      id_user:
+        type: integer
+        description: The ID of the user associated with the banner file.
+        example: 123
+      bankName:
+        type: string
+        description: Name of the bank associated with the banner file.
+        example: "ABC Bank"
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "Hotel"
+      occasion:
+        type: string
+        description: Occasion related to the banner file.
+        example: "New Year Sale"
+      file_name:
+        type: string
+        description: Name of the file.
+        example: "banner_image.jpg"
+      file_data:
+        type: string
+        description: Base64.
+        example: ""
+      file_type:
+        type: string
+        description: Type of the file.
+        example: "image/jpeg"
+      file:
+        type: object
+        example: {}
+      createdBy:
+        type: string
+        description: Creator of the banner file.
+        example: "John Doe"
+      updatedBy:
+        type: string
+        description: User who last updated the banner file.
+        example: "Jane Doe"
+
+  addDealsData:
+    type: object
+    properties:
+      deal_name:
+        type: string
+      category_name:
+        type: string
+      cover_image:
+        type: string
+      detail_page_image:
+        type: string
+      min_order_value:
+        type: string
+      max_discount_value:
+        type: string
+      offer_expiry_date:
+        type: string
+      how_to_redeem:
+        type: string
+      terms_and_conditions:
+        type: string
+      deal_price_rs:
+        type: string
+      deal_price_coins:
+        type: string
+      offer_redemption_url:
+        type: string
+      coupon_codes_csv:
+        type: string
+
+  deleteBannerFile:
+    type: object
+    properties:
+      bankName:
+        type: string
+        description: Name of the bank associated with the banner file.
+        example: "ABC Bank"
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "Hotel"
+      file_name:
+        type: string
+        description: Name of the file.
+        example: "banner_image.jpg"
+
+  getBannerFile:
+    type: object
+    properties:
+      bankName:
+        type: string
+        description: Name of the bank associated with the banner file.
+        example: "ABC Bank"
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "Hotel"
+        
+  dashboardData:
+    type: object
+    properties:
+      bankName:
+        type: string
+        description: Name of the bank associated with the banner file.
+        example: "ABC Bank"
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "Hotel"
+
+  ComercialConfig:
+    type: object
+    properties:
+      sectionName:
+        type: string
+      internationalHotel:
+        type: integer
+      domesticHotel:
+        type: integer
+      internatinalFlight:
+        type: integer
+      domesticFlight:
+        type: integer
+      chargeValueType:
+        type: string
+      message:
+        type: string
+      createdBy:
+        type: string
+      updatedBy:
+        type: string
+      
+  IdTripData:
+    type: object
+    properties:
+      id_trip:
+        type: string
+
+  ErrorResponse:
+    type: object
+    properties:
+      result:
+        type: integer
+        format: int32
+
+externalDocs:
+  description: "Figma URL"
+  url: "https://www.figma.com/file/3yI5CF3eYmaiDoT9vfhnaF/Flight-Booking-Screens?type=design&node-id=0-1&mode=design"
