@@ -278,10 +278,10 @@ paths:
 
   /GetPwaRewards:
     get:
-      summary: Get Date
-      description: Create a new trip with authentication
+      summary: Get Reward
+      description: Get reward points
       operationId: GetPwaRewards
-      x-swagger-router-controller: tripController
+      x-swagger-router-controller: clientController
       consumes:
         - application/json
       produces:
@@ -310,10 +310,10 @@ paths:
 
   /GetPWAWalletPoints:
     get:
-      summary: Get Date
-      description: Create a new trip with authentication
+      summary: Get Wallet
+      description: Get walletpoints
       operationId: GetPWAWalletPoints
-      x-swagger-router-controller: tripController
+      x-swagger-router-controller: clientController
       consumes:
         - application/json
       produces:
@@ -340,10 +340,10 @@ paths:
 
   /DeductWalletPoints:
     post:
-      summary: Get Date
+      summary: Deduct walletpoint
       description: Create a new trip with authentication
       operationId: DeductWalletPoints
-      x-swagger-router-controller: tripController
+      x-swagger-router-controller: clientController
       consumes:
         - application/json
       produces:
