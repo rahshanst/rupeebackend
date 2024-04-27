@@ -95,15 +95,16 @@ module.exports.getDetalsDetails = () => {
 
 // Function to insert a new deal
 module.exports.insertDeal = (dealData) => {
-  const { deal_name, category_name, cover_image, detail_page_image, min_order_value, max_discount_value, 
+  console.log({dealData});
+  const { uuid,deal_name, category_name,brand, cover_image, detail_page_image, min_order_value, max_discount_value, 
           offer_expiry_date, how_to_redeem, terms_and_conditions, deal_price_rs, deal_price_coins, 
           offer_redemption_url, coupon_codes_csv } = dealData;
-  const query = `INSERT INTO deals (deal_name, category_name, cover_image, detail_page_image, min_order_value, 
+  const query = `INSERT INTO deals (uuid,deal_heading, category_name,brand, cover_image, detail_page_image, min_order_value, 
                                     max_discount_value, offer_expiry_date, how_to_redeem, terms_and_conditions, 
                                     deal_price_rs, deal_price_coins, offer_redemption_url, coupon_codes_csv) 
-                 VALUES ('${deal_name}', '${category_name}', '${cover_image}', '${detail_page_image}', ${min_order_value}, 
-                         ${max_discount_value}, '${offer_expiry_date}', '${how_to_redeem}', '${terms_and_conditions}', 
-                         ${deal_price_rs}, ${deal_price_coins}, '${offer_redemption_url}', '${coupon_codes_csv}')`;
+                 VALUES ('${uuid}','${deal_name}', '${category_name}', '${brand}','${cover_image}', '${detail_page_image}', '${min_order_value}', 
+                         '${max_discount_value}', '${offer_expiry_date}', '${how_to_redeem}', '${terms_and_conditions}', 
+                         '${deal_price_rs}', '${deal_price_coins}', '${offer_redemption_url}', '${coupon_codes_csv}')`;
   return executeQuery(query);
 };
 

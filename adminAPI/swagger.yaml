@@ -201,6 +201,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
+  /addDeals:
+    post:
+      operationId: addDeals
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/addDealsData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   /getBrands:
     get:
       operationId: getBrands
@@ -601,6 +632,36 @@ definitions:
         type: string
         description: User who last updated the banner file.
         example: "Jane Doe"
+
+  addDealsData:
+    type: object
+    properties:
+      deal_name:
+        type: string
+      category_name:
+        type: string
+      cover_image:
+        type: string
+      detail_page_image:
+        type: string
+      min_order_value:
+        type: string
+      max_discount_value:
+        type: string
+      offer_expiry_date:
+        type: string
+      how_to_redeem:
+        type: string
+      terms_and_conditions:
+        type: string
+      deal_price_rs:
+        type: string
+      deal_price_coins:
+        type: string
+      offer_redemption_url:
+        type: string
+      coupon_codes_csv:
+        type: string
 
   deleteBannerFile:
     type: object

@@ -156,7 +156,7 @@ module.exports.addBrands = (req, res) => {
 
 // Method to add deals
 module.exports.addDeals = (req, res) => {
-  dashboardBusiness.addDeals(req.body)
+  dashboardBusiness.addDeals(req)
     .then((result) => {
       res.json(result);
     })

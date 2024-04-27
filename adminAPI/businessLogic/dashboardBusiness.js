@@ -541,9 +541,11 @@ module.exports.addBrands = async (req, res) => {
 
 // Method to add deals
 module.exports.addDeals = async (req, res) => {
+  const uuid = uuidv4();
+  let deals = { uuid, ...req.body };
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.addDeals(req.body);
+      let result = await dashboardServices.insertDeal(deals);
       logger.info([result]);
       if (result.error) {
         resolve({
