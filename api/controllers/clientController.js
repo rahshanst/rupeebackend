@@ -85,6 +85,24 @@ const checkPaymentStatus = (req, res) => {
   });
 };
 
+const GetPwaRewards = (req, res) => {
+  clientBusiness.GetPwaRewards(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const GetPWAWalletPoints = (req, res) => {
+  clientBusiness.GetPWAWalletPoints(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const DeductWalletPoints = (req, res) => {
+  clientBusiness.DeductWalletPoints(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -96,8 +114,8 @@ module.exports = {
   getCouponcode,
   validationCheck,
   checkPaymentStatus,
- // GetPwaRewards,
- // GetPWAWalletPoints,
- // DeductWalletPoints,
+  GetPwaRewards,
+  GetPWAWalletPoints,
+  DeductWalletPoints,
  // RefundPoints,
 };

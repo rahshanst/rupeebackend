@@ -5,7 +5,10 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const {
   GEN_SWINKPAY_ORDER_ID,
-  CHECK_SWINKPAY_STATUS
+  CHECK_SWINKPAY_STATUS,
+  GET_PWA_REWARDS,
+  GET_PWA_WALLET_POINTS,
+  DEDUCT_WALLET_POINTS
 } = require("../apiconstants");
 
 /*const {
@@ -267,7 +270,60 @@ const validationCheck = (req, res) => {
       Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
       Cookie,
     };
+    console.log("modeofpay:",req.body.mop)
+    if(req.body.mop === 2){
+    try {
+    GetPWAWalletPoints(req).then((result) => {
+      if(result.data?.walletPoints > 0){
+        try {
+        DeductWalletPoints(req).then((result) => {
+          if(result.data === true){
+          resolve({
+          status: 200,
+          data: 'dummycoupn',//result.recordset,
+          message: "Fetched Successfully",
+          });
+          }
+          else{
+            resolve({
+              status: 500,
+              data: [],
+              error,
+              message: error.code,
+            });
+          }
 
+        });
+        }catch (error) {
+          console.error("Error making API request:", error.message);
+          resolve({
+            status: 500,
+            data: [],
+            error,
+            message: error.code,
+          });
+        }
+      }
+      else{
+        resolve({
+          status: 500,
+          data: [],
+          error,
+          message: "Not enough wallet points!",
+        });
+      }
+    });
+    }catch (error) {
+      console.error("Error making API request:", error.message);
+      resolve({
+        status: 500,
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+   }
+   else{
     try {
       const apiData = {
         url: GEN_SWINKPAY_ORDER_ID,
@@ -291,6 +347,7 @@ const validationCheck = (req, res) => {
         message: error.code,
       });
     }
+   }
   });
 };
 
@@ -331,36 +388,39 @@ const checkPaymentStatus = (req, res) => {
     }
   });
 };
-/*
+
 const GetPwaRewards = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const url = GET_PWA_REWARDS;
-    console.log(url);
-    console.log(req.headers);
+    
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
       "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
+      Authorization: `Bearer ${authorizationHeader}`, 
       Cookie,
     };
-    console.log({ headers });
+    
     try {
-      const response = await axios.get(url, {
+      const apiData = {
+        url: GET_PWA_REWARDS,
+        method: "get",
         headers,
-      });
+      };
+
+      const response = await axios(apiData);
       console.log(response.data);
       resolve({
-        status: "200",
+        status: 200,
         data: response.data,
         message: "Data fetched Successfully",
       });
     } catch (error) {
       console.error("Error making API request:", error.message);
       resolve({
-        status: "500",
+        status: 500,
         data: [],
         error,
         message: error.code,
@@ -368,11 +428,11 @@ const GetPwaRewards = (req, res) => {
     }
   });
 };
+
 const GetPWAWalletPoints = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const url = GET_PWA_WALLET_POINTS;
-    console.log(url);
-    console.log(req.headers);
+    
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
@@ -384,19 +444,22 @@ const GetPWAWalletPoints = (req, res) => {
     };
 
     try {
-      const response = await axios.get(url, {
+      const apiData = {
+        url: GET_PWA_WALLET_POINTS,
+        method: "get",
         headers,
-      });
+      };
+      const response = await axios(apiData);
       console.log(response.data);
       resolve({
-        status: "200",
+        status: 200,
         data: response.data,
         message: "Data fetched Successfully",
       });
     } catch (error) {
       console.error("Error making API request:", error.message);
       resolve({
-        status: "500",
+        status: 500,
         data: [],
         error,
         message: error.code,
@@ -404,7 +467,7 @@ const GetPWAWalletPoints = (req, res) => {
     }
   });
 };
-
+/*
 const RefundPoints = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const postData = {
@@ -451,17 +514,17 @@ const RefundPoints = (req, res) => {
     }
   });
 };
+*/
 const DeductWalletPoints = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const postData = {
-      ...req.body,
+    rewardPoint: 1,
+    title: "flight",
     };
     const url=DEDUCT_WALLET_POINTS;
-    console.log({ postData });
-    console.log(url);
-    console.log(req.headers);
+    
     const authorizationHeader = req.headers["authorization"];
-    // const Cookie = req.headers["Cookie"];
+
     const Cookie =
       "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
     const headers = {
@@ -470,26 +533,30 @@ const DeductWalletPoints = (req, res) => {
       Cookie,
     };
     try {
-      const response = await axios.post(DEDUCT_WALLET_POINTS, postData, {
+      const apiData = {
+        url: DEDUCT_WALLET_POINTS,
+        method: "post",
         headers,
-      });
+        data:postData
+      };
+      const response = await axios(apiData);
       console.log(response.data);
       if (response.data.Errors) {
         resolve({
-          status: "400",
+          status: 400,
           data: response.data,
           message: "Error while fetching details",
         });
       }
       resolve({
-        status: "200",
+        status: 200,
         data: response.data,
         message: "Data fetched Successfully",
       });
     } catch (error) {
       console.error("Error making API request:", error.message);
       resolve({
-        status: "500",
+        status: 500,
         data: [],
         error,
         message: error.message,
@@ -497,7 +564,7 @@ const DeductWalletPoints = (req, res) => {
     }
   });
 };
-*/
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -509,9 +576,9 @@ module.exports = {
   getCouponcode,
   validationCheck,
   checkPaymentStatus,
- // GetPwaRewards,
- // GetPWAWalletPoints,
- // DeductWalletPoints,
+  GetPwaRewards,
+  GetPWAWalletPoints,
+  DeductWalletPoints,
  // RefundPoints,
  // getToken,
 };
