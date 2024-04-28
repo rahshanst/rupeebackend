@@ -464,7 +464,8 @@ const RefundPoints = (req, res) => {
 const DeductWalletPoints = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const postData = {
-      ...req.body,
+    rewardPoint: 1,
+    title: "flight",
     };
     const url=DEDUCT_WALLET_POINTS;
     
@@ -478,9 +479,13 @@ const DeductWalletPoints = (req, res) => {
       Cookie,
     };
     try {
-      const response = await axios.post(DEDUCT_WALLET_POINTS, postData, {
+      const apiData = {
+        url: DEDUCT_WALLET_POINTS,
+        method: "post",
         headers,
-      });
+        data:postData
+      };
+      const response = await axios(apiData);
       console.log(response.data);
       if (response.data.Errors) {
         resolve({

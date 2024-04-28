@@ -13,4 +13,3 @@ module.exports={
     GET_PWA_WALLET_POINTS,
     DEDUCT_WALLET_POINTS,
 }
-
