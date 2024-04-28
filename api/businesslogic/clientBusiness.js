@@ -308,7 +308,6 @@ const validationCheck = (req, res) => {
         resolve({
           status: 500,
           data: [],
-          error,
           message: "Not enough wallet points!",
         });
       }
