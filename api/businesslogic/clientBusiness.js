@@ -270,7 +270,60 @@ const validationCheck = (req, res) => {
       Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
       Cookie,
     };
+    console.log("modeofpay:",req.body.mop)
+    if(req.body.mop === 2){
+    try {
+    GetPWAWalletPoints(req).then((result) => {
+      if(result.data?.walletPoints > 0){
+        try {
+        DeductWalletPoints(req).then((result) => {
+          if(result.data === true){
+          resolve({
+          status: 200,
+          data: 'dummycoupn',//result.recordset,
+          message: "Fetched Successfully",
+          });
+          }
+          else{
+            resolve({
+              status: 500,
+              data: [],
+              error,
+              message: error.code,
+            });
+          }
 
+        });
+        }catch (error) {
+          console.error("Error making API request:", error.message);
+          resolve({
+            status: 500,
+            data: [],
+            error,
+            message: error.code,
+          });
+        }
+      }
+      else{
+        resolve({
+          status: 500,
+          data: [],
+          error,
+          message: "Not enough wallet points!",
+        });
+      }
+    });
+    }catch (error) {
+      console.error("Error making API request:", error.message);
+      resolve({
+        status: 500,
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+   }
+   else{
     try {
       const apiData = {
         url: GEN_SWINKPAY_ORDER_ID,
@@ -294,6 +347,7 @@ const validationCheck = (req, res) => {
         message: error.code,
       });
     }
+   }
   });
 };
 
