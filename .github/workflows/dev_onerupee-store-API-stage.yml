@@ -57,9 +57,6 @@ jobs:
           
       - name: unzip artifact for deployment
         run: unzip release.zip
-
-      - name: deletebzip artifact for deployment
-        run: rm -rf release.zip
         
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
@@ -69,3 +66,6 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_67FAC15FE0A04B0EAF6B78CEEF2D1C32 }}
+
+      - name: deletebzip artifact for deployment
+        run: rm -rf release.zip
