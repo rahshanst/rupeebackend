@@ -280,7 +280,7 @@ const validationCheck = (req, res) => {
           if(result.data === true){
           resolve({
           status: 200,
-          data: 'dummycoupn',//result.recordset,
+          data: 'THIS3IS4COUP',//result.recordset,
           message: "Fetched Successfully",
           });
           }
