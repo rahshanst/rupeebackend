@@ -34,7 +34,7 @@ jobs:
           npm run test --if-present
 
       - name: Zip artifact for deployment
-        run: zip releasee.zip ./* -r
+        run: Compress-Archive -Force -Path ./* -Destination releasee.zip
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -57,6 +57,9 @@ jobs:
           
       - name: unzip artifact for deployment
         run: unzip releasee.zip
+
+      - name: deletebzip artifact for deployment
+        run: rm releasee.zip
         
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
@@ -67,5 +70,3 @@ jobs:
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_67FAC15FE0A04B0EAF6B78CEEF2D1C32 }}
 
-      - name: deletebzip artifact for deployment
-        run: rm releasee.zip
