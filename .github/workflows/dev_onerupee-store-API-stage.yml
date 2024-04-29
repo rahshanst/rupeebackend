@@ -68,4 +68,4 @@ jobs:
           app-name: 'onerupee-store-API-stage'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5468E80549CA4A2FAE3F169DAD249066 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_67FAC15FE0A04B0EAF6B78CEEF2D1C32 }}
