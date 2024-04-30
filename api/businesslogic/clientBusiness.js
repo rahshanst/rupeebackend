@@ -239,10 +239,10 @@ const getCouponcode =  (req, res) => {
     let incomingData = { user_id, coupon_code, ...req.body };
 
     userServices.getCouponcode(incomingData).then((result) => {
-      if (result) {
+      if (result.recordset[0]) {
         resolve({
           status: 200,
-          data: 'dummycoupn',//result.recordset,
+          data: result.recordset,
           message: "Fetched Successfully",
         });
       }
@@ -258,6 +258,7 @@ const getCouponcode =  (req, res) => {
 
 const validationCheck = (req, res) => {
   return new Promise(async (resolve, reject) => {
+    const offer_id = req.body.offer_id;
     const postData = {
       payableAmount: 1, //parseInt(req.body.payableAmount),
       channel: "flight", //req.body.mode,
@@ -278,11 +279,25 @@ const validationCheck = (req, res) => {
         try {
         DeductWalletPoints(req).then((result) => {
           if(result.data === true){
-          resolve({
-          status: 200,
-          data: 'THIS3IS4COUP',//result.recordset,
-          message: "Fetched Successfully",
-          });
+            userServices.getCouponcode(offer_id).then((result) => {
+              if (result.recordset[0]) {
+                console.log(result)
+                result.recordset[0].coupon_code='COUPON3THIS';
+                result.recordset[0].redeem_url='https://myntra.com';
+                resolve({
+                  status: 200,
+                  data: result.recordset,
+                  message: "Fetched Successfully",
+                });ß
+              }
+              resolve({
+                status: 400,
+                data: [],
+                message: "Unable to fetch coupon",
+              });
+              
+            });
+          
           }
           else{
             resolve({
