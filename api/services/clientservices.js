@@ -81,18 +81,20 @@ async function getOfferDetails(incomingData) {
 }
 
 async function getCouponcode(incomingData) {
-  const query = `INSERT INTO user_coupons
-   (offer_id, coupon_code, purchased_at, user_id)
-   VALUES
-   (
-    '${incomingData.offer_id}',
-    '${incomingData.coupon_code}',
-    GETDATE(),
-    '${incomingData.user_id}'
-   )`;
+  // const query = `INSERT INTO user_coupons
+  //  (offer_id, coupon_code, purchased_at, user_id)
+  //  VALUES
+  //  (
+  //   '${incomingData.offer_id}',
+  //   '${incomingData.coupon_code}',
+  //   GETDATE(),
+  //   '${incomingData.user_id}'
+  //  )`;
+  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_category, offer_type, tnc, up_color, down_color FROM offers WHERE id='${incomingData}'`;
 
   return executeQuery(query);
 }
+
 module.exports = {
   getTrips,
   getTrip,
