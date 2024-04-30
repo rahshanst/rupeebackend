@@ -283,11 +283,12 @@ const validationCheck = (req, res) => {
               if (result.recordset[0]) {
                 console.log(result)
                 result.recordset[0].coupon_code='COUPON3THIS';
+                result.recordset[0].redeem_url='https://myntra.com';
                 resolve({
                   status: 200,
                   data: result.recordset,
                   message: "Fetched Successfully",
-                });
+                });ß
               }
               resolve({
                 status: 400,
