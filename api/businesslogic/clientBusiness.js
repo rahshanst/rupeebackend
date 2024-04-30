@@ -288,7 +288,7 @@ const validationCheck = (req, res) => {
                   status: 200,
                   data: result.recordset,
                   message: "Fetched Successfully",
-                });ß
+                });
               }
               resolve({
                 status: 400,
