@@ -409,6 +409,45 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /validateToken:
+    post:
+      summary: validateToken
+      description: validateToken
+      operationId: validateToken
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - cheggout API
+      parameters:
+        - in: header
+          name: Cookie
+          type: string
+          format: cookie
+          required: false
+          description: The cookie containing the ARRAffinity value.
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: false
+          description: Bearer token for authentication
+        - in: body
+          name: BookingBalanceData
+          description: BookingBalanceData
+          required: true
+          schema:
+            $ref: "#/definitions/validateTokenData"
+
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   
   /getAutoSuggest:
     post:
@@ -1140,6 +1179,31 @@ definitions:
       order_id: "1701769750893887"
       razorpay_payment_id: "SPNb4lnVmPV61wP9tFUI"
       razorpay_amount: "1.0"
+
+  validateTokenData:
+    type: object
+    properties:
+      applicationId:
+        type: string
+        example: "pwa1"
+      token:
+        type: string
+        example: ""
+      virtualId:
+        type: string
+        example: "test"
+      SessionId:
+        type: string
+        example: "4530657f-8777-4703-4034-3c3a9e370fcc"
+      bName:
+        type: string
+        example: "BOB"
+      deviceType:
+        type: string
+        example: "WEB"
+      GenerateSessionInfo:
+        type: boolean
+        example: false
       
   FlightPaymentDetails:
     type: object

@@ -5,6 +5,9 @@ const CHECK_SWINKPAY_STATUS = `${CHEGGOUT_URL}/CheckSwinkPayStatus`;
 const GET_PWA_REWARDS = `${CHEGGOUT_URL}/GetPwaRewards`;
 const GET_PWA_WALLET_POINTS = `${CHEGGOUT_URL}/GetPWAWalletPoints`;
 const DEDUCT_WALLET_POINTS = `${CHEGGOUT_URL}/DeductWalletPoints`;
+const VALIDATE_TOKEN = `${CHEGGOUT_URL}/ValidateToken`;
+const GENERATE_SESSION_INFO = `${CHEGGOUT_URL}/GenerateSessionInfo`
+const CHECK_SESSION_ID_IS_VALID = `${CHEGGOUT_URL}/CheckSessionIDIsValid`
 
 module.exports={
     GEN_SWINKPAY_ORDER_ID,
@@ -12,4 +15,7 @@ module.exports={
     GET_PWA_REWARDS,
     GET_PWA_WALLET_POINTS,
     DEDUCT_WALLET_POINTS,
+    VALIDATE_TOKEN,
+    GENERATE_SESSION_INFO,
+    CHECK_SESSION_ID_IS_VALID,
 }
