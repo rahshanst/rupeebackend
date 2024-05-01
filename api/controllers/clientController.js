@@ -103,6 +103,12 @@ const DeductWalletPoints = (req, res) => {
   });
 };
 
+const validateToken = (req, res) => {
+  clientBusiness.validateToken(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -117,5 +123,6 @@ module.exports = {
   GetPwaRewards,
   GetPWAWalletPoints,
   DeductWalletPoints,
+  validateToken,
  // RefundPoints,
 };
