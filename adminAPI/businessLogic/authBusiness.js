@@ -34,7 +34,7 @@ module.exports.login = async (req, res) => {
         userData.recordset[0];
 
       // Generate an access token
-      const accessToken = jwt.sign({ username }, process.env.SECRET_KEY);
+      const accessToken = jwt.sign({ username }, 'XXKEYXX)(!');
       const sessionCreated = await authServices.addUserSession(
         username,
         accessToken
