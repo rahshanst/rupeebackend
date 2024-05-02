@@ -9,6 +9,7 @@ const cors = require('cors');
 const { connectDB } = require("./db/connect");
 const jsyaml = require('js-yaml');
 const swaggerTools = require('swagger-tools');
+const { env } = require('process');
 
 
 const app = express();
@@ -38,7 +39,7 @@ app.use(express.static('public'));
 // Default route
 app.get("/", (req, res) => {
   return res.status(200).json({
-    msg: "Welcome to cheggout rupee api v1",
+    msg: "Welcome to cheggout rupee api dev 01",
   });
 });
 
