@@ -53,12 +53,12 @@ module.exports.login = async (req, res) => {
         message: "login success",
       });
     } catch (error) {
-      logger.info("Error making API request:", error.message);
+      logger.info("Error making API request:", error);
       resolve({
         status: "500",
         data: [],
         error,
-        message: error.code,
+        message: error,
       });
     }
   });
