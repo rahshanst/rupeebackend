@@ -381,7 +381,7 @@ const validationCheck = (req, res) => {
     const offer_id = req.body.offer_id;
     const postData = {
       payableAmount: 1, //parseInt(req.body.payableAmount),
-      channel: "flight", //req.body.mode,
+      channel: "rupeestore", //req.body.mode,
     };
     const authorizationHeader = req.headers["authorization"];
     const Cookie =
