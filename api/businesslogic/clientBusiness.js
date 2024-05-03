@@ -487,6 +487,7 @@ const validationCheck = (req, res) => {
 
 const checkPaymentStatus = (req, res) => {
   return new Promise(async (resolve, reject) => {
+    const offer_id = req.body.offer_id;
     const postData = req.body;
     const authorizationHeader = req.headers["authorization"];
     const Cookie =
@@ -506,11 +507,36 @@ const checkPaymentStatus = (req, res) => {
       };
       const response = await axios(apiData);
       console.log(response.data);
+      if(response.data?.errorstring === 'captured'){
+        userServices.getCouponcode(offer_id).then((result) => {
+          if (result.recordset[0]) {
+            console.log(result)
+            result.recordset[0].coupon_code='CO4PON3TH7S';
+            result.recordset[0].redeem_url='https://myntra.com';
+            resolve({
+              status: 200,
+              data: result.recordset,
+              message: "Fetched Successfully",
+            });
+          }
+          else{
+          resolve({
+            status: 400,
+            data: [],
+            message: "Unable to fetch coupon",
+          });
+          }
+          
+        });
+
+      }
+      else{
       resolve({
-        status: 200,
-        data: response.data,
-        message: "Data fetched Successfully",
+        status: 402,
+        data: [],
+        message: "Payment failed",
       });
+      }
     } catch (error) {
       console.error("Error making API request:", error.message);
       resolve({
