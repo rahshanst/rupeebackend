@@ -171,7 +171,7 @@ const validateToken = function (req) {
       }
       console.log(apiData);
       response = await axios(apiData);
-      
+     // console.log(response.data)
       if (response.data.Errors) {
         resolve({
           status: "400",
@@ -180,7 +180,29 @@ const validateToken = function (req) {
         });
       }
 
+      
+
       if (req.body.token !== "") {
+        const ticketid = uuidv4();
+        let UserData = { 
+          ticketid,
+          id_user: response.data.chegcustomerId,
+          bank_name: response.data.bankName,
+          bank_token: 'NA',
+          token: req.body.token,
+          module_type:'rupee'
+        };
+
+        userServices.initiateSession(UserData).then((result) => {
+          if (!result) {
+            resolve({
+              status: 400,
+              data: result,
+              message: "Unable to insert user",
+            });
+          }
+          
+        });
         resolve({
           status: response.data.status || "200",
           data: [
