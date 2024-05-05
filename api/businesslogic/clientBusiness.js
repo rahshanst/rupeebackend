@@ -426,6 +426,41 @@ const validationCheck = (req, res) => {
                 console.log(result)
                 result.recordset[0].coupon_code='COUPON3THIS';
                 result.recordset[0].redeem_url='https://myntra.com';
+                
+                let user_token = req.headers["authorization"]
+            userServices.getUserId(user_token).then((result) => { 
+              if(result.recordset[0]){
+                console.log("userr",result.recordset[0].id_user)
+
+                let offerdata = {
+                  user_id: result.recordset[0].id_user,
+                  offer_id: offer_id,
+                  redeem_code: 'CO4PON3TH7S',
+
+                }
+                userServices.putUserOffer(offerdata).then((result) => {
+                  if(result){
+                  console.log("offput", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Unable to write offer",
+                    });
+                  }
+                 })
+
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to fetch user",
+                });
+              }
+            })
+
                 resolve({
                   status: 200,
                   data: result.recordset,
@@ -535,6 +570,41 @@ const checkPaymentStatus = (req, res) => {
             console.log(result)
             result.recordset[0].coupon_code='CO4PON3TH7S';
             result.recordset[0].redeem_url='https://myntra.com';
+            
+            let user_token = req.headers["authorization"]
+            userServices.getUserId(user_token).then((result) => { 
+              if(result.recordset[0]){
+                console.log("userr",result.recordset[0].id_user)
+
+                let offerdata = {
+                  user_id: result.recordset[0].id_user,
+                  offer_id: offer_id,
+                  redeem_code: 'CO4PON3TH7S',
+
+                }
+                userServices.putUserOffer(offerdata).then((result) => {
+                  if(result){
+                  console.log("offput", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Unable to write offer",
+                    });
+                  }
+                 })
+
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to fetch user",
+                });
+              }
+            })
+
             resolve({
               status: 200,
               data: result.recordset,

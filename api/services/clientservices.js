@@ -80,6 +80,27 @@ async function getOfferDetails(incomingData) {
   return executeQuery(query);
 }
 
+async function getUserId(incomingData) {
+  const query = `SELECT id_user FROM user_details WHERE token='${incomingData}'`;
+
+  return executeQuery(query);
+}
+
+async function putUserOffer(incomingData) {
+  const query = `
+  INSERT INTO useroffers 
+  (user_id, offer_id, redeem_code) 
+  VALUES 
+  (
+      '${incomingData.user_id}', 
+      ${incomingData.offer_id}, 
+      '${incomingData.redeem_code}'
+  )
+`;
+
+  return executeQuery(query);
+}
+
 async function getCouponcode(incomingData) {
   // const query = `INSERT INTO user_coupons
   //  (offer_id, coupon_code, purchased_at, user_id)
@@ -104,4 +125,6 @@ module.exports = {
   getOffers,
   getOfferDetails,
   getCouponcode,
+  getUserId,
+  putUserOffer,
 };
