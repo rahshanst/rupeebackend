@@ -116,6 +116,13 @@ async function getCouponcode(incomingData) {
   return executeQuery(query);
 }
 
+async function getMyOffers(incomingData) {
+  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, useroffers.redeem_code, useroffers.redeem_status FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}`;
+
+  return executeQuery(query);
+}
+
+
 module.exports = {
   getTrips,
   getTrip,
@@ -127,4 +134,5 @@ module.exports = {
   getCouponcode,
   getUserId,
   putUserOffer,
+  getMyOffers,
 };

@@ -817,6 +817,43 @@ const DeductWalletPoints = (req, res) => {
   });
 };
 
+const getMyOffers = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+     
+    
+    const authorizationHeader = req.headers["authorization"];
+    userServices.getUserId(authorizationHeader).then((result) => { 
+      if(result.recordset[0]){
+        console.log("userr",result.recordset[0].id_user)
+
+        
+        userServices.getMyOffers(result.recordset[0].id_user).then((result) => {
+          if(result){
+          console.log("myoffers", result)
+          }
+          else{
+            resolve({
+              status: 400,
+              data: [],
+              message: "Unable to fetch user offers",
+            });
+          }
+         })
+
+      }
+      else{
+        resolve({
+          status: 400,
+          data: [],
+          message: "Unable to fetch user",
+        });
+      }
+    })
+    
+    
+  });
+};
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -832,6 +869,7 @@ module.exports = {
   GetPwaRewards,
   GetPWAWalletPoints,
   DeductWalletPoints,
+  getMyOffers,
  // RefundPoints,
  // getToken,
 };
