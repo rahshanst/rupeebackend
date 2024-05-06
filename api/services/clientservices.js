@@ -80,6 +80,27 @@ async function getOfferDetails(incomingData) {
   return executeQuery(query);
 }
 
+async function getUserId(incomingData) {
+  const query = `SELECT id_user FROM user_details WHERE token='${incomingData}'`;
+
+  return executeQuery(query);
+}
+
+async function putUserOffer(incomingData) {
+  const query = `
+  INSERT INTO useroffers 
+  (user_id, offer_id, redeem_code) 
+  VALUES 
+  (
+      '${incomingData.user_id}', 
+      ${incomingData.offer_id}, 
+      '${incomingData.redeem_code}'
+  )
+`;
+
+  return executeQuery(query);
+}
+
 async function getCouponcode(incomingData) {
   // const query = `INSERT INTO user_coupons
   //  (offer_id, coupon_code, purchased_at, user_id)
@@ -95,6 +116,13 @@ async function getCouponcode(incomingData) {
   return executeQuery(query);
 }
 
+async function getMyOffers(incomingData) {
+  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, useroffers.redeem_code, useroffers.redeem_status FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
+
+  return executeQuery(query);
+}
+
+
 module.exports = {
   getTrips,
   getTrip,
@@ -104,4 +132,7 @@ module.exports = {
   getOffers,
   getOfferDetails,
   getCouponcode,
+  getUserId,
+  putUserOffer,
+  getMyOffers,
 };

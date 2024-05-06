@@ -210,6 +210,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
+  /getMyOffers:
+    get:
+      summary: Offer details of user
+      description: details of particular users offer
+      operationId: getMyOffers
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /getCouponcode:
     post:

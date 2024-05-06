@@ -171,7 +171,7 @@ const validateToken = function (req) {
       }
       console.log(apiData);
       response = await axios(apiData);
-      
+     // console.log(response.data)
       if (response.data.Errors) {
         resolve({
           status: "400",
@@ -180,7 +180,29 @@ const validateToken = function (req) {
         });
       }
 
+      
+
       if (req.body.token !== "") {
+        const ticketid = uuidv4();
+        let UserData = { 
+          ticketid,
+          id_user: response.data.chegcustomerId,
+          bank_name: response.data.bankName,
+          bank_token: 'NA',
+          token: req.body.token,
+          module_type:'rupee'
+        };
+
+        userServices.initiateSession(UserData).then((result) => {
+          if (!result) {
+            resolve({
+              status: 400,
+              data: result,
+              message: "Unable to insert user",
+            });
+          }
+          
+        });
         resolve({
           status: response.data.status || "200",
           data: [
@@ -404,6 +426,41 @@ const validationCheck = (req, res) => {
                 console.log(result)
                 result.recordset[0].coupon_code='COUPON3THIS';
                 result.recordset[0].redeem_url='https://myntra.com';
+                
+                let user_token = req.headers["authorization"]
+            userServices.getUserId(user_token).then((result) => { 
+              if(result.recordset[0]){
+                console.log("userr",result.recordset[0].id_user)
+
+                let offerdata = {
+                  user_id: result.recordset[0].id_user,
+                  offer_id: offer_id,
+                  redeem_code: 'CO4PON3TH7S',
+
+                }
+                userServices.putUserOffer(offerdata).then((result) => {
+                  if(result){
+                  console.log("offput", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Unable to write offer",
+                    });
+                  }
+                 })
+
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to fetch user",
+                });
+              }
+            })
+
                 resolve({
                   status: 200,
                   data: result.recordset,
@@ -513,6 +570,41 @@ const checkPaymentStatus = (req, res) => {
             console.log(result)
             result.recordset[0].coupon_code='CO4PON3TH7S';
             result.recordset[0].redeem_url='https://myntra.com';
+            
+            let user_token = req.headers["authorization"]
+            userServices.getUserId(user_token).then((result) => { 
+              if(result.recordset[0]){
+                console.log("userr",result.recordset[0].id_user)
+
+                let offerdata = {
+                  user_id: result.recordset[0].id_user,
+                  offer_id: offer_id,
+                  redeem_code: 'CO4PON3TH7S',
+
+                }
+                userServices.putUserOffer(offerdata).then((result) => {
+                  if(result){
+                  console.log("offput", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Unable to write offer",
+                    });
+                  }
+                 })
+
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to fetch user",
+                });
+              }
+            })
+
             resolve({
               status: 200,
               data: result.recordset,
@@ -725,6 +817,53 @@ const DeductWalletPoints = (req, res) => {
   });
 };
 
+const getMyOffers = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+     
+    
+    const authorizationHeader = req.headers["authorization"];
+    userServices.getUserId(authorizationHeader).then((result) => { 
+      if(result.recordset[0]){
+        console.log("userr",result.recordset[0].id_user)
+
+        
+        userServices.getMyOffers(result.recordset[0].id_user).then((result) => {
+          if (result.recordset[0]) {
+            result.recordset.forEach(element => {
+              if(element.brand_logo){
+              element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
+              }
+              
+            });
+            resolve({
+              status: 200,
+              data: result.recordset,
+              message: "Fetched Successfully",
+            });
+          }
+          else{
+            resolve({
+              status: 400,
+              data: [],
+              message: "Unable to fetch user offers",
+            });
+          }
+         })
+
+      }
+      else{
+        resolve({
+          status: 400,
+          data: [],
+          message: "Unable to fetch user",
+        });
+      }
+    })
+    
+    
+  });
+};
+
 module.exports = {
  // getTrips,
  // getTripById,
@@ -740,6 +879,7 @@ module.exports = {
   GetPwaRewards,
   GetPWAWalletPoints,
   DeductWalletPoints,
+  getMyOffers,
  // RefundPoints,
  // getToken,
 };
