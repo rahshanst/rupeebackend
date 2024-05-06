@@ -828,8 +828,18 @@ const getMyOffers = (req, res) => {
 
         
         userServices.getMyOffers(result.recordset[0].id_user).then((result) => {
-          if(result){
-          console.log("myoffers", result)
+          if (result.recordset[0]) {
+            result.recordset.forEach(element => {
+              if(element.brand_logo){
+              element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
+              }
+              
+            });
+            resolve({
+              status: 200,
+              data: result.recordset,
+              message: "Fetched Successfully",
+            });
           }
           else{
             resolve({
