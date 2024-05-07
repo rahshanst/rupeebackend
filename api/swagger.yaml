@@ -99,6 +99,37 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   
 
+  /updateCategory:
+    post:
+      summary: category adding
+      description: ruppee store addcategory
+      operationId: addCategory
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get initiateData
+          description:  initiateData
+          required: true
+          schema:
+            $ref: "#/definitions/initiateData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   /getCategories:
     get:
       summary: Get all categories

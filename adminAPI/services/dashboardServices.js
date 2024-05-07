@@ -6,9 +6,20 @@ const today = moment().format('L');
 
 module.exports.getDashboardCount = (condition) => {
   console.log({condition});
-  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM store_user_details tud where CONVERT(DATE, tud.createdAt) = '${today}' UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals tud  UNION ALL
-  SELECT 'noOfActiveBanks' AS QueryType, COUNT(*) AS Result FROM store_user_details tud where bank_name is not null `;
+  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
+  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
+  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
+  UNION ALL
+  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
+    SELECT id_user
+    FROM user_details
+    GROUP BY id_user
+    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
+  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
+  UNION ALL
+  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
+  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
+  WHERE bank_name IS NOT NULL; `;
   return executeQuery(query);
 };
 
