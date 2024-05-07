@@ -41,6 +41,85 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /getUserSetting:
+    post:
+      summary: Search for a hotel
+      description: Search for a hotel with authentication
+      operationId: getUserSetting
+      x-swagger-router-controller: authController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Auth
+      parameters:
+        - in: body
+          name: loginData
+          description: loginData
+          required: true
+          schema:
+            $ref: '#/definitions/getUserSettingData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /updateuserData:
+    post:
+      summary: Search for a hotel
+      description: Search for a hotel with authentication
+      operationId: updateuserData
+      x-swagger-router-controller: authController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Auth
+      parameters:
+        - in: body
+          name: loginData
+          description: loginData
+          required: true
+          schema:
+            $ref: '#/definitions/updateuserDataData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /changePassword:
+    post:
+      summary: Search for a hotel
+      description: Search for a hotel with authentication
+      operationId: changePassword
+      x-swagger-router-controller: authController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Auth
+      parameters:
+        - in: body
+          name: loginData
+          description: loginData
+          required: true
+          schema:
+            $ref: '#/definitions/changePasswordData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /getDashboardCount:
     post:
       summary: getDashboardCount
@@ -452,6 +531,32 @@ definitions:
       username:
         type: string
       password:
+        type: string
+  
+  getUserSettingData:
+    type: object
+    properties:
+      username:
+        type: string
+  updateuserDataData:
+    type: object
+    properties:
+      username:
+        type: string
+      name:
+        type: string
+      avatar:
+        type: string
+      email:
+        type: string
+  changePasswordData:
+    type: object
+    properties:
+      username:
+        type: string
+      oldPassword:
+        type: string
+      newPassword:
         type: string
 
   DashboardCountData:
