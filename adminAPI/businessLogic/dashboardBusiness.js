@@ -545,7 +545,100 @@ module.exports.addDeals = async (req, res) => {
   let deals = { uuid, ...req.body };
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.insertDeal(deals);
+      let result = await dashboardServices.createDeal(deals);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+
+module.exports.updateDeals = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(req.body);
+      let result = await dashboardServices.updateDealById(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+
+module.exports.getDealsById = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.getDealById(req.body.id);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+
+module.exports.deleteDealsById = async (req, res) => {
+  const uuid = uuidv4();
+  let deals = { uuid, ...req.body };
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.deleteDealById(req.body.id);
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -607,7 +700,8 @@ module.exports.addCategories = async (req, res) => {
 module.exports.updateBrands = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.updateBrands(req.body);
+      console.log(req.body);
+      let result = await dashboardServices.updateBrandById(req.body);
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -634,11 +728,10 @@ module.exports.updateBrands = async (req, res) => {
   });
 };
 
-// Method to update deals
-module.exports.updateDeals = async (req, res) => {
+module.exports.deleteBrandsById = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.updateDeals(req.body);
+      let result = await dashboardServices.deleteBrandById(req.body.id);
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -664,6 +757,37 @@ module.exports.updateDeals = async (req, res) => {
     }
   });
 };
+
+module.exports.getBrandById = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.getBrandById(req.body.id);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+
 
 // Method to update categories
 module.exports.updateCategories = async (req, res) => {

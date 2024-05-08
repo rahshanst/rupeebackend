@@ -170,6 +170,52 @@ module.exports.addDeals = (req, res) => {
     });
 };
 
+module.exports.updateDeals = (req, res) => {
+  console.log({req});
+  dashboardBusiness.updateDeals(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+
+module.exports.getDealsById = (req, res) => {
+  dashboardBusiness.getDealsById(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+
+module.exports.deleteDealsById = (req, res) => {
+  dashboardBusiness.deleteDealsById(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+
 // Method to add categories
 module.exports.addCategories = (req, res) => {
   dashboardBusiness.addCategories(req.body)
@@ -188,7 +234,7 @@ module.exports.addCategories = (req, res) => {
 
 // Method to update brands
 module.exports.updateBrands = (req, res) => {
-  dashboardBusiness.updateBrands(req.body)
+  dashboardBusiness.updateBrands(req)
     .then((result) => {
       res.json(result);
     })
@@ -202,9 +248,23 @@ module.exports.updateBrands = (req, res) => {
     });
 };
 
-// Method to update deals
-module.exports.updateDeals = (req, res) => {
-  dashboardBusiness.updateDeals(req.body)
+module.exports.getBrandsById = (req, res) => {
+  dashboardBusiness.getBrandById(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+
+module.exports.deleteBrandsById = (req, res) => {
+  dashboardBusiness.deleteBrandsById(req)
     .then((result) => {
       res.json(result);
     })

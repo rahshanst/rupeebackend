@@ -88,11 +88,10 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 */
 
-const addCategory =  (req, res) => {
-  return new Promise( async(resolve, reject) => {
-    
+const addCategory = (req, res) => {
+  return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
-   
+
     adminServices.addCategory(incomingData).then((result) => {
       if (result) {
         resolve({
@@ -105,17 +104,75 @@ const addCategory =  (req, res) => {
         data: result,
         message: "Unable to insert record",
       });
-      
     });
+  });
+};
+const updateCategory = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    adminServices.updateCategory(incomingData).then((result) => {
+      if (result) {
+        resolve({
+          status: 200,
+          message: "Data Added Successfully",
+        });
+      }
+      resolve({
+        status: 400,
+        data: result,
+        message: "Unable to insert record",
+      });
+    });
+  });
+};
+const getCategoryById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.getCategoryById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data:result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
+    
+  });
+};
+const deleteCategoryById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.deleteCategoryById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data:result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
     
   });
 };
 
-const addOffer =  (req, res) => {
-  return new Promise( async(resolve, reject) => {
-    
+const addOffer = (req, res) => {
+  return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
-    
+
     adminServices.addOffer(incomingData).then((result) => {
       if (result) {
         resolve({
@@ -128,9 +185,7 @@ const addOffer =  (req, res) => {
         data: result,
         message: "Unable to insert record",
       });
-      
     });
-    
   });
 };
 
@@ -302,13 +357,16 @@ const DeductWalletPoints = (req, res) => {
 };
 */
 module.exports = {
- // getTrips,
- // getTripById,
- // addTrip,
+  // getTrips,
+  // getTripById,
+  // addTrip,
   addCategory,
+  updateCategory,
+  getCategoryById,
+  deleteCategoryById,
   addOffer,
- // GetPWAWalletPoints,
- // DeductWalletPoints,
- // RefundPoints,
- // getToken,
+  // GetPWAWalletPoints,
+  // DeductWalletPoints,
+  // RefundPoints,
+  // getToken,
 };

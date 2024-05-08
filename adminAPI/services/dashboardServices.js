@@ -68,23 +68,6 @@ module.exports.addBrands = (brandData) => {
 };
 
 // Function to update a brand by ID
-module.exports.updateBrandById = (brandId, brandData) => {
-  const { brand_name, category_name, bank_name, logo_image, coupon_code_bg_image } = brandData;
-  const query = `UPDATE brands 
-                 SET brand_name = '${brand_name}', 
-                     category_name = '${category_name}', 
-                     bank_name = '${bank_name}', 
-                     logo_image = '${logo_image}', 
-                     coupon_code_bg_image = '${coupon_code_bg_image}' 
-                 WHERE id = ${brandId}`;
-  return executeQuery(query);
-};
-
-// Function to delete a brand by ID
-module.exports.deleteBrandById = (brandId) => {
-  const query = `DELETE FROM brands WHERE id = ${brandId}`;
-  return executeQuery(query);
-};
 
 // Function to fetch all deals
 module.exports.getDeals = () => {
@@ -104,49 +87,148 @@ module.exports.getDetalsDetails = () => {
   return executeQuery(query);
 };
 
-// Function to insert a new deal
-module.exports.insertDeal = (dealData) => {
+module.exports.getDealsById = () => {
+  const query = `SELECT * FROM deals WHERE id = ${dealId}`;
+  return executeQuery(query);
+};
+// Create a new deal
+module.exports.createDeal = (dealData) => {
+  const {
+    uuid,
+    category,
+    brand,
+    category_name,
+    isActive,
+    cover_image,
+    deal_heading,
+    detail_page_image,
+    min_order_value,
+    max_discount_value,
+    offer_expiry_date,
+    how_to_redeem,
+    terms_and_conditions,
+    deal_price_rs,
+    deal_price_coins,
+    offer_redemption_url,
+    coupon_codes_csv,
+    createdBy,
+    updatedBy,
+    cover_img_file_name,
+    cover_img_file_data,
+    cover_img_file_type,
+    detail_img_file_name,
+    detail_img_file_data,
+    detail_img_file_type,
+    coupons_img_file_name,
+    coupons_img_file_data,
+    coupons_img_file_type,
+    no_of_coupons
+  } = dealData;
+
+  const query = `
+    INSERT INTO Deals (
+      uuid,
+      category,
+      brand,
+      category_name,
+      isActive,
+      cover_image,
+      deal_heading,
+      detail_page_image,
+      min_order_value,
+      max_discount_value,
+      offer_expiry_date,
+      how_to_redeem,
+      terms_and_conditions,
+      deal_price_rs,
+      deal_price_coins,
+      offer_redemption_url,
+      coupon_codes_csv,
+      createdBy,
+      updatedBy,
+      cover_img_file_name,
+      cover_img_file_data,
+      cover_img_file_type,
+      detail_img_file_name,
+      detail_img_file_data,
+      detail_img_file_type,
+      coupons_img_file_name,
+      coupons_img_file_data,
+      coupons_img_file_type,
+      no_of_coupons
+    )
+    VALUES (
+      '${uuid}',
+      '${category}',
+      '${brand}',
+      '${category_name}',
+      ${isActive},
+      '${cover_image}',
+      '${deal_heading}',
+      '${detail_page_image}',
+      ${min_order_value},
+      ${max_discount_value},
+      '${offer_expiry_date}',
+      '${how_to_redeem}',
+      '${terms_and_conditions}',
+      ${deal_price_rs},
+      ${deal_price_coins},
+      '${offer_redemption_url}',
+      '${coupon_codes_csv}',
+      '${createdBy}',
+      '${updatedBy}',
+      '${cover_img_file_name}',
+      '${cover_img_file_data}',
+      '${cover_img_file_type}',
+      '${detail_img_file_name}',
+      '${detail_img_file_data}',
+      '${detail_img_file_type}',
+      '${coupons_img_file_name}',
+      '${coupons_img_file_data}',
+      '${coupons_img_file_type}',
+      '${no_of_coupons}'
+    )`;
+
+  return executeQuery(query);
+};
+
+// Read all deals
+module.exports.getAllDeals = () => {
+  const query = `SELECT * FROM Deals`;
+  return executeQuery(query);
+};
+
+// Read a deal by ID
+module.exports.getDealById = (id) => {
+  const query = `SELECT * FROM Deals WHERE id = ${id}`;
+  return executeQuery(query);
+};
+
+// Update a deal by ID
+module.exports.updateDealById = (dealData) => {
   console.log({dealData});
-  const { uuid,deal_name, category_name,brand, cover_image, detail_page_image, min_order_value, max_discount_value, 
-          offer_expiry_date, how_to_redeem, terms_and_conditions, deal_price_rs, deal_price_coins, 
-          offer_redemption_url, coupon_codes_csv } = dealData;
-  const query = `INSERT INTO deals (uuid,deal_heading, category_name,brand, cover_image, detail_page_image, min_order_value, 
-                                    max_discount_value, offer_expiry_date, how_to_redeem, terms_and_conditions, 
-                                    deal_price_rs, deal_price_coins, offer_redemption_url, coupon_codes_csv) 
-                 VALUES ('${uuid}','${deal_name}', '${category_name}', '${brand}','${cover_image}', '${detail_page_image}', '${min_order_value}', 
-                         '${max_discount_value}', '${offer_expiry_date}', '${how_to_redeem}', '${terms_and_conditions}', 
-                         '${deal_price_rs}', '${deal_price_coins}', '${offer_redemption_url}', '${coupon_codes_csv}')`;
+  const { id, ...updatedData } = dealData;
+
+  console.log({updatedData});
+
+  const updateValues = Object.entries(updatedData)
+    .map(([key, value]) => `${key} = '${value}'`)
+    .join(', ');
+
+  const query = `
+    UPDATE Deals
+    SET ${updateValues}
+    WHERE id = ${id}`;
+
   return executeQuery(query);
 };
 
-// Function to update a deal by ID
-module.exports.updateDealById = (dealId, dealData) => {
-  const { deal_name, category_name, cover_image, detail_page_image, min_order_value, max_discount_value, 
-          offer_expiry_date, how_to_redeem, terms_and_conditions, deal_price_rs, deal_price_coins, 
-          offer_redemption_url, coupon_codes_csv } = dealData;
-  const query = `UPDATE deals 
-                 SET deal_name = '${deal_name}', 
-                     category_name = '${category_name}', 
-                     cover_image = '${cover_image}', 
-                     detail_page_image = '${detail_page_image}', 
-                     min_order_value = ${min_order_value}, 
-                     max_discount_value = ${max_discount_value}, 
-                     offer_expiry_date = '${offer_expiry_date}', 
-                     how_to_redeem = '${how_to_redeem}', 
-                     terms_and_conditions = '${terms_and_conditions}', 
-                     deal_price_rs = ${deal_price_rs}, 
-                     deal_price_coins = ${deal_price_coins}, 
-                     offer_redemption_url = '${offer_redemption_url}', 
-                     coupon_codes_csv = '${coupon_codes_csv}' 
-                 WHERE id = ${dealId}`;
+// Delete a deal by ID
+module.exports.deleteDealById = (id) => {
+  const query = `DELETE FROM Deals WHERE id = ${id}`;
   return executeQuery(query);
 };
 
-// Function to delete a deal by ID
-module.exports.deleteDealById = (dealId) => {
-  const query = `DELETE FROM deals WHERE id = ${dealId}`;
-  return executeQuery(query);
-};
 
 // Function to fetch all banners
 module.exports.getBanners = () => {
@@ -326,5 +408,94 @@ module.exports.getRecordBySectionName = (sectionName) => {
 
 module.exports.getAllCommercialConfig = (sectionName) => {
   const query = `SELECT * from [comercialConfig]`;
+  return executeQuery(query);
+};
+// Create a new brand
+module.exports.createBrand = (brandData) => {
+  const {
+    uuid,
+    brand_name,
+    category_name,
+    bank_name,
+    logo_image,
+    logo_file_name,
+    logo_file_data,
+    logo_file_type,
+    coupon_code_bg_image,
+    bg_file_name,
+    bg_file_data,
+    bg_file_type,
+    createdBy,
+    updatedBy
+  } = brandData;
+
+  const query = `
+    INSERT INTO Brands (
+      uuid,
+      brand_name,
+      category_name,
+      bank_name,
+      logo_image,
+      logo_file_name,
+      logo_file_data,
+      logo_file_type,
+      coupon_code_bg_image,
+      bg_file_name,
+      bg_file_data,
+      bg_file_type,
+      createdBy,
+      updatedBy
+    )
+    VALUES (
+      '${uuid}',
+      '${brand_name}',
+      '${category_name}',
+      '${bank_name}',
+      '${logo_image}',
+      '${logo_file_name}',
+      '${logo_file_data}',
+      '${logo_file_type}',
+      '${coupon_code_bg_image}',
+      '${bg_file_name}',
+      '${bg_file_data}',
+      '${bg_file_type}',
+      '${createdBy}',
+      '${updatedBy}'
+    )`;
+
+  return executeQuery(query);
+};
+
+// Read all brands
+module.exports.getAllBrands = () => {
+  const query = `SELECT * FROM Brands`;
+  return executeQuery(query);
+};
+
+// Read a brand by ID
+module.exports.getBrandById = (id) => {
+  const query = `SELECT * FROM Brands WHERE id = ${id}`;
+  return executeQuery(query);
+};
+
+// Update a brand by ID
+module.exports.updateBrandById = (brandData) => {
+  const { id, ...updatedData } = brandData;
+
+  const updateValues = Object.entries(updatedData)
+    .map(([key, value]) => `${key} = '${value}'`)
+    .join(', ');
+
+  const query = `
+    UPDATE Brands
+    SET ${updateValues}
+    WHERE id = ${id}`;
+
+  return executeQuery(query);
+};
+
+// Delete a brand by ID
+module.exports.deleteBrandById = (id) => {
+  const query = `DELETE FROM Brands WHERE id = ${id}`;
   return executeQuery(query);
 };
