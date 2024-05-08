@@ -53,6 +53,24 @@ const addCategory = (req, res) => {
   });
 };
 
+const updateCategory = (req, res) => {
+  adminBusiness.updateCategory(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const getCategoryById = (req, res) => {
+  adminBusiness.getCategoryById(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const deleteCategoryById = (req, res) => {
+  adminBusiness.deleteCategoryById(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
 const addOffer = (req, res) => {
 
   adminBusiness.addOffer(req).then((result) => {
@@ -66,6 +84,9 @@ module.exports = {
  // getTripById,
  // addTrip,
   addCategory,
+  updateCategory,
+  getCategoryById,
+  deleteCategoryById,
   addOffer,
  // GetPWAWalletPoints,
  // DeductWalletPoints,

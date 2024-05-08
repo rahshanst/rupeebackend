@@ -44,12 +44,16 @@ async function addCategory(incomingData) {
   console.log({ incomingData });
   const query = `
   INSERT INTO categories 
-  (category_name, category_icon, file_data,created_at, updated_at) 
+  (category_name, category_icon, file_data,file_name,file_type,creator,updater,created_at, updated_at) 
   VALUES 
   (
       '${incomingData.category_name}',
       '${incomingData.category_icon}',
       '${incomingData.file_data}',
+      '${incomingData.file_name}',
+      '${incomingData.file_type}',
+      '${incomingData.creator}',
+      '${incomingData.updater}',
       GETDATE(), 
       GETDATE()
   )
@@ -57,7 +61,32 @@ async function addCategory(incomingData) {
 
   return executeQuery(query);
 }
+async function updateCategory(incomingData) {
+  console.log({ incomingData });
+  const query = ` UPDATE categories SET
+  category_name='${incomingData.category_name}', 
+  category_icon = '${incomingData.category_icon}',
+  file_data = '${incomingData.file_data}',
+  file_name = '${incomingData.file_name}',
+  file_type = '${incomingData.file_type}',
+  updater = '${incomingData.updater}',
+  updated_at= GETDATE()  where id= '${incomingData.id}'`;
 
+  return executeQuery(query);
+}
+async function getCategoryById(incomingData) {
+  console.log({ incomingData });
+  const query = ` select * from categories where id= '${incomingData.id}'`;
+
+  return executeQuery(query);
+}
+
+async function deleteCategoryById(incomingData) {
+  console.log({ incomingData });
+  const query = ` delete from categories where id= '${incomingData.id}'`;
+
+  return executeQuery(query);
+}
 async function addOffer(incomingData) {
   console.log({ incomingData });
   const query = `
@@ -93,6 +122,9 @@ module.exports = {
   getTrip,
   addTrip,
   addCategory,
+  updateCategory,
+  getCategoryById,
+  deleteCategoryById,
   addOffer
   
 };

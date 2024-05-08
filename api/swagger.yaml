@@ -87,11 +87,11 @@ paths:
           required: true
           description: Bearer token for authentication
         - in: body
-          name: Get initiateData
-          description:  initiateData
+          name: Get categoryData
+          description:  categoryData
           required: true
           schema:
-            $ref: "#/definitions/initiateData"
+            $ref: "#/definitions/categoryData"
       responses:
         default:
           description: Error
@@ -99,6 +99,100 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   
 
+  /updateCategory:
+    post:
+      summary: category adding
+      description: ruppee store updateCategory
+      operationId: updateCategory
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get categoryData
+          description:  categoryData
+          required: true
+          schema:
+            $ref: "#/definitions/categoryData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getCategoryById:
+    post:
+      summary: category adding
+      description: ruppee store updateCategory
+      operationId: getCategoryById
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get categoryData
+          description:  categoryData
+          required: true
+          schema:
+            $ref: "#/definitions/getCategoryData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /deleteCategoryById:
+    post:
+      summary: category adding
+      description: ruppee store updateCategory
+      operationId: deleteCategoryById
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get categoryData
+          description:  categoryData
+          required: true
+          schema:
+            $ref: "#/definitions/getCategoryData"
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  
   /getCategories:
     get:
       summary: Get all categories
@@ -1224,6 +1318,42 @@ definitions:
       payableAmount: "1000"
       walletAmount: "100"
 
+  categoryData:
+    type: object
+    properties:
+      category_name:
+        type: string
+      id:
+        type: string
+      category_icon:
+        type: string
+      file_data:
+        type: string
+      file_name:
+        type: string
+      file_type:
+        type: string
+      creator:
+        type: string
+      updater:
+        type: string
+    example:
+      id: "1"
+      category_name: "category_name"
+      category_icon: "category_icon"
+      file_data: "file_data"
+      file_name: "file_name"
+      file_type: "file_type"
+      creator: "creator"
+      updater: "updater"
+  
+  getCategoryData:
+    type: object
+    properties:
+      id:
+        type: string
+    example:
+      id: "1"
   
   checkPaymentStatus:
     type: object
