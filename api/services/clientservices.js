@@ -69,13 +69,13 @@ async function getCategories() {
 }
 
 async function getOffers() {
-  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, offer_banner_lg, offer_category, offer_type, down_color, up_color FROM offers";
+  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, product_pic, offer_category, offer_type, down_color, up_color FROM offers";
 
   return executeQuery(query);
 }
 
 async function getOfferDetails(incomingData) {
-  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_banner_lg, offer_banner_xl, offer_category, offer_type, tnc, up_color, down_color FROM offers WHERE id='${incomingData.offer_id}'`;
+  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, product_pic, offer_category, offer_type, tnc, up_color, down_color FROM offers WHERE id='${incomingData.offer_id}'`;
 
   return executeQuery(query);
 }
@@ -111,13 +111,13 @@ async function getCouponcode(incomingData) {
   //   GETDATE(),
   //   '${incomingData.user_id}'
   //  )`;
-  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_category, offer_type, tnc, up_color, down_color FROM offers WHERE id='${incomingData}'`;
+  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_category, offer_type, tnc, up_color, down_color, offer_url FROM offers WHERE id='${incomingData}'`;
 
   return executeQuery(query);
 }
 
 async function getMyOffers(incomingData) {
-  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, useroffers.redeem_code, useroffers.redeem_status FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
+  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, offers.up_color, offers.down_color, offers.offer_url, useroffers.redeem_code, useroffers.redeem_status FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
 
   return executeQuery(query);
 }
