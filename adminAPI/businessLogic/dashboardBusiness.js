@@ -512,7 +512,7 @@ module.exports.addBrands = async (req, res) => {
   let datas = { uuid, ...req.body };
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.addBrands(datas);
+      let result = await dashboardServices.createBrand(datas);
       logger.info([result]);
       if (result.error) {
         resolve({
