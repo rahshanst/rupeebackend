@@ -1,28 +1,29 @@
 const dashboardServices = require("../services/dashboardServices");
+const adminServices = require("../../api/services/adminservices");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("../../utils/logger");
-const { uploadFile, downloadFile } = require("../../utils/azureBlobFile");
 const dayjs = require("dayjs");
+const { uploadFilesToBlob } = require("../../utils/azureBlobFile");
 
 module.exports.getDashboardCount = async (req, res) => {
   return new Promise(async (resolve, reject) => {
-    const { bankName,ticketModule } = req.body;
+    const { bankName, ticketModule } = req.body;
     let condition;
     try {
-    //   if (bankName === "" && ticketModule === "") {
-    //     // No condition needed
-    //     condition = '';
-    // } else if (bankName !== "" && ticketModule === "") {
-    //     // Only bank_name is specified
-    //     condition = ` bank_name = '${bankName}'`;
-    // } else if (bankName === "" && ticketModule !== "") {
-    //     // Only ticketModule is specified
-    //     condition = ` ticket_module = '${ticketModule}'`;
-    // } else {
-    //     // Both bank_name and ticketModule are specified
-    //     condition = ` bank_name = '${bankName}' AND ticket_module = '${ticketModule}'`;
-    // }
+      //   if (bankName === "" && ticketModule === "") {
+      //     // No condition needed
+      //     condition = '';
+      // } else if (bankName !== "" && ticketModule === "") {
+      //     // Only bank_name is specified
+      //     condition = ` bank_name = '${bankName}'`;
+      // } else if (bankName === "" && ticketModule !== "") {
+      //     // Only ticketModule is specified
+      //     condition = ` ticket_module = '${ticketModule}'`;
+      // } else {
+      //     // Both bank_name and ticketModule are specified
+      //     condition = ` bank_name = '${bankName}' AND ticket_module = '${ticketModule}'`;
+      // }
       const dashboardData = await dashboardServices.getDashboardCount(
         condition
       );
@@ -81,7 +82,7 @@ module.exports.getAdminConstantValue = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
       let bankNames = await dashboardServices.getBankNames();
-      logger.info([bankNames.recordset,]);
+      logger.info([bankNames.recordset]);
       resolve({
         status: "200",
         data: {
@@ -110,7 +111,7 @@ module.exports.addBankConfig = async (req, res) => {
         resolve({
           status: "200",
           data: {
-            result
+            result,
           },
           message: "Success",
           updated: true,
@@ -121,7 +122,7 @@ module.exports.addBankConfig = async (req, res) => {
         resolve({
           status: "200",
           data: {
-            result
+            result,
           },
           message: "Success",
         });
@@ -146,7 +147,7 @@ module.exports.updateBankConfig = async (req, res) => {
       resolve({
         status: "200",
         data: {
-          result
+          result,
         },
         message: "Success",
       });
@@ -166,17 +167,20 @@ module.exports.getBankConfig = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
       let bankData = await dashboardServices.getBankConfig(req.body);
-      let result = await dashboardServices.getComercialConfigBySectionName(req.body);
+      let result = await dashboardServices.getComercialConfigBySectionName(
+        req.body
+      );
       let bannerList = await dashboardServices.getBannerFile(req.body);
       const imgList = bannerList?.recordset?.map((item) => ({
-        id:  `1-img-${item.id}`,
+        id: `1-img-${item.id}`,
         img: item.file_data,
-        name: item.file_name
+        name: item.file_name,
       }));
-      logger.info({bankData, ...result.recordset[0] });
+      logger.info({ bankData, ...result.recordset[0] });
       resolve({
         status: "200",
-        data: {imgList, ...bankData.recordset[0],...result.recordset[0] } || [],
+        data:
+          { imgList, ...bankData.recordset[0], ...result.recordset[0] } || [],
         message: "Success",
       });
     } catch (error) {
@@ -194,22 +198,22 @@ module.exports.getBankConfig = async (req, res) => {
 module.exports.addBannerFile = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { file_data,file_name,ticketModule,file_type } = req.body
-      const timestamp = dayjs().format('DDMMYYYYHmmss'); // Get current timestamp
+      const { file_data, file_name, ticketModule, file_type } = req.body;
+      const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
 
-      console.log({file_data,file_name,ticketModule});
+      console.log({ file_data, file_name, ticketModule });
       // Format the data with timestamp
-      const buffer = Buffer.from(file_data, 'base64');
+      const buffer = Buffer.from(file_data, "base64");
 
-      const fileName = file_name.split('.')
-      console.log({fileName});
+      const fileName = file_name.split(".");
+      console.log({ fileName });
 
-      console.log({buffer});
+      console.log({ buffer });
 
       // const fileResult = await uploadFile(buffer, `${fileName[0]}_${timestamp}.${fileName[1]}`, ticketModule, file_type)
       // console.log({ fileResult });
       let result = await dashboardServices.addBannerFile(req.body);
-      
+
       // logger.info([result]);
       resolve({
         status: "200",
@@ -229,7 +233,7 @@ module.exports.addBannerFile = async (req, res) => {
 };
 
 module.exports.deleteBannerFile = async (req, res) => {
-  console.log("aaa",req.body);
+  console.log("aaa", req.body);
   return new Promise(async (resolve, reject) => {
     try {
       let result = await dashboardServices.deleteBannerFile(req.body);
@@ -273,23 +277,25 @@ module.exports.getBannerFile = async (req, res) => {
   });
 };
 
-
 module.exports.addComercialConfig = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(req.body); 
+      console.log(req.body);
 
-      const isRecordExist = await dashboardServices.getRecordBySectionName(req.body.sectionName)
-      console.log({isRecordExist});
-      if(isRecordExist.recordset.length > 0){
-        const updatedRecord = await dashboardServices.updateComercialConfig(req.body)
+      const isRecordExist = await dashboardServices.getRecordBySectionName(
+        req.body.sectionName
+      );
+      console.log({ isRecordExist });
+      if (isRecordExist.recordset.length > 0) {
+        const updatedRecord = await dashboardServices.updateComercialConfig(
+          req.body
+        );
         resolve({
           status: "200",
           data: updatedRecord.recordset || [],
           message: "Record Updated",
         });
-      }else{
-
+      } else {
         let result = await dashboardServices.addComercialConfig(req.body);
         logger.info([result]);
         resolve({
@@ -383,7 +389,6 @@ module.exports.getAllCommercialConfig = async (req, res) => {
     }
   });
 };
-
 
 module.exports.getBrands = async (req, res) => {
   return new Promise(async (resolve, reject) => {
@@ -539,13 +544,67 @@ module.exports.addBrands = async (req, res) => {
   });
 };
 
+let sizeImage = {
+  offer_banner_sm: "banner_sm",
+  offer_banner_xl: "banner_xl",
+  offer_banner_lg: "banner_lg",
+};
+
 // Method to add deals
 module.exports.addDeals = async (req, res) => {
   const uuid = uuidv4();
-  let deals = { uuid, ...req.body };
+  let ticketModule = "",
+    fileResultXl = "",
+    fileResultLg = "",
+    fileResultSm = "";
+  const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.createDeal(deals);
+      const { offer_banner_sm, offer_banner_lg, offer_banner_xl,...rest } = req.files;
+
+      // if (offer_banner_sm) {
+      //   ticketModule = sizeImage["offer_banner_sm"];
+      //   fileResultSm = await uploadFilesToBlob({
+      //     ...req.body,
+      //     ...req.files,
+      //     timestamp,
+      //     folder: "Deals",
+      //     file_data:offer_banner_sm,
+      //     ticketModule,
+      //   });
+      // }
+      // if (offer_banner_lg) {
+      //   ticketModule = sizeImage["offer_banner_lg"];
+      //   fileResultLg = await uploadFilesToBlob({
+      //     ...req.body,
+      //     ...req.files,
+      //     timestamp,
+      //     timestamp,
+      //     folder: "Deals",
+      //     file_data:offer_banner_lg,
+      //     ticketModule,
+      //   });
+      // }
+      // if (offer_banner_xl) {
+      //   ticketModule = sizeImage["offer_banner_xl"];
+      //   fileResultXl = await uploadFilesToBlob({
+      //     ...req.body,
+      //     ...req.files,
+      //     timestamp, folder: "Deals",
+      //     file_data:offer_banner_xl,
+      //     folder: "Deals",
+      //     ticketModule,
+      //   });
+      // }
+      // console.log(
+      //   fileResultLg[0]?.url,fileResultSm?.url,fileResultXl?.url
+      // );
+      let result = await adminServices.addOffer({
+        ...req.body,
+        // offer_banner_sm: fileResultSm[0]?.url,
+        // offer_banner_lg: fileResultLg[0]?.url,
+        // offer_banner_xl: fileResultXl[0]?.url,
+      });
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -787,7 +846,6 @@ module.exports.getBrandById = async (req, res) => {
     }
   });
 };
-
 
 // Method to update categories
 module.exports.updateCategories = async (req, res) => {

@@ -91,21 +91,35 @@ async function addOffer(incomingData) {
   console.log({ incomingData });
   const query = `
   INSERT INTO offers 
-  (brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, offer_category, offer_type, tnc, no_of_coupons, is_active, created_at, updated_at) 
+  (brand_name, brand_description, product_name, original_price,
+    offer_validity, offer_percentage, min_order,brand_logo,product_pic,
+    offer_category, offer_type, tnc, no_of_coupons,
+    is_active,
+    up_color,
+    offer_url,
+    down_color,
+    coupon_file,
+     created_at, updated_at)
   VALUES 
   (
       '${incomingData.brand_name}',
       '${incomingData.brand_description}',
       '${incomingData.product_name}',
       '${incomingData.original_price}',
-       GETDATE(),
+      '${incomingData.offer_validity}',
       '${incomingData.offer_percentage}',
       '${incomingData.min_order}',
+      '${incomingData.brand_logo}',
+      '${incomingData.product_pic}',
       '${incomingData.offer_category}',
       '${incomingData.offer_type}',
       '${incomingData.tnc}',
       '${incomingData.no_of_coupons}',
       '${incomingData.is_active}',
+      '${incomingData.offer_url}',
+      '${incomingData.up_color}',
+      '${incomingData.down_color}',
+      '${incomingData.coupon_file}',
       GETDATE(), 
       GETDATE()
   )

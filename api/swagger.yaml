@@ -74,7 +74,7 @@ paths:
       operationId: addCategory
       x-swagger-router-controller: adminController
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       tags:
@@ -86,12 +86,24 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
-        - in: body
-          name: Get categoryData
-          description:  categoryData
-          required: true
-          schema:
-            $ref: "#/definitions/categoryData"
+        - name: category_name
+          in: formData
+          required: true  
+          type: string
+        - name: file_name
+          in: formData
+          required: true  
+          type: string
+        - name: file_data
+          in: formData
+          type: file
+        - name: file_type
+          in: formData
+          type: string
+        - name: creator
+          in: formData
+          required: true  
+          type: string
       responses:
         default:
           description: Error
@@ -106,7 +118,7 @@ paths:
       operationId: updateCategory
       x-swagger-router-controller: adminController
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       tags:
@@ -118,12 +130,28 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
-        - in: body
-          name: Get categoryData
-          description:  categoryData
-          required: true
-          schema:
-            $ref: "#/definitions/categoryData"
+        - name: id
+          in: formData
+          required: true  
+          type: string
+        - name: category_name
+          in: formData
+          required: true  
+          type: string
+        - name: file_name
+          in: formData
+          required: true  
+          type: string
+        - name: file_data
+          in: formData
+          type: file
+        - name: file_type
+          in: formData
+          type: string
+        - name: updator
+          in: formData
+          required: true  
+          type: string
       responses:
         default:
           description: Error

@@ -5,6 +5,8 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const { uploadFile } = require("../../utils/azureBlobFile");
 //const multer  = require('multer')
+const { uploadFilesToBlob } = require("../../utils/azureBlobFile");
+const dayjs = require("dayjs");
 
 /*const {
   GET_PWA_REWARDS,
@@ -91,39 +93,62 @@ var upload = multer({ storage: storage })
 const addCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
-
-    adminServices.addCategory(incomingData).then((result) => {
-      if (result) {
-        resolve({
-          status: 200,
-          message: "Data Added Successfully",
-        });
-      }
-      resolve({
-        status: 400,
-        data: result,
-        message: "Unable to insert record",
-      });
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const folder = "category";
+    const fileResult = await uploadFilesToBlob({
+      ...req.body,
+      ...req.files,
+      timestamp,
+      folder,
     });
+    console.log({ file_data: fileResult?.url || "" });
+    adminServices
+      .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            fileResult: fileResult || [],
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
   });
 };
 const updateCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
-
-    adminServices.updateCategory(incomingData).then((result) => {
-      if (result) {
-        resolve({
-          status: 200,
-          message: "Data Added Successfully",
-        });
-      }
-      resolve({
-        status: 400,
-        data: result,
-        message: "Unable to insert record",
-      });
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const folder = "category";
+    const fileResult = await uploadFilesToBlob({
+      ...req.body,
+      ...req.files,
+      timestamp,
+      folder,
     });
+    console.log({ file_data: fileResult?.url || "" });
+    adminServices
+      .updateCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            fileResult: fileResult || [],
+
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
   });
 };
 const getCategoryById = (req, res) => {
@@ -135,7 +160,7 @@ const getCategoryById = (req, res) => {
     if (result) {
       resolve({
         status: 200,
-        data:result?.recordsets,
+        data: result?.recordsets,
         message: " Success",
       });
     } else {
@@ -144,7 +169,6 @@ const getCategoryById = (req, res) => {
         message: "No data found",
       });
     }
-    
   });
 };
 const deleteCategoryById = (req, res) => {
@@ -156,7 +180,7 @@ const deleteCategoryById = (req, res) => {
     if (result) {
       resolve({
         status: 200,
-        data:result?.recordsets,
+        data: result?.recordsets,
         message: " Success",
       });
     } else {
@@ -165,27 +189,77 @@ const deleteCategoryById = (req, res) => {
         message: "No data found",
       });
     }
-    
   });
 };
 
 const addOffer = (req, res) => {
   return new Promise(async (resolve, reject) => {
-    let incomingData = { ...req.body };
-
-    adminServices.addOffer(incomingData).then((result) => {
-      if (result) {
-        resolve({
-          status: 200,
-          message: "Data Added Successfully",
-        });
-      }
-      resolve({
-        status: 400,
-        data: result,
-        message: "Unable to insert record",
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    let ticketModule = "",
+      brand_logoFile = "",
+      product_picFile = "",
+      couponfileFile = "";
+      const { brand_logo, product_pic,coupon_file } = req.files;
+      console.log({coupon_file});
+    if (brand_logo) {
+      ticketModule = 'brand_logo';
+      brand_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder: "Deals",
+        file_data: brand_logo,
+        ticketModule,
       });
-    });
+    }
+    if (product_pic) {
+      ticketModule = 'product_pic';
+      product_picFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: product_pic,
+        ticketModule,
+      });
+    }
+
+    if (coupon_file) {
+      ticketModule = 'coupon_file';
+      couponfileFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "couponfile",
+        file_data: coupon_file,
+        ticketModule,
+      });
+    }
+    adminServices
+      .addOffer({
+        ...req.body,
+        brand_logo: brand_logoFile[0]?.url,
+        product_pic: product_picFile[0]?.url,
+        coupon_file: couponfileFile[0]?.url,
+      })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            brand_logo: brand_logoFile[0]?.url,
+            product_pic: product_picFile[0]?.url,
+            coupon_file: couponfileFile[0]?.url,
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
   });
 };
 

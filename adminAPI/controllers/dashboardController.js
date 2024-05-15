@@ -1,4 +1,5 @@
 const dashboardBusiness = require("../businessLogic/dashboardBusiness");
+const adminBusiness = require("../../api/businesslogic/adminBusiness");
 
 module.exports.getDashboardCount = (req, res) => {
   dashboardBusiness.getDashboardCount(req).then((result) => {
@@ -156,7 +157,7 @@ module.exports.addBrands = (req, res) => {
 
 // Method to add deals
 module.exports.addDeals = (req, res) => {
-  dashboardBusiness.addDeals(req)
+  adminBusiness.addOffer(req)
     .then((result) => {
       res.json(result);
     })

@@ -384,7 +384,7 @@ paths:
       operationId: addDeals
       x-swagger-router-controller: dashboardController
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       tags:
@@ -396,12 +396,79 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
-        - in: body
-          name: addDeals
-          description: addDeals
+        - name: brand_name
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/addDealsData'
+          type: string
+        - name: brand_description
+          in: formData
+          required: true
+          type: string
+        - name: product_name
+          in: formData
+          required: true
+          type: string
+        - name: original_price
+          in: formData
+          required: true
+          type: number
+        - name: offer_validity
+          in: formData
+          required: true
+          type: string
+        - name: offer_percentage
+          in: formData
+          required: true
+          type: number
+        - name: min_order
+          in: formData
+          required: true
+          type: number
+        - name: brand_logo
+          in: formData
+          type: file
+        - name: product_pic
+          in: formData
+          type: file
+        - name: coupon_file
+          in: formData
+          type: file
+        - name: offer_category
+          in: formData
+          required: true
+          type: string
+        - name: offer_type
+          in: formData
+          required: true
+          type: string
+        - name: up_color
+          in: formData
+          required: true
+          type: string
+        - name: down_color
+          in: formData
+          required: true
+          type: string
+        - name: offer_url
+          in: formData
+          required: true
+          type: string
+        - name: tnc
+          in: formData
+          required: true
+          type: string
+        - name: no_of_coupons
+          in: formData
+          required: true
+          type: integer
+        - name: is_active
+          in: formData
+          required: true
+          type: integer
+        - name: creator
+          in: formData
+          required: true
+          type: string
       responses:
         200:
           description: Successful operation
@@ -415,7 +482,7 @@ paths:
       operationId: updateDeals
       x-swagger-router-controller: dashboardController
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       tags:
@@ -427,12 +494,70 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
-        - in: body
-          name: addDeals
-          description: addDeals
+        - name: id
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/addDealsData'
+          type: string
+        - name: brand_name
+          in: formData
+          required: true
+          type: string
+        - name: brand_description
+          in: formData
+          required: true
+          type: string
+        - name: product_name
+          in: formData
+          required: true
+          type: string
+        - name: original_price
+          in: formData
+          required: true
+          type: number
+        - name: offer_validity
+          in: formData
+          required: true
+          type: string
+        - name: offer_percentage
+          in: formData
+          required: true
+          type: number
+        - name: min_order
+          in: formData
+          required: true
+          type: number
+        - name: offer_banner_sm
+          in: formData
+          type: file
+        - name: offer_banner_lg
+          in: formData
+          type: file
+        - name: offer_banner_xl
+          in: formData
+          type: file
+        - name: offer_category
+          in: formData
+          required: true
+          type: string
+        - name: offer_type
+          in: formData
+          required: true
+          type: string
+        - name: tnc
+          in: formData
+          required: true
+          type: string
+        - name: no_of_coupons
+          in: formData
+          required: true
+          type: integer
+        - name: is_active
+          in: formData
+          type: integer
+        - name: updator
+          in: formData
+          required: true
+          type: string
       responses:
         200:
           description: Successful operation
