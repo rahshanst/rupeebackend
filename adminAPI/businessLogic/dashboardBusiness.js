@@ -481,10 +481,40 @@ module.exports.getCategories = async (req, res) => {
     }
   });
 };
+
+module.exports.getTransaction = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.getTransactionDetails(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
 module.exports.getDetalsDetails = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.getDetalsDetails(req.body);
+      let result = await dashboardServices.getAllDeals(req.body);
       logger.info([result]);
       if (result.error) {
         resolve({
