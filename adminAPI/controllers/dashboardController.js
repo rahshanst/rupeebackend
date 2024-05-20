@@ -123,6 +123,21 @@ module.exports.getCategoryDetails = (req, res) => {
       });
     });
 };
+module.exports.getTransactionDetails = (req, res) => {
+  dashboardBusiness.getTransaction(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+ 
 
 module.exports.getDetalsDetails = (req, res) => {
   dashboardBusiness.getDetalsDetails(req)

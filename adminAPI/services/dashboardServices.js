@@ -78,12 +78,25 @@ module.exports.getDeals = () => {
 // Similarly, you can create insert, update, delete functions for deals, categories, and banners
 
   // Function to fetch all deals
-module.exports.getCategoryDetails = () => {
-  const query = `SELECT * FROM categories`;
+module.exports.getCategoryDetails = (filterp) => {
+  const query = `SELECT * FROM categories 
+  ORDER BY createdAt DESC
+  OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
+  FETCH NEXT ${filter.page_size} ROWS ONLY`;
   return executeQuery(query);
 };
-module.exports.getDetalsDetails = () => {
-  const query = `SELECT * FROM deals`;
+module.exports.getTransactionDetails = (filter) => {
+  const query = `SELECT * FROM useroffers 
+  ORDER BY created_at DESC
+  OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
+  FETCH NEXT ${filter.page_size} ROWS ONLY`;
+  return executeQuery(query);
+};
+module.exports.getDetalsDetails = (filter) => {
+  const query = `SELECT * FROM deals
+  ORDER BY createdAt DESC
+  OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
+  FETCH NEXT ${filter.page_size} ROWS ONLY`;
   return executeQuery(query);
 };
 
@@ -193,8 +206,27 @@ module.exports.createDeal = (dealData) => {
 };
 
 // Read all deals
-module.exports.getAllDeals = () => {
-  const query = `SELECT * FROM Deals`;
+module.exports.getAllDeals = (filter) => {
+  const query = `SELECT o.*, c.category_name
+  FROM offers o
+  LEFT JOIN categories c ON o.offer_category = c.id
+  WHERE 1 = 1
+  ${filter.brand_name ? `AND o.brand_name = '${filter.brand_name}'` : ''}
+  ${filter.offer_category ? `AND o.offer_category = ${filter.offer_category}` : ''}
+  ${filter.offer_validity_start ? `AND o.offer_validity >= '${filter.offer_validity_start}'` : ''}
+  ${filter.offer_validity_end ? `AND o.offer_validity <= '${filter.offer_validity_end}'` : ''}
+  ${filter.original_price_min ? `AND CAST(o.original_price AS DECIMAL) >= ${filter.original_price_min}` : ''}
+  ${filter.original_price_max ? `AND CAST(o.original_price AS DECIMAL) <= ${filter.original_price_max}` : ''}
+  ${filter.offer_percentage_min ? `AND o.offer_percentage >= ${filter.offer_percentage_min}` : ''}
+  ${filter.offer_percentage_max ? `AND o.offer_percentage <= ${filter.offer_percentage_max}` : ''}
+  ${filter.min_order_min ? `AND o.min_order >= ${filter.min_order_min}` : ''}
+  ${filter.min_order_max ? `AND o.min_order <= ${filter.min_order_max}` : ''}
+  ${filter.coupon_counter_min ? `AND o.coupon_counter >= ${filter.coupon_counter_min}` : ''}
+  ${filter.coupon_counter_max ? `AND o.coupon_counter <= ${filter.coupon_counter_max}` : ''}
+  ${filter.is_active !== undefined ? `AND o.is_active = ${filter.is_active}` : ''}
+  ORDER BY o.created_at DESC
+  OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
+  FETCH NEXT ${filter.page_size} ROWS ONLY`;
   return executeQuery(query);
 };
 

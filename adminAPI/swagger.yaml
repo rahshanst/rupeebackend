@@ -181,7 +181,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
   /getCategoryDetails:
-    get:
+    post:
       operationId: getCategoryDetails
       x-swagger-router-controller: dashboardController
       consumes:
@@ -197,6 +197,43 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
+        - in: body
+          name: getData
+          description: getData
+          required: true
+          schema:
+            $ref: '#/definitions/getData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /getTransactionDetails:
+    post:
+      operationId: getTransactionDetails
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: getData
+          description: getData
+          required: true
+          schema:
+            $ref: '#/definitions/getData'
       responses:
         200:
           description: Successful operation
@@ -206,7 +243,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   
   /getBannerDetails:
-    get:
+    post:
       operationId: getBannerDetails
       x-swagger-router-controller: dashboardController
       consumes:
@@ -222,6 +259,12 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
+        - in: body
+          name: getData
+          description: getData
+          required: true
+          schema:
+            $ref: '#/definitions/getData'
       responses:
         200:
           description: Successful operation
@@ -231,7 +274,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   
   /getBrandDetails:
-    get:
+    post:
       operationId: getBrandDetails
       x-swagger-router-controller: dashboardController
       consumes:
@@ -247,6 +290,12 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
+        - in: body
+          name: getData
+          description: getData
+          required: true
+          schema:
+            $ref: '#/definitions/getData'
       responses:
         200:
           description: Successful operation
@@ -680,7 +729,7 @@ paths:
   
 
   /getDealsDetails:
-    get:
+    post:
       operationId: getDetalsDetails
       x-swagger-router-controller: dashboardController
       consumes:
@@ -696,6 +745,12 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
+        - in: body
+          name: getData
+          description: getData
+          required: true
+          schema:
+            $ref: "#/definitions/DealFilter"
       responses:
         200:
           description: Successful operation
@@ -918,6 +973,67 @@ definitions:
       offer_amnt_end:
         type: string
         example: "100"
+      page_number:
+        type: string
+        example: "1"
+      page_size:
+        type: string
+        example: "10"
+
+  DealFilter:
+    type: object
+    properties:
+      page_number:
+        type: string
+        example: "1"
+      page_size:
+        type: string
+        example: "10"
+      brand_name:
+        type: string
+        example: "BrandX"
+      offer_category:
+        type: string
+        example: "2"
+      offer_validity_start:
+        type: string
+        format: date
+        example: "2024-05-01"
+      offer_validity_end:
+        type: string
+        format: date
+        example: "2024-05-31"
+      original_price_min:
+        type: string
+        example: "10.00"
+      original_price_max:
+        type: string
+        example: "100.00"
+      offer_percentage_min:
+        type: string
+        example: "10"
+      offer_percentage_max:
+        type: string
+        example: "50"
+      min_order_min:
+        type: string
+        example: "1"
+      min_order_max:
+        type: string
+        example: "10"
+      coupon_counter_min:
+        type: string
+        example: "1"
+      coupon_counter_max:
+        type: string
+        example: "100"
+      is_active:
+        type: string
+        example: "1"
+
+  getData:
+    type: object
+    properties:
       page_number:
         type: string
         example: "1"
