@@ -184,6 +184,8 @@ paths:
           schema:
             $ref: "#/definitions/getCategoryData"
       responses:
+        200:
+          description: Successful operation
         default:
           description: Error
           schema:
@@ -215,6 +217,8 @@ paths:
           schema:
             $ref: "#/definitions/getCategoryData"
       responses:
+        200:
+          description: Successful operation
         default:
           description: Error
           schema:
