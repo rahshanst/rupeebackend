@@ -746,8 +746,8 @@ paths:
           required: true
           description: Bearer token for authentication
         - in: body
-          name: getData
-          description: getData
+          name: DealFilter
+          description: DealFilter
           required: true
           schema:
             $ref: "#/definitions/DealFilter"
@@ -997,11 +997,9 @@ definitions:
         example: "2"
       offer_validity_start:
         type: string
-        format: date
         example: "2024-05-01"
       offer_validity_end:
         type: string
-        format: date
         example: "2024-05-31"
       original_price_min:
         type: string

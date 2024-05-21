@@ -80,7 +80,7 @@ module.exports.getDeals = () => {
   // Function to fetch all deals
 module.exports.getCategoryDetails = (filter) => {
   const query = `SELECT * FROM categories 
-  ORDER BY createdAt DESC
+  ORDER BY created_at DESC
   OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
   FETCH NEXT ${filter.page_size} ROWS ONLY`;
   return executeQuery(query);
@@ -94,7 +94,7 @@ module.exports.getTransactionDetails = (filter) => {
 };
 module.exports.getDetalsDetails = (filter) => {
   const query = `SELECT * FROM deals
-  ORDER BY createdAt DESC
+  ORDER BY created_at DESC
   OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
   FETCH NEXT ${filter.page_size} ROWS ONLY`;
   return executeQuery(query);
@@ -223,7 +223,7 @@ module.exports.getAllDeals = (filter) => {
   ${filter.min_order_max ? `AND o.min_order <= ${filter.min_order_max}` : ''}
   ${filter.coupon_counter_min ? `AND o.coupon_counter >= ${filter.coupon_counter_min}` : ''}
   ${filter.coupon_counter_max ? `AND o.coupon_counter <= ${filter.coupon_counter_max}` : ''}
-  ${filter.is_active !== undefined ? `AND o.is_active = ${filter.is_active}` : ''}
+  ${filter.is_active  ? `AND o.is_active = ${filter.is_active}` : ''}
   ORDER BY o.created_at DESC
   OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
   FETCH NEXT ${filter.page_size} ROWS ONLY`;
