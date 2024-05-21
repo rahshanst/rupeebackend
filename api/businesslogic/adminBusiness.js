@@ -7,6 +7,7 @@ const { uploadFile } = require("../../utils/azureBlobFile");
 //const multer  = require('multer')
 const { uploadFilesToBlob } = require("../../utils/azureBlobFile");
 const dayjs = require("dayjs");
+const logger = require("../../utils/logger");
 
 /*const {
   GET_PWA_REWARDS,
@@ -102,6 +103,7 @@ const addCategory = (req, res) => {
       folder,
     });
     console.log({ file_data: fileResult?.url || "" });
+    logger.info(`Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`);
     adminServices
       .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
       .then((result) => {
@@ -199,7 +201,7 @@ const addOffer = (req, res) => {
       brand_logoFile = "",
       product_picFile = "",
       couponfileFile = "";
-      const { brand_logo, product_pic,coupon_file } = req.files;
+    const { brand_logo, product_pic, coupon_file } = req.files;
       console.log({coupon_file});
     if (brand_logo) {
       ticketModule = 'brand_logo';
@@ -237,6 +239,13 @@ const addOffer = (req, res) => {
         ticketModule,
       });
     }
+    logger.info(`Executing query ${{
+      ...req.body,
+      brand_logo: brand_logoFile[0]?.url,
+      product_pic: product_picFile[0]?.url,
+      coupon_file: couponfileFile[0]?.url,
+    }}`);
+
     adminServices
       .addOffer({
         ...req.body,
