@@ -78,7 +78,7 @@ module.exports.getDeals = () => {
 // Similarly, you can create insert, update, delete functions for deals, categories, and banners
 
   // Function to fetch all deals
-module.exports.getCategoryDetails = (filterp) => {
+module.exports.getCategoryDetails = (filter) => {
   const query = `SELECT * FROM categories 
   ORDER BY createdAt DESC
   OFFSET (${filter.page_number} - 1) * ${filter.page_size} ROWS
