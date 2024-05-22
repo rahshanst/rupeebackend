@@ -115,12 +115,13 @@ const addCategory = (req, res) => {
             message: "Data Added Successfully",
           });
         }
+      }).catch((err) => {
         resolve({
-          status: 400,
-          data: result,
-          message: "Unable to insert record",
+          status: 500,
+          data: [],
+          message: `${err}`,
         });
-      });
+      })
   });
 };
 const updateCategory = (req, res) => {
