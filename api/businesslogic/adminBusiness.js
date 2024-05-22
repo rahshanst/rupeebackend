@@ -93,7 +93,9 @@ var upload = multer({ storage: storage })
 
 const addCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
+    
     let incomingData = { ...req.body };
+    logger.info({ incomingData });
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
     const fileResult = await uploadFilesToBlob({
@@ -102,7 +104,6 @@ const addCategory = (req, res) => {
       timestamp,
       folder,
     });
-    console.log({ file_data: fileResult?.url || "" });
     logger.info(`Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`);
     adminServices
       .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
