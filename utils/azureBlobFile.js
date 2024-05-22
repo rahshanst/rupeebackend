@@ -54,7 +54,7 @@ const sharedKeyCredential = new StorageSharedKeyCredential(
   accountKey
 );
 
-// console.log({sharedKeyCredential})
+// logger.info({sharedKeyCredential})
 // Create a blob service client
 const blobServiceClient = new BlobServiceClient(
   `https://${accountName}.blob.core.windows.net`,
@@ -71,7 +71,7 @@ async function uploadFile(buffer, blobName, containerName, file_type) {
   try {
     // const blobServiceClient = BlobServiceClient.fromConnectionString('BlobEndpoint=https://onerupeestorefesg.blob.core.windows.net/;QueueEndpoint=https://onerupeestorefesg.queue.core.windows.net/;FileEndpoint=https://onerupeestorefesg.file.core.windows.net/;TableEndpoint=https://onerupeestorefesg.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02&ss=bfqt&srt=c&sp=rwdlacupiytfx&se=2024-03-15T03:42:44Z&st=2024-03-14T19:42:44Z&spr=https&sig=7oBImTM5GmOGyvLXe1d8Z2vvqg%2BA1Npa1ndGABcyCvo%3D');
 
-    console.log({ buffer, blobName, containerName, file_type });
+    logger.info({ buffer, blobName, containerName, file_type });
     // sharedBlobService.createContainerIfNotExists('mycontainer', function(error, result, response){if(!error){}});
     // Get a reference to a container
     const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -96,10 +96,10 @@ const containerClientSAS = blobServiceClientWithSAS.getContainerClient(container
 
 // List blobs in the container
 for await (const blob of containerClient.listBlobsFlat()) {
-  console.log("xx",blob.name);
+  logger.info("xx",blob.name);
 }
 
-    console.log("Image uploaded to:", blobUrl);
+    logger.info("Image uploaded to:", blobUrl);
     return blobUrl;
   } catch (error) {
     console.error(error.message);
@@ -117,7 +117,7 @@ async function downloadFile(blobName, downloadFilePath, containerName) {
     // Download the blob to a local file
     await blockBlobClient.downloadToFile(downloadFilePath);
 
-    console.log(`Blob "${blobName}" downloaded to "${downloadFilePath}"`);
+    logger.info(`Blob "${blobName}" downloaded to "${downloadFilePath}"`);
   } catch (error) {
     console.error(error.message);
   }
@@ -134,7 +134,7 @@ async function deleteBlob(blobName, containerName) {
     // Delete the blob
     await blockBlobClient.delete();
 
-    console.log(`Blob "${blobName}" deleted successfully.`);
+    logger.info(`Blob "${blobName}" deleted successfully.`);
   } catch (error) {
     console.error(error.message);
   }
@@ -144,7 +144,7 @@ async function uploadFile(fileData, blobName, file_type) {
   const containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  console.log({fileData,blobName});
+  logger.info({fileData,blobName});
   // Convert base64 data to a Buffer
   // const bufferData = Buffer.from(base64Data, 'base64');
 
@@ -165,13 +165,13 @@ async function uploadFile(fileData, blobName, file_type) {
   // })
   // .then(blobData => {
   //   // Handle the blob data, for example, upload it to Azure Blob Storage
-  //   console.log('Blob data:', blobData);
+  //   logger.info('Blob data:', blobData);
   // })
   // .catch(error => {
   //   console.error('Error fetching file:', error);
   // });
 
-  // console.log({response});
+  // logger.info({response});
   // if (!response.ok) {
   //   throw new Error(`Failed to fetch the file from URL: ${url}`);
   // }
@@ -185,13 +185,13 @@ async function uploadFile(fileData, blobName, file_type) {
 
   // const uploadResponse = await blockBlobClient.uploadFile(blobName);
 
-  // console.log(`Uploaded file "${blobName}" from URL "${uploadResponse}" successfully.`);
+  // logger.info(`Uploaded file "${blobName}" from URL "${uploadResponse}" successfully.`);
   await blockBlobClient.upload(fileData, fileData.length);
 
-    console.log(`Blob "${blobName}" uploaded to container "${CONTAINER_NAME}" successfully.`);
-  console.log({ blobName });
+    logger.info(`Blob "${blobName}" uploaded to container "${CONTAINER_NAME}" successfully.`);
+  logger.info({ blobName });
 
-  // console.log(`Uploaded file "${filePath}" successfully.`);
+  // logger.info(`Uploaded file "${filePath}" successfully.`);
   return blobName;
 }
 async function downloadFile(blobName, downloadFilePath, containerName) {
@@ -205,7 +205,7 @@ async function downloadFile(blobName, downloadFilePath, containerName) {
     // Download the blob to a local file
     await blockBlobClient.downloadToFile(downloadFilePath);
 
-    console.log(`Blob "${blobName}" downloaded to "${downloadFilePath}"`);
+    logger.info(`Blob "${blobName}" downloaded to "${downloadFilePath}"`);
   } catch (error) {
     console.error(error.message);
   }
@@ -222,7 +222,7 @@ async function deleteBlob(blobName, containerName) {
     // Delete the blob
     await blockBlobClient.delete();
 
-    console.log(`Blob "${blobName}" deleted successfully.`);
+    logger.info(`Blob "${blobName}" deleted successfully.`);
   } catch (error) {
     console.error(error.message);
   }
@@ -231,7 +231,7 @@ async function deleteBlob(blobName, containerName) {
 
 
 async function uploadFilesToBlob(req) {
-  console.log("sksksksk---->",req);
+  logger.info("sksksksk---->",req);
   const { file_data,timestamp,folder } = req
   
   ticketModule = folder;
@@ -241,7 +241,7 @@ async function uploadFilesToBlob(req) {
   const directoryPath = "/";
   var promiseList = [];
 
-  console.log("Arshad===>", file);
+  logger.info("Arshad===>", file);
   const sharedKeyCredential = new StorageSharedKeyCredential(
     config.azureStorageConfig.accountName,
     config.azureStorageConfig.accountKey
@@ -264,7 +264,7 @@ async function uploadFilesToBlob(req) {
 
 
 
-  console.log({ config });
+  logger.info({ config });
 
 
   // Create a container
@@ -273,17 +273,17 @@ async function uploadFilesToBlob(req) {
   try {
     await containerClient.createIfNotExists();
   } catch (err) {
-    console.log("error", err);
-    console.log(
+    logger.info("error", err);
+    logger.info(
       `Creating a container fails, requestId - ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
     );
   }
 
-  console.log("===>Files",JSON.stringify(file));
+  logger.info("===>Files",JSON.stringify(file));
 
 
   file?.forEach((file) => {
-    console.log("===>",{ file });
+    logger.info("===>",{ file });
     const blobName = getBlobName(file,ticketModule,timestamp);
     // const stream = getStream(file.buffer).require("into-stream");
     const stream = bufferToStream(file.buffer);
@@ -291,7 +291,7 @@ async function uploadFilesToBlob(req) {
     const blobNamewithFolder = directoryPath
       ? `${directoryPath}/${blobName}`
       : `${blobName}`;
-    console.log("blobNamewithFolder", blobNamewithFolder);
+    logger.info("blobNamewithFolder", blobNamewithFolder);
     promiseList.push(
       new Promise((resolve, reject) => {
         // Create a blob
@@ -303,7 +303,7 @@ async function uploadFilesToBlob(req) {
         try {
           blockBlobClient.uploadStream(stream, 4 * 1024 * 1024, 20, {
             // abortSignal: AbortController.timeout(30 * 60 * 1000), // Abort uploading with timeout in 30mins
-            onProgress: (ev) => console.log("progress", ev),
+            onProgress: (ev) => logger.info("progress", ev),
           });
 
           let startDateTime = new Date();
@@ -336,8 +336,8 @@ async function uploadFilesToBlob(req) {
             });
           }, 2500);
         } catch (err) {
-          console.log("error sssss", err);
-          console.log(
+          logger.info("error sssss", err);
+          logger.info(
             `uploadStream failed, requestId ssssss- ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
           );
           reject(err);
