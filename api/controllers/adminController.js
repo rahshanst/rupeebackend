@@ -1,5 +1,6 @@
 // controllers/TripController.js
 
+const logger = require("../../utils/logger");
 const adminBusiness = require("../businesslogic/adminBusiness");
 /*
 const getTrips = (_, res) => {
@@ -49,6 +50,7 @@ const RefundPoints = (req, res) => {
 
 const addCategory = (req, res) => {
   adminBusiness.addCategory(req).then((result) => {
+    logger.info(`CONTROLLER | addCategory | result | ${result}`)
     res.status(201).json(result);
   });
 };

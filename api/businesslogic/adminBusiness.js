@@ -93,18 +93,27 @@ var upload = multer({ storage: storage })
 
 const addCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
-    
     let incomingData = { ...req.body };
     logger.info({ incomingData });
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
+    logger.info({
+      ...req.body,
+      ...req.files,
+      timestamp,
+      folder,
+    });
     const fileResult = await uploadFilesToBlob({
       ...req.body,
       ...req.files,
       timestamp,
       folder,
     });
-    logger.info(`Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`);
+    logger.info({ fileResult });
+
+    logger.info(
+      `Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`
+    );
     adminServices
       .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
       .then((result) => {
@@ -115,13 +124,14 @@ const addCategory = (req, res) => {
             message: "Data Added Successfully",
           });
         }
-      }).catch((err) => {
+      })
+      .catch((err) => {
         resolve({
           status: 500,
           data: [],
           message: `${err}`,
         });
-      })
+      });
   });
 };
 const updateCategory = (req, res) => {
@@ -204,9 +214,9 @@ const addOffer = (req, res) => {
       product_picFile = "",
       couponfileFile = "";
     const { brand_logo, product_pic, coupon_file } = req.files;
-      console.log({coupon_file});
+    console.log({ coupon_file });
     if (brand_logo) {
-      ticketModule = 'brand_logo';
+      ticketModule = "brand_logo";
       brand_logoFile = await uploadFilesToBlob({
         ...req.body,
         ...req.files,
@@ -216,8 +226,9 @@ const addOffer = (req, res) => {
         ticketModule,
       });
     }
+    logger.info({brand_logoFile})
     if (product_pic) {
-      ticketModule = 'product_pic';
+      ticketModule = "product_pic";
       product_picFile = await uploadFilesToBlob({
         ...req.body,
         ...req.files,
@@ -230,7 +241,7 @@ const addOffer = (req, res) => {
     }
 
     if (coupon_file) {
-      ticketModule = 'coupon_file';
+      ticketModule = "coupon_file";
       couponfileFile = await uploadFilesToBlob({
         ...req.body,
         ...req.files,
@@ -241,12 +252,14 @@ const addOffer = (req, res) => {
         ticketModule,
       });
     }
-    logger.info(`Executing query ${{
-      ...req.body,
-      brand_logo: brand_logoFile[0]?.url,
-      product_pic: product_picFile[0]?.url,
-      coupon_file: couponfileFile[0]?.url,
-    }}`);
+    logger.info(
+      `Executing query ${{
+        ...req.body,
+        brand_logo: brand_logoFile[0]?.url,
+        product_pic: product_picFile[0]?.url,
+        coupon_file: couponfileFile[0]?.url,
+      }}`
+    );
 
     adminServices
       .addOffer({
