@@ -67,6 +67,7 @@ const blobServiceClient = new BlobServiceClient(
 // EndpointSuffix = core.windows.net
 
 async function uploadFile(buffer, blobName, containerName, file_type) {
+  logger.info(`buffer, blobName, containerName, file_type | ${buffer, blobName, containerName, file_type}`)
   try {
     // const blobServiceClient = BlobServiceClient.fromConnectionString('BlobEndpoint=https://onerupeestorefesg.blob.core.windows.net/;QueueEndpoint=https://onerupeestorefesg.queue.core.windows.net/;FileEndpoint=https://onerupeestorefesg.file.core.windows.net/;TableEndpoint=https://onerupeestorefesg.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02&ss=bfqt&srt=c&sp=rwdlacupiytfx&se=2024-03-15T03:42:44Z&st=2024-03-14T19:42:44Z&spr=https&sig=7oBImTM5GmOGyvLXe1d8Z2vvqg%2BA1Npa1ndGABcyCvo%3D');
 
