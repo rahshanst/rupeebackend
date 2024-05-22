@@ -39,7 +39,7 @@ app.use(express.static('public'));
 // Default route
 app.get("/", (req, res) => {
   return res.status(200).json({
-    msg: "Welcome to cheggout rupee api dev 02",
+    msg: "Welcome to cheggout rupee api dev 03",
   });
 });
 
