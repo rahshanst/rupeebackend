@@ -105,6 +105,8 @@ paths:
           required: true  
           type: string
       responses:
+        200:
+          description: Successful operation
         default:
           description: Error
           schema:
@@ -245,6 +247,8 @@ paths:
           required: true
           description: Bearer token for authentication
       responses:
+        200:
+          description: Successful operation
         default:
           description: Error
           schema:
@@ -276,6 +280,8 @@ paths:
           schema:
             $ref: "#/definitions/initiateData"
       responses:
+        200:
+          description: Successful operation
         default:
           description: Error
           schema:
