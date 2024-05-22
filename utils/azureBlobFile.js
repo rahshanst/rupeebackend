@@ -340,7 +340,7 @@ async function uploadFilesToBlob(req) {
           logger.info(
             `uploadStream failed, requestId ssssss- ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`
           );
-          reject(err);
+          resolve({err});
         }
       })
     );
