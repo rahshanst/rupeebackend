@@ -96,8 +96,8 @@ const addCategory = async (req, res) => {
   try {
     return await new Promise(async (resolve, reject) => {
       let incomingData = { ...req.body };
-      logger.info("Beofre timestamp");
-      logger.info({ incomingData });
+      logger.info(`Beofre timestamp ${timestamp}`);
+      // logger.info({ incomingData });
       logger.info({ timestamp });
       const folder = "category";
       logger.info({

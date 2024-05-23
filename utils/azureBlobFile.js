@@ -231,7 +231,7 @@ async function deleteBlob(blobName, containerName) {
 
 
 async function uploadFilesToBlob(req) {
-  logger.info("sksksksk---->",req);
+  // logger.info("sksksksk---->",req);
   const { file_data,timestamp,folder } = req
   
   ticketModule = folder;
@@ -241,7 +241,7 @@ async function uploadFilesToBlob(req) {
   const directoryPath = "/";
   var promiseList = [];
 
-  logger.info("Arshad===>", file);
+  // logger.info("Arshad===>", file);
   const sharedKeyCredential = new StorageSharedKeyCredential(
     config.azureStorageConfig.accountName,
     config.azureStorageConfig.accountKey
@@ -279,11 +279,11 @@ async function uploadFilesToBlob(req) {
     );
   }
 
-  logger.info("===>Files",JSON.stringify(file));
+  // logger.info("===>Files",JSON.stringify(file));
 
 
   file?.forEach((file) => {
-    logger.info("===>",{ file });
+    // logger.info("===>",{ file });
     const blobName = getBlobName(file,ticketModule,timestamp);
     // const stream = getStream(file.buffer).require("into-stream");
     const stream = bufferToStream(file.buffer);

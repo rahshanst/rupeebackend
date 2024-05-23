@@ -1,12 +1,13 @@
+const config = require("../utils/config.dev.json");
 module.exports = {
-    secret: process.env.SECRET,
+    secret: config.SECRET_KEY,
     azureStorageConfig: {
-      connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
-      accountName: process.env.AZURE_STORAGE_ACCOUNT_NAME,
-      accountKey: process.env.AZURE_STORAGE_ACCOUNT_ACCESS_KEY,
-      containerName: process.env.AZURE_STORAGE_CONTAINER_NAME,
+      connectionString: config.AZURE_STORAGE_CONNECTION_STRING,
+      accountName: config.AZURE_STORAGE_ACCOUNT_NAME,
+      accountKey: config.AZURE_STORAGE_ACCOUNT_ACCESS_KEY,
+      containerName: config.AZURE_STORAGE_CONTAINER_NAME,
       blobURL:
-        "https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net",
+        "https://${config.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net",
     },
-    expressPort: process.env.EXPRESS_PORT,
+    expressPort: '9000',
   };
