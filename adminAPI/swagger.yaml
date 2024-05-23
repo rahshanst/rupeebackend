@@ -243,8 +243,8 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   
   /getBannerDetails:
-    post:
-      operationId: getBannerDetails
+    get:
+      operationId: getBannerFile
       x-swagger-router-controller: dashboardController
       consumes:
         - application/json
@@ -259,12 +259,12 @@ paths:
           format: Bearer
           required: true
           description: Bearer token for authentication
-        - in: body
-          name: getData
-          description: getData
-          required: true
-          schema:
-            $ref: '#/definitions/getData'
+        # - in: body
+        #   name: getData
+        #   description: getData
+        #   required: true
+        #   schema:
+        #     $ref: '#/definitions/getData'
       responses:
         200:
           description: Successful operation
@@ -575,13 +575,13 @@ paths:
           in: formData
           required: true
           type: number
-        - name: offer_banner_sm
+        - name: brand_logo
           in: formData
           type: file
-        - name: offer_banner_lg
+        - name: product_pic
           in: formData
           type: file
-        - name: offer_banner_xl
+        - name: coupon_file
           in: formData
           type: file
         - name: offer_category
@@ -589,6 +589,18 @@ paths:
           required: true
           type: string
         - name: offer_type
+          in: formData
+          required: true
+          type: string
+        - name: up_color
+          in: formData
+          required: true
+          type: string
+        - name: down_color
+          in: formData
+          required: true
+          type: string
+        - name: offer_url
           in: formData
           required: true
           type: string
@@ -602,8 +614,9 @@ paths:
           type: integer
         - name: is_active
           in: formData
+          required: true
           type: integer
-        - name: updator
+        - name: updater
           in: formData
           required: true
           type: string
@@ -883,7 +896,7 @@ paths:
           description: BankConfig
           required: true
           schema:
-            $ref: '#/definitions/BannerFile'
+            $ref: '#/definitions/BannerFileDelete'
       responses:
         200:
           description: Successful operation
@@ -1168,6 +1181,17 @@ definitions:
         type: string
         description: User who last updated the banner file.
         example: "Jane Doe"
+  BannerFileDelete:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The ID of the user associated with the banner file.
+        example: 1
+      ticketModule:
+        type: string
+        description: ticketModule.
+        example: "banners"
 
   addDealsData:
     type: object

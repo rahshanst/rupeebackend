@@ -232,7 +232,9 @@ module.exports.getAllDeals = (filter) => {
 
 // Read a deal by ID
 module.exports.getDealById = (id) => {
-  const query = `SELECT * FROM Deals WHERE id = ${id}`;
+  const query = `SELECT o.*, c.category_name
+  FROM offers o
+  LEFT JOIN categories c ON o.offer_category = c.id WHERE o.id = ${id}`;
   return executeQuery(query);
 };
 
@@ -248,7 +250,7 @@ module.exports.updateDealById = (dealData) => {
     .join(', ');
 
   const query = `
-    UPDATE Deals
+    UPDATE offers
     SET ${updateValues}
     WHERE id = ${id}`;
 
@@ -257,7 +259,7 @@ module.exports.updateDealById = (dealData) => {
 
 // Delete a deal by ID
 module.exports.deleteDealById = (id) => {
-  const query = `DELETE FROM Deals WHERE id = ${id}`;
+  const query = `DELETE FROM offers WHERE id = ${id}`;
   return executeQuery(query);
 };
 
@@ -401,7 +403,7 @@ module.exports.addBannerFile = (data) => {
 };
 
 module.exports.deleteBannerFile = (data) => {
-  const query = `delete from bannerFiles WHERE ticketModule = '${data.ticketModule}';
+  const query = `delete from bannerFiles WHERE ticketModule = '${data.ticketModule}' and  id= '${data.id}';
 `;
   return executeQuery(query);
 };
