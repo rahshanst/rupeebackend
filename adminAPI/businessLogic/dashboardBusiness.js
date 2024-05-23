@@ -258,7 +258,7 @@ module.exports.deleteBannerFile = async (req, res) => {
 module.exports.getBannerFile = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.getBannerFileAdmin(req.body);
+      let result = await dashboardServices.getBannerFileAdmin({ticketModule:'banners'});
       logger.info([result]);
       resolve({
         status: "200",
