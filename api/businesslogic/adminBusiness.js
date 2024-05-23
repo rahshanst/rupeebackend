@@ -98,8 +98,6 @@ const addCategory = (req, res) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
     logger.info({
-      ...req.body,
-      ...req.files,
       timestamp,
       folder,
     });
