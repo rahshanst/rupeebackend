@@ -98,8 +98,6 @@ const addCategory = (req, res) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
     logger.info({
-      ...req.body,
-      ...req.files,
       timestamp,
       folder,
     });
@@ -122,6 +120,12 @@ const addCategory = (req, res) => {
             status: 200,
             fileResult: fileResult || [],
             message: "Data Added Successfully",
+          });
+        } else {
+          resolve({
+            status: 500,
+            fileResult: [],
+            message: `${result}`,
           });
         }
       })
