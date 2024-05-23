@@ -8,6 +8,7 @@ const { uploadFile } = require("../../utils/azureBlobFile");
 const { uploadFilesToBlob } = require("../../utils/azureBlobFile");
 const dayjs = require("dayjs");
 const logger = require("../../utils/logger");
+const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
 
 /*const {
   GET_PWA_REWARDS,
@@ -95,8 +96,8 @@ const addCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
     logger.info({ incomingData });
-    logger.info({ incomingData });
-    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    logger.info("Beofre timestamp")
+    logger.info({ timestamp });
     const folder = "category";
     logger.info({
       timestamp,
