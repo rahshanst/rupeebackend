@@ -3,6 +3,7 @@ const dbConfig = require('./dbConfig');
 
 async function connectDB() {
     try {
+        console.log('Started connection...!');
         const pool = await sql.connect(dbConfig);
         console.log('Connected to the database!');
         return pool;
