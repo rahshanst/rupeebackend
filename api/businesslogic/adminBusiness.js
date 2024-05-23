@@ -92,61 +92,63 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 */
 
-const addCategory = (req, res) => {
-  return new Promise(async (resolve, reject) => {
-    let incomingData = { ...req.body };
-    logger.info({ incomingData });
-    logger.info("Beofre timestamp")
-    logger.info({ timestamp });
-    const folder = "category";
-    logger.info({
-      timestamp,
-      folder,
-    });
-    const fileResult = await uploadFilesToBlob({
-      ...req.body,
-      ...req.files,
-      timestamp,
-      folder,
-    });
-    logger.info({ fileResult });
+const addCategory = async (req, res) => {
+  try {
+    return await new Promise(async (resolve, reject) => {
+      let incomingData = { ...req.body };
+      logger.info("Beofre timestamp");
+      logger.info({ incomingData });
+      logger.info({ timestamp });
+      const folder = "category";
+      logger.info({
+        timestamp,
+        folder,
+      });
+      const fileResult = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder,
+      });
+      logger.info({ fileResult });
 
-    logger.info(
-      `Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`
-    );
-    adminServices
-      .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
-      .then((result) => {
-        if (result) {
-          resolve({
-            status: 200,
-            fileResult: fileResult || [],
-            message: "Data Added Successfully",
-          });
-        } else {
+      logger.info(
+        `Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`
+      );
+      adminServices
+        .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
+        .then((result) => {
+          if (result) {
+            resolve({
+              status: 200,
+              fileResult: fileResult || [],
+              message: "Data Added Successfully",
+            });
+          } else {
+            resolve({
+              status: 500,
+              fileResult: [],
+              message: `${result}`,
+            });
+          }
+        })
+        .catch((err) => {
+          logger.info(`bb ${err}`);
           resolve({
             status: 500,
-            fileResult: [],
-            message: `${result}`,
+            data: [],
+            message: `${err}`,
           });
-        }
-      })
-      .catch((err) => {
-        logger.info(`bb ${err}`);
-        resolve({
-          status: 500,
-          data: [],
-          message: `${err}`,
         });
-      });
-  }).catch((err) => {
-    logger.info(`catch ${err}`);
+    });
+  } catch (err_1) {
+    logger.info(`catch ${err_1}`);
     resolve({
       status: 500,
       data: [],
-      message: `${err}`,
+      message: `${err_1}`,
     });
-  });
+  }
 };
 const updateCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
