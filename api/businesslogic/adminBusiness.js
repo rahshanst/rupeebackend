@@ -95,6 +95,7 @@ const addCategory = (req, res) => {
   return new Promise(async (resolve, reject) => {
     let incomingData = { ...req.body };
     logger.info({ incomingData });
+    logger.info({ incomingData });
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
     logger.info({
@@ -130,12 +131,20 @@ const addCategory = (req, res) => {
         }
       })
       .catch((err) => {
+        logger.info(`bb ${err}`);
         resolve({
           status: 500,
           data: [],
           message: `${err}`,
         });
       });
+  }).catch((err) => {
+    logger.info(`catch ${err}`);
+    resolve({
+      status: 500,
+      data: [],
+      message: `${err}`,
+    });
   });
 };
 const updateCategory = (req, res) => {
@@ -230,7 +239,7 @@ const addOffer = (req, res) => {
         ticketModule,
       });
     }
-    logger.info({brand_logoFile})
+    logger.info({ brand_logoFile });
     if (product_pic) {
       ticketModule = "product_pic";
       product_picFile = await uploadFilesToBlob({
