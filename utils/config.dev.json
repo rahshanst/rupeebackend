@@ -11,6 +11,10 @@
     "HOTEL_USERNAME": "HotelAPIUserTest",
     "HOTEL_PASSWORD": "BDvRwrEwX5waYF6NKHbRNN4pSD9G2H",
     "FLIGHT_PASSWORD": "EMT@uytrFYTREt",
-    "FLIGHT_USERNAME": "EMTB2B"
+    "FLIGHT_USERNAME": "EMTB2B",
+    "AZURE_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=ticketbookingadminstage;AccountKey=icHHTelyZRDD80MzfglkcJ1zCHhjqEpOzLX9A7Wo8+BPGZ2U+lIPSaqDnOkosL4bZkOujDw25FYN+AStUU5Qeg==;EndpointSuffix=core.windows.net",
+    "AZURE_STORAGE_ACCOUNT_NAME":"onerupeestorefesg",
+    "AZURE_STORAGE_ACCOUNT_ACCESS_KEY":"xoGHrEgYZH2/4th5AFV3qM1myWtrNvSYUDLv81jCCfoDYyHOKC09niphhGApVnxWAe5qAhy/0ABu+AStyii7mQ==",
+    "AZURE_STORAGE_CONTAINER_NAME":"ticketbooking"
 }
   
