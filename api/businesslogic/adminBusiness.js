@@ -123,6 +123,12 @@ const addCategory = (req, res) => {
             fileResult: fileResult || [],
             message: "Data Added Successfully",
           });
+        } else {
+          resolve({
+            status: 500,
+            fileResult: [],
+            message: `${result}`,
+          });
         }
       })
       .catch((err) => {
