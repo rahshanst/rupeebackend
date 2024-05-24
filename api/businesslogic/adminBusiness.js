@@ -1,14 +1,17 @@
 // controllers/TripController.js
 const adminServices = require("../services/adminservices");
-const jwt = require("jsonwebtoken");
-const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
-const { uploadFile } = require("../../utils/azureBlobFile");
-//const multer  = require('multer')
 const { uploadFilesToBlob } = require("../../utils/azureBlobFile");
 const dayjs = require("dayjs");
 const logger = require("../../utils/logger");
 const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+const { Readable } = require("stream");
+const xlsx = require("xlsx");
+
+const csv = require("csv-parser");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 
 /*const {
   GET_PWA_REWARDS,
@@ -41,7 +44,7 @@ const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
 
 const getTripById = (req, res) => {
   return new Promise((resolve, reject) => {
-    console.log("req.body.id", req.body.tripId);
+    logger.info("req.body.id", req.body.tripId);
     tripServices.getTrip(req.body.tripId).then((result) => {
       if (result[0]) {
         resolve({
@@ -113,7 +116,10 @@ const addCategory = async (req, res) => {
       logger.info({ fileResult });
 
       logger.info(
-        `Executing query ${{ ...req.body, file_data: fileResult[0]?.url || "" }}`
+        `Executing query ${{
+          ...req.body,
+          file_data: fileResult[0]?.url || "",
+        }}`
       );
       adminServices
         .addCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
@@ -161,7 +167,7 @@ const updateCategory = (req, res) => {
       timestamp,
       folder,
     });
-    console.log({ file_data: fileResult?.url || "" });
+    logger.info({ file_data: fileResult?.url || "" });
     adminServices
       .updateCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
       .then((result) => {
@@ -222,15 +228,76 @@ const deleteCategoryById = (req, res) => {
   });
 };
 
+async function handleExcelFile(file, id_offer) {
+  const tempFileName = `${Date.now()}_${file[0]?.originalname}`;
+  console.log({ tempFileName });
+  const tempFilePath = path.join(os.tmpdir(), tempFileName);
+  console.log({ tempFilePath }); // Check temporary file path
+  fs.writeFileSync(tempFilePath, file[0].buffer);
+  const buffer = fs.readFileSync(tempFilePath);
+  console.log({ buffer });
+  const workbook = xlsx.read(buffer, { type: "buffer" });
+  const sheet_name_list = workbook.SheetNames;
+  const results = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+  console.log({ results });
+
+  for (const row of results) {
+    await adminServices.addCoupon({
+      id_offer: id_offer,
+      brand_name: row["Brand Name"],
+      coupon_code: row["Coupon Code"],
+      is_active: row["Active"],
+    });
+  }
+}
+
+async function handleCsvFile(file, id_offer) {
+  const results = [];
+  const readableStream = new Readable();
+  readableStream.push(file.buffer);
+  readableStream.push(null);
+
+  return new Promise((resolve, reject) => {
+    readableStream
+      .pipe(csv({ separator: ";" }))
+      .on("data", (data) => results.push(data))
+      .on("end", async () => {
+        try {
+          for (const row of results) {
+            logger.info({
+              id_offer: id_offer,
+              brand_name: row["Brand Name"],
+              coupon_code: row["Coupon Code"],
+              is_active: row["Active"],
+            });
+            await adminServices.addCoupon({
+              id_offer: id_offer,
+              brand_name: row["Brand Name"],
+              coupon_code: row["Coupon Code"],
+              is_active: row["Active"],
+            });
+          }
+          resolve();
+        } catch (err) {
+          console.error("Error inserting data", err);
+          reject(err);
+        }
+      });
+  });
+}
+
 const addOffer = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const id_offer = uuidv4();
+
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
       couponfileFile = "";
     const { brand_logo, product_pic, coupon_file } = req.files;
-    console.log({ coupon_file });
+    logger.info({ coupon_file });
     if (brand_logo) {
       ticketModule = "brand_logo";
       brand_logoFile = await uploadFilesToBlob({
@@ -277,12 +344,26 @@ const addOffer = (req, res) => {
       }}`
     );
 
+    const fileExtension = coupon_file[0]?.originalname?.split(".")[1];
+    logger.info({ fileExtension });
+    if (fileExtension === "xls" || fileExtension === "xlsx") {
+      await handleExcelFile(coupon_file, id_offer);
+    } else if (fileExtension === "csv") {
+      await handleCsvFile(coupon_file, id_offer);
+    } else {
+      resolve({
+        status: 408,
+        message: "Unsupported file",
+        err: `${err}`,
+      });
+    }
     adminServices
       .addOffer({
         ...req.body,
         brand_logo: brand_logoFile[0]?.url,
         product_pic: product_picFile[0]?.url,
         coupon_file: couponfileFile[0]?.url,
+        coupon_id: id_offer,
       })
       .then((result) => {
         if (result) {
@@ -307,8 +388,8 @@ const addOffer = (req, res) => {
 const GetPwaRewards = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const url = GET_PWA_REWARDS;
-    console.log(url);
-    console.log(req.headers);
+    logger.info(url);
+    logger.info(req.headers);
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
@@ -318,12 +399,12 @@ const GetPwaRewards = (req, res) => {
       Authorization: `Bearer ${authorizationHeader}`, // Add your authorization token here
       Cookie,
     };
-    console.log({ headers });
+    logger.info({ headers });
     try {
       const response = await axios.get(url, {
         headers,
       });
-      console.log(response.data);
+      logger.info(response.data);
       resolve({
         status: "200",
         data: response.data,
@@ -343,8 +424,8 @@ const GetPwaRewards = (req, res) => {
 const GetPWAWalletPoints = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const url = GET_PWA_WALLET_POINTS;
-    console.log(url);
-    console.log(req.headers);
+    logger.info(url);
+    logger.info(req.headers);
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
@@ -359,7 +440,7 @@ const GetPWAWalletPoints = (req, res) => {
       const response = await axios.get(url, {
         headers,
       });
-      console.log(response.data);
+      logger.info(response.data);
       resolve({
         status: "200",
         data: response.data,
@@ -382,9 +463,9 @@ const RefundPoints = (req, res) => {
     const postData = {
       ...req.body,
     };
-    console.log({ postData });
-    console.log(url);
-    console.log(req.headers);
+    logger.info({ postData });
+    logger.info(url);
+    logger.info(req.headers);
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
@@ -399,7 +480,7 @@ const RefundPoints = (req, res) => {
       const response = await axios.post(REFUND_POINTS, postData, {
         headers,
       });
-      console.log(response.data);
+      logger.info(response.data);
       if (response.data.Errors) {
         resolve({
           status: "400",
@@ -429,9 +510,9 @@ const DeductWalletPoints = (req, res) => {
       ...req.body,
     };
     const url=DEDUCT_WALLET_POINTS;
-    console.log({ postData });
-    console.log(url);
-    console.log(req.headers);
+    logger.info({ postData });
+    logger.info(url);
+    logger.info(req.headers);
     const authorizationHeader = req.headers["authorization"];
     // const Cookie = req.headers["Cookie"];
     const Cookie =
@@ -445,7 +526,7 @@ const DeductWalletPoints = (req, res) => {
       const response = await axios.post(DEDUCT_WALLET_POINTS, postData, {
         headers,
       });
-      console.log(response.data);
+      logger.info(response.data);
       if (response.data.Errors) {
         resolve({
           status: "400",
