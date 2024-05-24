@@ -39,7 +39,6 @@ async function addTrip(trip) {
   return executeQuery(query);
 }
 
-
 async function addCategory(incomingData) {
   console.log({ incomingData });
   const query = `
@@ -99,7 +98,7 @@ async function addOffer(incomingData) {
     offer_url,
     down_color,
     coupon_file,
-     created_at, updated_at)
+     created_at, updated_at,coupon_id)
   VALUES 
   (
       '${incomingData.brand_name}',
@@ -121,14 +120,24 @@ async function addOffer(incomingData) {
       '${incomingData.down_color}',
       '${incomingData.coupon_file}',
       GETDATE(), 
-      GETDATE()
+      GETDATE(),
+      '${incomingData.coupon_id}'
   )
+`;
+
+  return executeQuery(query);
+}
+async function addCoupon(incomingData) {
+  console.log({ incomingData });
+  const query = ` INSERT INTO coupon (id_offer,brand_name,coupon_code,is_active,createdBy) VALUES 
+  ( '${incomingData.id_offer}','${incomingData.brand_name}', '${incomingData.coupon_code}', '${incomingData.is_active}','admin');
 `;
 
   return executeQuery(query);
 }
 
 module.exports = {
+  addCoupon,
   getTrips,
   getTrip,
   addTrip,
@@ -136,6 +145,5 @@ module.exports = {
   updateCategory,
   getCategoryById,
   deleteCategoryById,
-  addOffer
-  
+  addOffer,
 };
