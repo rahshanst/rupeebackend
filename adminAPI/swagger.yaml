@@ -518,6 +518,18 @@ paths:
           in: formData
           required: true
           type: string
+        - name: is_brand_logo
+          in: formData
+          required: true
+          type: integer
+        - name: is_product_pic
+          in: formData
+          required: true
+          type: integer          
+        - name: is_coupon_file
+          in: formData
+          required: true
+          type: integer 
       responses:
         200:
           description: Successful operation
@@ -612,6 +624,18 @@ paths:
           in: formData
           required: true
           type: integer
+        - name: is_brand_logo
+          in: formData
+          required: true
+          type: integer
+        - name: is_product_pic
+          in: formData
+          required: true
+          type: integer          
+        - name: is_coupon_file
+          in: formData
+          required: true
+          type: integer          
         - name: is_active
           in: formData
           required: true

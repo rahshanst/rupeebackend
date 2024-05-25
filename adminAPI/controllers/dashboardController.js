@@ -188,7 +188,7 @@ module.exports.addDeals = (req, res) => {
 
 module.exports.updateDeals = (req, res) => {
   console.log({req});
-  dashboardBusiness.updateDeals(req)
+  adminBusiness.updateOffer(req)
     .then((result) => {
       res.json(result);
     })

@@ -228,7 +228,7 @@ const deleteCategoryById = (req, res) => {
   });
 };
 
-async function handleExcelFile(file, id_offer) {
+async function handleExcelFile(file, id_offer,type,id) {
   const tempFileName = `${Date.now()}_${file[0]?.originalname}`;
   console.log({ tempFileName });
   const tempFilePath = path.join(os.tmpdir(), tempFileName);
@@ -242,17 +242,31 @@ async function handleExcelFile(file, id_offer) {
 
   console.log({ results });
 
-  for (const row of results) {
-    await adminServices.addCoupon({
-      id_offer: id_offer,
-      brand_name: row["Brand Name"],
-      coupon_code: row["Coupon Code"],
-      is_active: row["Active"],
-    });
+  if (type == 'update') {
+    const offerId = await adminServices.getCouponIdByOfferId({ id: id })
+    console.log({offerId},offerId?.recordset[0]?.coupon_id);
+    for (const row of results) {
+      console.log({row:row});
+      await adminServices.updateCouponOfferById({
+        id_offer: offerId?.recordset[0]?.coupon_id,
+        brand_name: row["Brand Name"],
+        coupon_code: row["Coupon Code"],
+        is_active: row["Active"],
+      });
+    }
+  } else {
+    for (const row of results) {
+      await adminServices.addCoupon({
+        id_offer: id_offer,
+        brand_name: row["Brand Name"],
+        coupon_code: row["Coupon Code"],
+        is_active: row["Active"],
+      });
+    }
   }
 }
 
-async function handleCsvFile(file, id_offer) {
+async function handleCsvFile(file, id_offer,type) {
   const results = [];
   const readableStream = new Readable();
   readableStream.push(file.buffer);
@@ -264,19 +278,26 @@ async function handleCsvFile(file, id_offer) {
       .on("data", (data) => results.push(data))
       .on("end", async () => {
         try {
-          for (const row of results) {
-            logger.info({
-              id_offer: id_offer,
-              brand_name: row["Brand Name"],
-              coupon_code: row["Coupon Code"],
-              is_active: row["Active"],
-            });
-            await adminServices.addCoupon({
-              id_offer: id_offer,
-              brand_name: row["Brand Name"],
-              coupon_code: row["Coupon Code"],
-              is_active: row["Active"],
-            });
+          if (type == 'update') {
+            const offerId = await adminServices.getCouponIdByOfferId({ id: id })
+            console.log({offerId}); 
+            for (const row of results) {
+              await adminServices.updateCouponOfferById({
+                id_offer: offerId?.recordset[0]?.coupon_id,
+                brand_name: row["Brand Name"],
+                coupon_code: row["Coupon Code"],
+                is_active: row["Active"],
+              });
+            }
+          } else {
+            for (const row of results) {
+              await adminServices.addCoupon({
+                id_offer: id_offer,
+                brand_name: row["Brand Name"],
+                coupon_code: row["Coupon Code"],
+                is_active: row["Active"],
+              });
+            }
           }
           resolve();
         } catch (err) {
@@ -292,13 +313,15 @@ const addOffer = (req, res) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const id_offer = uuidv4();
 
+    let fileurl = {};
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
       couponfileFile = "";
+    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
     const { brand_logo, product_pic, coupon_file } = req.files;
     logger.info({ coupon_file });
-    if (brand_logo) {
+    if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
       brand_logoFile = await uploadFilesToBlob({
         ...req.body,
@@ -308,9 +331,12 @@ const addOffer = (req, res) => {
         file_data: brand_logo,
         ticketModule,
       });
+      fileurl={...fileurl,brand_logo:brand_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,brand_logo:''}
     }
     logger.info({ brand_logoFile });
-    if (product_pic) {
+    if (is_product_pic == '1' && product_pic) {
       ticketModule = "product_pic";
       product_picFile = await uploadFilesToBlob({
         ...req.body,
@@ -321,9 +347,12 @@ const addOffer = (req, res) => {
         file_data: product_pic,
         ticketModule,
       });
+      fileurl={...fileurl,product_pic:product_picFile[0]?.url}
+    } else {
+      fileurl={...fileurl,product_pic:''}
     }
 
-    if (coupon_file) {
+    if (is_coupon_file == '1' && coupon_file) {
       ticketModule = "coupon_file";
       couponfileFile = await uploadFilesToBlob({
         ...req.body,
@@ -334,44 +363,143 @@ const addOffer = (req, res) => {
         file_data: coupon_file,
         ticketModule,
       });
+      fileurl={...fileurl,coupon_file:product_picFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_file:''}
     }
     logger.info(
       `Executing query ${{
         ...req.body,
-        brand_logo: brand_logoFile[0]?.url,
-        product_pic: product_picFile[0]?.url,
-        coupon_file: couponfileFile[0]?.url,
+        ...fileurl,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
       }}`
     );
 
     const fileExtension = coupon_file[0]?.originalname?.split(".")[1];
     logger.info({ fileExtension });
     if (fileExtension === "xls" || fileExtension === "xlsx") {
-      await handleExcelFile(coupon_file, id_offer);
+      await handleExcelFile(coupon_file, id_offer,'insert');
     } else if (fileExtension === "csv") {
-      await handleCsvFile(coupon_file, id_offer);
+      await handleCsvFile(coupon_file, id_offer,'insert');
     } else {
       resolve({
         status: 408,
         message: "Unsupported file",
-        err: `${err}`,
+        err: '',
       });
     }
+    console.log({fileurl});
     adminServices
       .addOffer({
         ...req.body,
-        brand_logo: brand_logoFile[0]?.url,
-        product_pic: product_picFile[0]?.url,
-        coupon_file: couponfileFile[0]?.url,
+        ...fileurl,
+        coupon_id: id_offer,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+      })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            ...fileurl,
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
+  });
+};
+
+const updateOffer = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const id_offer = uuidv4();
+
+    let fileurl = {};
+    let ticketModule = "",
+      brand_logoFile = "",
+      product_picFile = "",
+      couponfileFile = "";
+    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
+    const { brand_logo, product_pic, coupon_file, } = req.files;
+    console.log(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
+    logger.info({ coupon_file });
+    if (is_brand_logo == '1' && brand_logo) {
+      ticketModule = "brand_logo";
+      brand_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder: "Deals",
+        file_data: brand_logo,
+        ticketModule,
+      });
+      fileurl={...fileurl,brand_logo:brand_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,brand_logo}
+    }
+    logger.info({ brand_logoFile });
+    if (is_product_pic == '1' && product_pic) {
+      ticketModule = "product_pic";
+      product_picFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: product_pic,
+        ticketModule,
+      });
+      fileurl={...fileurl,product_pic:product_picFile[0]?.url}
+    } else {
+      fileurl={...fileurl,product_pic}
+    }
+
+    if (is_coupon_file == '1' && coupon_file) {
+      ticketModule = "coupon_file";
+      couponfileFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "couponfile",
+        file_data: coupon_file,
+        ticketModule,
+      });
+      fileurl={...fileurl,coupon_file:couponfileFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_file}
+    }
+    logger.info(
+      `Executing query ${{
+        ...req.body,
+        ...fileurl,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+      }}`
+    );
+
+    const fileExtension = is_coupon_file == '1' ? coupon_file[0]?.originalname?.split(".")[1]:'';
+    logger.info({ fileExtension });
+    if (fileExtension === "xlsx") {
+      await handleExcelFile(coupon_file, id_offer,'update',req.body.id);
+    } else if (fileExtension === "csv") {
+      await handleCsvFile(coupon_file, id_offer,'update',req.body.id);
+    }
+    console.log({fileurl});
+    adminServices
+      .updateOfferById({
+        ...req.body,
+        ...fileurl,
         coupon_id: id_offer,
       })
       .then((result) => {
         if (result) {
           resolve({
             status: 200,
-            brand_logo: brand_logoFile[0]?.url,
-            product_pic: product_picFile[0]?.url,
-            coupon_file: couponfileFile[0]?.url,
+            ...fileurl,
             message: "Data Added Successfully",
           });
         }
@@ -560,6 +688,7 @@ module.exports = {
   getCategoryById,
   deleteCategoryById,
   addOffer,
+  updateOffer
   // GetPWAWalletPoints,
   // DeductWalletPoints,
   // RefundPoints,
