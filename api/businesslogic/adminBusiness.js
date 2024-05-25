@@ -439,7 +439,7 @@ const updateOffer = (req, res) => {
       });
       fileurl={...fileurl,brand_logo:brand_logoFile[0]?.url}
     } else {
-      fileurl={...fileurl,brand_logo}
+      fileurl={...fileurl,brand_logo:undefined}
     }
     logger.info({ brand_logoFile });
     if (is_product_pic == '1' && product_pic) {
@@ -455,7 +455,7 @@ const updateOffer = (req, res) => {
       });
       fileurl={...fileurl,product_pic:product_picFile[0]?.url}
     } else {
-      fileurl={...fileurl,product_pic}
+      fileurl={...fileurl,product_pic:undefined}
     }
 
     if (is_coupon_file == '1' && coupon_file) {
@@ -471,7 +471,7 @@ const updateOffer = (req, res) => {
       });
       fileurl={...fileurl,coupon_file:couponfileFile[0]?.url}
     } else {
-      fileurl={...fileurl,coupon_file}
+      fileurl={...fileurl,coupon_file:undefined}
     }
     logger.info(
       `Executing query ${{
