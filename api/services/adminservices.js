@@ -80,6 +80,14 @@ async function getCategoryById(incomingData) {
   return executeQuery(query);
 }
 
+
+async function getCouponIdByOfferId(incomingData) {
+  console.log({ incomingData });
+  const query = ` select coupon_id from offers where id= '${incomingData.id}'`;
+
+  return executeQuery(query);
+}
+
 async function deleteCategoryById(incomingData) {
   console.log({ incomingData });
   const query = ` delete from categories where id= '${incomingData.id}'`;
@@ -127,6 +135,34 @@ async function addOffer(incomingData) {
 
   return executeQuery(query);
 }
+
+async function updateOfferById(dealData) {
+  const { id, is_brand_logo, is_product_pic, is_coupon_file, ...updatedData } = dealData;
+
+  console.log({ id, updatedData });
+
+  // Filter out undefined values
+  const validEntries = Object.entries(updatedData).filter(([key, value]) => value !== undefined);
+
+  console.log({validEntries});
+  // Map to key-value pairs for the SQL query
+  const updateValues = validEntries
+    .map(([key, value]) => `${key} = '${value}'`)
+    .join(', ');
+
+  // Ensure there's something to update
+  if (updateValues.length === 0) {
+    throw new Error('No valid fields to update');
+  }
+
+  const query = `
+    UPDATE offers
+    SET ${updateValues}
+    WHERE id = ${id}`;
+
+  return executeQuery(query);
+};
+
 async function addCoupon(incomingData) {
   console.log({ incomingData });
   const query = ` INSERT INTO coupon (id_offer,brand_name,coupon_code,is_active,createdBy) VALUES 
@@ -136,7 +172,28 @@ async function addCoupon(incomingData) {
   return executeQuery(query);
 }
 
+async function updateCouponOfferById(dealData) {
+  console.log({dealData});
+  const { id_offer, ...updatedData } = dealData;
+
+  console.log({updatedData});
+
+  const updateValues = Object.entries(updatedData)
+    .map(([key, value]) => `${key} = '${value}'`)
+    .join(', ');
+
+  const query = `
+    UPDATE coupon
+    SET ${updateValues}
+    WHERE id_offer = '${id_offer}'`;
+
+  return executeQuery(query);
+};
+
 module.exports = {
+  updateCouponOfferById,
+  updateOfferById,
+  getCouponIdByOfferId,
   addCoupon,
   getTrips,
   getTrip,
