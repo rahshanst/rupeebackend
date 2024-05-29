@@ -102,8 +102,8 @@ async function addOffer(incomingData) {
     offer_validity, offer_percentage, min_order,brand_logo,product_pic,
     offer_category, offer_type, tnc, no_of_coupons,
     is_active,
-    up_color,
     offer_url,
+    up_color,
     down_color,
     coupon_file,
      created_at, updated_at,coupon_id)

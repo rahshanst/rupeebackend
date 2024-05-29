@@ -316,7 +316,7 @@ const getOffers = (req, res) => {
       console.log("ele",result.recordset)
       if (result.recordset[0]) {
         
-        result.recordset.forEach(element => {
+        /* result.recordset.forEach(element => {
           if(element.brand_logo){
           element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
           }
@@ -326,6 +326,7 @@ const getOffers = (req, res) => {
             }
        
         });
+        */
 
         resolve({
           status: 200,
@@ -350,7 +351,7 @@ const getOfferDetails =  (req, res) => {
     userServices.getOfferDetails(incomingData).then((result) => {
       if (result.recordset[0]) {
 
-        result.recordset.forEach(element => {
+        /* result.recordset.forEach(element => {
           if(element.brand_logo){
           element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
           }
@@ -359,7 +360,7 @@ const getOfferDetails =  (req, res) => {
             element.product_pic =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.product_pic;
             }
         });
-
+         */
         resolve({
           status: 200,
           data: result.recordset,
@@ -831,12 +832,13 @@ const getMyOffers = (req, res) => {
         
         userServices.getMyOffers(result.recordset[0].id_user).then((result) => {
           if (result.recordset[0]) {
-            result.recordset.forEach(element => {
+            /*result.recordset.forEach(element => {
               if(element.brand_logo){
               element.brand_logo =  "https://onerupee-store-api-stage.azurewebsites.net/uploads/"+element?.brand_logo;
               }
               
             });
+            */
             resolve({
               status: 200,
               data: result.recordset,
