@@ -938,3 +938,91 @@ module.exports.updateBanners = async (req, res) => {
     }
   });
 };
+
+module.exports.searchTransactions = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.updateBannerById(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+module.exports.searchCategory = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.searchCategory(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
+module.exports.searchDeals = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.searchDeals(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
