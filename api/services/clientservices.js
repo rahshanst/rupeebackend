@@ -63,7 +63,7 @@ async function initiateSession(userDetails) {
 
 
 async function getCategories() {
-  const query = "SELECT category_name, category_icon FROM categories";
+  const query = "SELECT id, category_name, file_data FROM categories";
 
   return executeQuery(query);
 }
