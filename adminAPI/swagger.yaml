@@ -682,6 +682,97 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+            
+  /searchDeals:
+    post:
+      operationId: searchDeals
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/searchData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /searchCategory:
+    post:
+      operationId: searchCategory
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/searchData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /searchTransactions:
+    post:
+      operationId: searchTransactions
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/searchData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /deleteDealsById:
     post:
@@ -972,6 +1063,12 @@ definitions:
     type: object
     properties:
       bank_name:
+        type: string
+  
+  searchData:
+    type: object
+    properties:
+      val:
         type: string
 
   GetAllBookingData:

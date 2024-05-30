@@ -533,3 +533,64 @@ module.exports.deleteBrandById = (id) => {
   const query = `DELETE FROM Brands WHERE id = ${id}`;
   return executeQuery(query);
 };
+module.exports.searchCategory = (val) => {
+  const query = `SELECT [category_name] FROM [dbo].[categories] WHERE 
+  [category_name] LIKE '%${val}%'`;
+  return executeQuery(query);
+};
+module.exports.searchDeals = (searchValue) => {
+  const query = ` SELECT o.*, c.category_name
+  FROM offers o
+  LEFT JOIN categories c ON o.offer_category = c.id
+  WHERE 
+    o.brand_name LIKE '%${searchValue}%' OR
+    o.offer_category LIKE '%${searchValue}%' OR
+    o.offer_validity LIKE '%${searchValue}%' OR
+    CAST(o.original_price AS VARCHAR) LIKE '%${searchValue}%' OR
+    o.offer_percentage LIKE '%${searchValue}%' OR
+    o.min_order LIKE '%${searchValue}%' OR
+    o.coupon_counter LIKE '%${searchValue}%' OR
+    c.category_name LIKE '%${searchValue}%'
+  ORDER BY o.created_at DESC`;
+  return executeQuery(query);
+};
+module.exports.searchCategory = (val) => {
+  const query = `SELECT [category_name] FROM [dbo].[categories] WHERE 
+  [category_name] LIKE '%${val}%'`;
+  return executeQuery(query);
+};
+
+
+module.exports.searchTransactions = (val) => {
+  const query = `SELECT 
+  [user_id],
+  [offer_id],
+  [redeem_code],
+  [redeem_status],
+  [transactionId],
+  [order_id],
+  [paid_amnt],
+  [cashback],
+  [payment_type],
+  [payment_id],
+  [bank_name],
+  [created_at],
+  [updated_at],
+  [updater]
+FROM 
+  [dbo].[useroffers]
+WHERE 
+  [user_id] LIKE '%${val}%'
+  OR [offer_id] LIKE '%${val}%'
+  OR [redeem_code] LIKE '%${val}%'
+  OR [redeem_status] LIKE '%${val}%'
+  OR [transactionId] LIKE '%${val}%'
+  OR [order_id] LIKE '%${val}%'
+  OR [paid_amnt] LIKE '%${val}%'
+  OR [cashback] LIKE '%${val}%'
+  OR [payment_type] LIKE '%${val}%'
+  OR [payment_id] LIKE '%${val}%'
+  OR [bank_name] LIKE '%${val}%'
+  OR [updater] LIKE '%${val}%';`;
+  return executeQuery(query);
+};
