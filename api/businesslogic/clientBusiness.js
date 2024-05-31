@@ -427,8 +427,8 @@ const validationCheck = (req, res) => {
             userServices.getCouponcode(offer_id).then((result) => {
               if (result.recordset[0]) {
                 console.log(result)
-                result.recordset[0].coupon_code='COUPON3THIS';
-                result.recordset[0].redeem_url='https://myntra.com';
+                //result.recordset[0].coupon_code='COUPON3THIS';
+                //result.recordset[0].redeem_url='https://myntra.com';
                 
                 let user_token = req.headers["authorization"]
             userServices.getUserId(user_token).then((result) => { 
@@ -438,7 +438,7 @@ const validationCheck = (req, res) => {
                 let offerdata = {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
-                  redeem_code: 'CO4PON3TH7S',
+                  //redeem_code: 'CO4PON3TH7S',
 
                 }
                 userServices.putUserOffer(offerdata).then((result) => {
@@ -571,8 +571,8 @@ const checkPaymentStatus = (req, res) => {
         userServices.getCouponcode(offer_id).then((result) => {
           if (result.recordset[0]) {
             console.log(result)
-            result.recordset[0].coupon_code='CO4PON3TH7S';
-            result.recordset[0].redeem_url='https://myntra.com';
+            //result.recordset[0].coupon_code='CO4PON3TH7S';
+            //result.recordset[0].redeem_url='https://myntra.com';
             
             let user_token = req.headers["authorization"]
             userServices.getUserId(user_token).then((result) => { 
@@ -582,7 +582,7 @@ const checkPaymentStatus = (req, res) => {
                 let offerdata = {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
-                  redeem_code: 'CO4PON3TH7S',
+                  //redeem_code: 'CO4PON3TH7S',
 
                 }
                 userServices.putUserOffer(offerdata).then((result) => {
