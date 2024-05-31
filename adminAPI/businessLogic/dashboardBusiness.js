@@ -942,7 +942,7 @@ module.exports.updateBanners = async (req, res) => {
 module.exports.searchTransactions = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.updateBannerById(req.body);
+      let result = await dashboardServices.searchTransactions(req.body.val);
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -971,7 +971,7 @@ module.exports.searchTransactions = async (req, res) => {
 module.exports.searchCategory = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.searchCategory(req.body);
+      let result = await dashboardServices.searchCategory(req.body.val);
       logger.info([result]);
       if (result.error) {
         resolve({
@@ -1000,7 +1000,7 @@ module.exports.searchCategory = async (req, res) => {
 module.exports.searchDeals = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.searchDeals(req.body);
+      let result = await dashboardServices.searchDeals(req.body.val);
       logger.info([result]);
       if (result.error) {
         resolve({

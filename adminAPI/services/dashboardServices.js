@@ -550,8 +550,7 @@ module.exports.searchDeals = (searchValue) => {
     o.offer_percentage LIKE '%${searchValue}%' OR
     o.min_order LIKE '%${searchValue}%' OR
     o.coupon_counter LIKE '%${searchValue}%' OR
-    c.category_name LIKE '%${searchValue}%'
-  ORDER BY o.created_at DESC`;
+    c.category_name LIKE '%${searchValue}%'`;
   return executeQuery(query);
 };
 module.exports.searchCategory = (val) => {
