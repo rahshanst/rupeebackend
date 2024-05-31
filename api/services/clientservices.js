@@ -111,7 +111,7 @@ async function getCouponcode(incomingData) {
   //   GETDATE(),
   //   '${incomingData.user_id}'
   //  )`;
-  const query = `SELECT id, brand_name, brand_description, product_name, original_price, offer_validity, offer_percentage, min_order, brand_logo, offer_category, offer_type, tnc, up_color, down_color, offer_url FROM offers WHERE id='${incomingData}'`;
+  const query = `SELECT TOP 1 offers.id, offers.brand_name, offers.brand_description, offers.product_name, offers.original_price, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_category, offers.offer_type, offers.tnc, offers.up_color, offers.down_color, offers.offer_url, coupon.coupon_code FROM coupon INNER JOIN offers ON coupon.id_offer=offers.coupon_id WHERE offers.id='${incomingData}'`;
 
   return executeQuery(query);
 }
