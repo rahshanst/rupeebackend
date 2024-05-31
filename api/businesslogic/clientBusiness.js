@@ -438,7 +438,7 @@ const validationCheck = (req, res) => {
                 let offerdata = {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
-                  //redeem_code: 'CO4PON3TH7S',
+                  redeem_code: result.recordset[0].coupon_code,
 
                 }
                 userServices.putUserOffer(offerdata).then((result) => {
@@ -582,7 +582,7 @@ const checkPaymentStatus = (req, res) => {
                 let offerdata = {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
-                  //redeem_code: 'CO4PON3TH7S',
+                  redeem_code: result.recordset[0].coupon_code,
 
                 }
                 userServices.putUserOffer(offerdata).then((result) => {
