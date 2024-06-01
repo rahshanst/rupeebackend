@@ -69,7 +69,7 @@ async function getCategories() {
 }
 
 async function getOffers() {
-  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, product_pic, offer_category, offer_type, down_color, up_color FROM offers";
+  const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, product_pic, offer_category, offer_type, down_color, up_color FROM offers WHERE is_active=1";
 
   return executeQuery(query);
 }
@@ -111,7 +111,24 @@ async function getCouponcode(incomingData) {
   //   GETDATE(),
   //   '${incomingData.user_id}'
   //  )`;
-  const query = `SELECT TOP 1 offers.id, offers.brand_name, offers.brand_description, offers.product_name, offers.original_price, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_category, offers.offer_type, offers.tnc, offers.up_color, offers.down_color, offers.offer_url, coupon.coupon_code FROM coupon INNER JOIN offers ON coupon.id_offer=offers.coupon_id WHERE offers.id='${incomingData}'`;
+  const query = `SELECT TOP 2 offers.id, offers.brand_name, offers.brand_description, offers.product_name, offers.original_price, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_category, offers.offer_type, offers.tnc, offers.up_color, offers.down_color, offers.offer_url, coupon.coupon_code, coupon.id_offer FROM coupon INNER JOIN offers ON coupon.id_offer=offers.coupon_id WHERE offers.id='${incomingData}'`;
+
+  return executeQuery(query);
+}
+
+async function putRemoveCoupon(incomingData) {
+ 
+  const query = `DELETE TOP (1) FROM coupon WHERE coupon.id_offer='${incomingData}'`;
+
+  return executeQuery(query);
+}
+
+async function putInactivateCoupon(incomingData) {
+ 
+  const query = `
+  UPDATE offers 
+   SET is_active = 0 WHERE id='${incomingData}'
+`;
 
   return executeQuery(query);
 }
@@ -132,7 +149,9 @@ module.exports = {
   getOffers,
   getOfferDetails,
   getCouponcode,
+  putRemoveCoupon,
   getUserId,
   putUserOffer,
+  putInactivateCoupon,
   getMyOffers,
 };

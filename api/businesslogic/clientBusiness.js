@@ -385,6 +385,7 @@ const getCouponcode =  (req, res) => {
 
     userServices.getCouponcode(incomingData).then((result) => {
       if (result.recordset[0]) {
+
         resolve({
           status: 200,
           data: result.recordset,
@@ -427,6 +428,34 @@ const validationCheck = (req, res) => {
             userServices.getCouponcode(offer_id).then((result) => {
               if (result.recordset[0]) {
                 console.log(result)
+                // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+                //   if(result){
+                //   console.log("couponremove", result)
+                //   }
+                //   else{
+                //     resolve({
+                //       status: 400,
+                //       data: [],
+                //       message: "Internal error. Please try again",
+                //     });
+                //   }
+                // })
+                if(!result.recordset[1]){
+                  userServices.putInactivateCoupon(offer_id).then((result) => {
+                  if(result){
+                  console.log("couponremove", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Internal error. Please try again",
+                    });
+                  }
+                })
+    
+                }
+                result.recordset[0].id_offer='';
                 //result.recordset[0].coupon_code='COUPON3THIS';
                 //result.recordset[0].redeem_url='https://myntra.com';
                 let coupon_codee = result.recordset[0].coupon_code
@@ -466,7 +495,7 @@ const validationCheck = (req, res) => {
 
                 resolve({
                   status: 200,
-                  data: result.recordset,
+                  data: result.recordset[0],
                   message: "Fetched Successfully",
                 });
               }
@@ -571,6 +600,35 @@ const checkPaymentStatus = (req, res) => {
         userServices.getCouponcode(offer_id).then((result) => {
           if (result.recordset[0]) {
             console.log(result)
+
+            // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+            //   if(result){
+            //   console.log("couponremove", result)
+            //   }
+            //   else{
+            //     resolve({
+            //       status: 400,
+            //       data: [],
+            //       message: "Internal error. Please try again",
+            //     });
+            //   }
+            // })
+            if(!result.recordset[1]){
+              userServices.putInactivateCoupon(offer_id).then((result) => {
+              if(result){
+              console.log("couponremove", result)
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Internal error. Please try again",
+                });
+              }
+            })
+
+            }
+            result.recordset[0].id_offer='';
             //result.recordset[0].coupon_code='CO4PON3TH7S';
             //result.recordset[0].redeem_url='https://myntra.com';
             let coupon_codee = result.recordset[0].coupon_code
@@ -610,7 +668,7 @@ const checkPaymentStatus = (req, res) => {
 
             resolve({
               status: 200,
-              data: result.recordset,
+              data: result.recordset[0],
               message: "Fetched Successfully",
             });
           }
