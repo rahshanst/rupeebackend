@@ -385,6 +385,7 @@ const getCouponcode =  (req, res) => {
 
     userServices.getCouponcode(incomingData).then((result) => {
       if (result.recordset[0]) {
+
         resolve({
           status: 200,
           data: result.recordset,
@@ -427,6 +428,34 @@ const validationCheck = (req, res) => {
             userServices.getCouponcode(offer_id).then((result) => {
               if (result.recordset[0]) {
                 console.log(result)
+                // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+                //   if(result){
+                //   console.log("couponremove", result)
+                //   }
+                //   else{
+                //     resolve({
+                //       status: 400,
+                //       data: [],
+                //       message: "Internal error. Please try again",
+                //     });
+                //   }
+                // })
+                if(!result.recordset[1]){
+                  userServices.putInactivateCoupon(offer_id).then((result) => {
+                  if(result){
+                  console.log("couponremove", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Internal error. Please try again",
+                    });
+                  }
+                })
+    
+                }
+                result.recordset[0].id_offer='';
                 //result.recordset[0].coupon_code='COUPON3THIS';
                 //result.recordset[0].redeem_url='https://myntra.com';
                 let coupon_codee = result.recordset[0].coupon_code
@@ -466,7 +495,7 @@ const validationCheck = (req, res) => {
 
                 resolve({
                   status: 200,
-                  data: result.recordset,
+                  data: result.recordset[0],
                   message: "Fetched Successfully",
                 });
               }
@@ -549,6 +578,9 @@ const checkPaymentStatus = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const offer_id = req.body.offer_id;
     const postData = req.body;
+    const order_id = req.body.order_id;
+    const transaction_id = req.body.razorpay_payment_id;
+    const amt = req.body.razorpay_amount;
     const authorizationHeader = req.headers["authorization"];
     const Cookie =
       "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
@@ -571,6 +603,35 @@ const checkPaymentStatus = (req, res) => {
         userServices.getCouponcode(offer_id).then((result) => {
           if (result.recordset[0]) {
             console.log(result)
+
+            // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+            //   if(result){
+            //   console.log("couponremove", result)
+            //   }
+            //   else{
+            //     resolve({
+            //       status: 400,
+            //       data: [],
+            //       message: "Internal error. Please try again",
+            //     });
+            //   }
+            // })
+            if(!result.recordset[1]){
+              userServices.putInactivateCoupon(offer_id).then((result) => {
+              if(result){
+              console.log("couponremove", result)
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Internal error. Please try again",
+                });
+              }
+            })
+
+            }
+            result.recordset[0].id_offer='';
             //result.recordset[0].coupon_code='CO4PON3TH7S';
             //result.recordset[0].redeem_url='https://myntra.com';
             let coupon_codee = result.recordset[0].coupon_code
@@ -583,9 +644,12 @@ const checkPaymentStatus = (req, res) => {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
                   redeem_code: coupon_codee,
+                  order_id: order_id,
+                  transaction_id: transaction_id,
+                  amt: amt
 
                 }
-                userServices.putUserOffer(offerdata).then((result) => {
+                userServices.putUserOfferPaid(offerdata).then((result) => {
                   if(result){
                   console.log("offput", result)
                   }
@@ -610,7 +674,7 @@ const checkPaymentStatus = (req, res) => {
 
             resolve({
               status: 200,
-              data: result.recordset,
+              data: result.recordset[0],
               message: "Fetched Successfully",
             });
           }
