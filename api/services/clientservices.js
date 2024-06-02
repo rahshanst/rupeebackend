@@ -95,6 +95,26 @@ async function putUserOffer(incomingData) {
       '${incomingData.user_id}', 
       ${incomingData.offer_id}, 
       '${incomingData.redeem_code}'
+
+  )
+`;
+
+  return executeQuery(query);
+}
+
+async function putUserOfferPaid(incomingData) {
+  const query = `
+  INSERT INTO useroffers 
+  (user_id, offer_id, redeem_code, transactionId, order_id, paid_amnt) 
+  VALUES 
+  (
+      '${incomingData.user_id}', 
+      ${incomingData.offer_id}, 
+      '${incomingData.redeem_code}',
+      '${incomingData.transaction_id}',
+      '${incomingData.order_id}',
+      '${incomingData.amt}'
+      
   )
 `;
 
@@ -152,6 +172,7 @@ module.exports = {
   putRemoveCoupon,
   getUserId,
   putUserOffer,
+  putUserOfferPaid,
   putInactivateCoupon,
   getMyOffers,
 };

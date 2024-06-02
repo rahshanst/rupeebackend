@@ -578,6 +578,9 @@ const checkPaymentStatus = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const offer_id = req.body.offer_id;
     const postData = req.body;
+    const order_id = req.body.order_id;
+    const transaction_id = req.body.razorpay_payment_id;
+    const amt = req.body.razorpay_amount;
     const authorizationHeader = req.headers["authorization"];
     const Cookie =
       "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
@@ -641,9 +644,12 @@ const checkPaymentStatus = (req, res) => {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
                   redeem_code: coupon_codee,
+                  order_id: order_id,
+                  transaction_id: transaction_id,
+                  amt: amt
 
                 }
-                userServices.putUserOffer(offerdata).then((result) => {
+                userServices.putUserOfferPaid(offerdata).then((result) => {
                   if(result){
                   console.log("offput", result)
                   }
