@@ -998,6 +998,7 @@ module.exports.searchCategory = async (req, res) => {
   });
 };
 module.exports.searchDeals = async (req, res) => {
+  console.log(req.body);
   return new Promise(async (resolve, reject) => {
     try {
       let result = await dashboardServices.searchDeals(req.body.val);
