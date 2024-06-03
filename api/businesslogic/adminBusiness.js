@@ -230,39 +230,89 @@ const deleteCategoryById = (req, res) => {
 
 async function handleExcelFile(file, id_offer,type,id) {
   const tempFileName = `${Date.now()}_${file[0]?.originalname}`;
-  console.log({ tempFileName });
+  logger.info({ tempFileName });
   const tempFilePath = path.join(os.tmpdir(), tempFileName);
-  console.log({ tempFilePath }); // Check temporary file path
+  logger.info({ tempFilePath }); // Check temporary file path
   fs.writeFileSync(tempFilePath, file[0].buffer);
   const buffer = fs.readFileSync(tempFilePath);
-  console.log({ buffer });
+  logger.info({ buffer });
   const workbook = xlsx.read(buffer, { type: "buffer" });
   const sheet_name_list = workbook.SheetNames;
   const results = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
-  console.log({ results });
+  logger.info({ results });
 
   if (type == 'update') {
     const offerId = await adminServices.getCouponIdByOfferId({ id: id })
-    console.log({offerId},offerId?.recordset[0]?.coupon_id);
+    logger.info({ offerId }, offerId?.recordset[0]?.coupon_id);
     for (const row of results) {
-      console.log({row:row});
-      await adminServices.updateCouponOfferById({
-        id_offer: offerId?.recordset[0]?.coupon_id,
-        brand_name: row["Brand Name"],
-        coupon_code: row["Coupon Code"],
-        is_active: row["Active"],
-      });
+      logger.info({ offerId }, row);
+      if ('__EMPTY' in row) {
+        // Fetch the next row if it exists
+        const nextRowIndex = results.indexOf(row) + 1;
+        if (nextRowIndex < results.length) {
+          const nextRow = results[nextRowIndex];
+          const brand_name = nextRow['__EMPTY'] || 'Brand Name';
+          const coupon_code = nextRow['Coupon Code'] || nextRow['__EMPTY_1'];
+          const is_active = nextRow['Active'] || nextRow['__EMPTY_2'];
+    
+          await adminServices.updateCouponOfferById({
+            id_offer: offerId?.recordset[0]?.coupon_id,
+            brand_name: brand_name,
+            coupon_code: coupon_code,
+            is_active: is_active || 0,
+          });
+        }
+      } else {
+        const brand_name = row['__EMPTY'] || 'Brand Name';
+        const coupon_code = row['Coupon Code'] || row['__EMPTY_1'];
+        const is_active = row['Active'] || row['__EMPTY_2'];
+    
+        await adminServices.addCoupon({
+          id_offer: id_offer,
+          brand_name: brand_name,
+          coupon_code: coupon_code,
+          is_active: is_active || 0,
+        });
+      }
     }
+    
   } else {
+    console.log({ id_offer }, results);
+
     for (const row of results) {
-      await adminServices.addCoupon({
-        id_offer: id_offer,
-        brand_name: row["Brand Name"],
-        coupon_code: row["Coupon Code"],
-        is_active: row["Active"],
-      });
+      logger.info({ id_offer }, row);
+    
+      if ('__EMPTY' in row) {
+        // Fetch the next row if it exists
+        const nextRowIndex = results.indexOf(row) + 1;
+        if (nextRowIndex < results.length) {
+          const nextRow = results[nextRowIndex];
+          const brand_name = nextRow['__EMPTY'] || nextRow['Brand Name'];
+          const coupon_code = nextRow['Coupon Code'] || nextRow['__EMPTY_1'];
+          const is_active = nextRow['Active'] || nextRow['__EMPTY_2'];
+    
+          await adminServices.addCoupon({
+            id_offer: id_offer,
+            brand_name: brand_name,
+            coupon_code: coupon_code,
+            is_active: is_active || 0,
+          });
+        }
+      } else {
+        const brand_name = row['__EMPTY'] || row['Brand Name'];
+        const coupon_code = row['Coupon Code'] || row['__EMPTY_1'];
+        const is_active = row['Active'] || row['__EMPTY_2'];
+    
+        await adminServices.addCoupon({
+          id_offer: id_offer,
+          brand_name: brand_name,
+          coupon_code: coupon_code,
+          is_active: is_active || 0,
+        });
+      }
     }
+    
   }
 }
 
@@ -280,7 +330,7 @@ async function handleCsvFile(file, id_offer,type) {
         try {
           if (type == 'update') {
             const offerId = await adminServices.getCouponIdByOfferId({ id: id })
-            console.log({offerId}); 
+            logger.info({offerId}); 
             for (const row of results) {
               await adminServices.updateCouponOfferById({
                 id_offer: offerId?.recordset[0]?.coupon_id,
@@ -388,7 +438,7 @@ const addOffer = (req, res) => {
         err: '',
       });
     }
-    console.log({fileurl});
+    logger.info({fileurl});
     adminServices
       .addOffer({
         ...req.body,
@@ -425,7 +475,7 @@ const updateOffer = (req, res) => {
       couponfileFile = "";
     const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
     const { brand_logo, product_pic, coupon_file, } = req.files;
-    console.log(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
+    logger.info(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
@@ -488,7 +538,7 @@ const updateOffer = (req, res) => {
     } else if (fileExtension === "csv") {
       await handleCsvFile(coupon_file, id_offer,'update',req.body.id);
     }
-    console.log({fileurl});
+    logger.info({fileurl});
     adminServices
       .updateOfferById({
         ...req.body,
