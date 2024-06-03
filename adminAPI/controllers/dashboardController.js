@@ -327,7 +327,7 @@ module.exports.updateBanners = (req, res) => {
 };
 // Method to update banners
 module.exports.searchDeals = (req, res) => {
-  dashboardBusiness.searchDeals(req.body)
+  dashboardBusiness.searchDeals(req)
     .then((result) => {
       res.json(result);
     })
@@ -342,7 +342,7 @@ module.exports.searchDeals = (req, res) => {
 };
 // Method to update banners
 module.exports.searchCategory = (req, res) => {
-  dashboardBusiness.searchCategory(req.body)
+  dashboardBusiness.searchCategory(req)
     .then((result) => {
       res.json(result);
     })
@@ -357,7 +357,7 @@ module.exports.searchCategory = (req, res) => {
 };
 // Method to update banners
 module.exports.searchTransactions = (req, res) => {
-  dashboardBusiness.searchTransactions(req.body)
+  dashboardBusiness.searchTransactions(req)
     .then((result) => {
       res.json(result);
     })
