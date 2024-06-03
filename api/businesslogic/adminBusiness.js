@@ -413,7 +413,7 @@ const addOffer = (req, res) => {
         file_data: coupon_file,
         ticketModule,
       });
-      fileurl={...fileurl,coupon_file:product_picFile[0]?.url}
+      fileurl={...fileurl,coupon_file:couponfileFile[0]?.url}
     } else {
       fileurl={...fileurl,coupon_file:''}
     }
