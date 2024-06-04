@@ -96,6 +96,16 @@ async function deleteCategoryById(incomingData) {
 }
 async function addOffer(incomingData) {
   console.log({ incomingData });
+ 
+  function urlToBase64(url) {
+    return btoa(url);
+}
+
+const url = `<click>${incomingData.offer_url}?type=hyperlink</click>`;
+const base64Url = urlToBase64(url);
+console.log(base64Url);
+
+
   const query = `
   INSERT INTO offers 
   (brand_name, brand_description, product_name, original_price,
@@ -123,7 +133,7 @@ async function addOffer(incomingData) {
       '${incomingData.tnc}',
       '${incomingData.no_of_coupons}',
       '${incomingData.is_active}',
-      '${incomingData.offer_url}',
+      '${base64Url}',
       '${incomingData.up_color}',
       '${incomingData.down_color}',
       '${incomingData.coupon_file}',

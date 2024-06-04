@@ -468,7 +468,7 @@ paths:
         - name: offer_percentage
           in: formData
           required: true
-          type: number
+          type: string
         - name: min_order
           in: formData
           required: true
@@ -743,6 +743,39 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+ 
+  /filterByBrand:
+    post:
+      operationId: filterByBrand
+      x-swagger-router-controller: dashboardController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        -  Dashboard
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: addDeals
+          description: addDeals
+          required: true
+          schema:
+            $ref: '#/definitions/filterData'
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+ 
   /searchTransactions:
     post:
       operationId: searchTransactions
@@ -1070,6 +1103,13 @@ definitions:
     properties:
       val:
         type: string
+      
+  filterData:
+    type: object
+    properties:
+      val:
+        type: string
+         
 
   GetAllBookingData:
     type: object

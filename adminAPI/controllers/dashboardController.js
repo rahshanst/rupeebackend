@@ -355,6 +355,22 @@ module.exports.searchCategory = (req, res) => {
       });
     });
 };
+
+module.exports.filterByBrand = (req, res) => {
+  dashboardBusiness.filterByBrand(req)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        status: "500",
+        data: [],
+        error: error.message,
+        message: "Internal server error",
+      });
+    });
+};
+
 // Method to update banners
 module.exports.searchTransactions = (req, res) => {
   dashboardBusiness.searchTransactions(req)

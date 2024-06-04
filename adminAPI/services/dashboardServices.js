@@ -534,10 +534,31 @@ module.exports.deleteBrandById = (id) => {
   return executeQuery(query);
 };
 module.exports.searchCategory = (val) => {
-  const query = `SELECT [category_name] FROM [dbo].[categories] WHERE 
+  const query = `SELECT [category_name],[file_name],[file_type],[file_data],[created_at] FROM [dbo].[categories]  
   [category_name] LIKE '%${val}%'`;
   return executeQuery(query);
 };
+
+module.exports.filterByBrand = (val) => {
+  console.log({val});
+  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
+  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
+  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
+  UNION ALL
+  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
+    SELECT id_user
+    FROM user_details
+    GROUP BY id_user
+    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
+  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
+  UNION ALL
+  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
+  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
+  WHERE bank_name IS NOT NULL; `;
+  return executeQuery(query);
+};
+
+
 module.exports.searchDeals = (searchValue) => {
   const query = ` SELECT o.*, c.category_name
   FROM offers o
@@ -550,11 +571,13 @@ module.exports.searchDeals = (searchValue) => {
     o.offer_percentage LIKE '%${searchValue}%' OR
     o.min_order LIKE '%${searchValue}%' OR
     o.coupon_counter LIKE '%${searchValue}%' OR
-    c.category_name LIKE '%${searchValue}%'`;
+    c.category_name LIKE '%${searchValue}%' OR
+    o.product_name LiKE '%${searchValue}%'`;
+  
   return executeQuery(query);
 };
 module.exports.searchCategory = (val) => {
-  const query = `SELECT [category_name] FROM [dbo].[categories] WHERE 
+  const query = `SELECT [category_name],[file_name],[file_type],[file_data],[created_at] FROM [dbo].[categories] WHERE 
   [category_name] LIKE '%${val}%'`;
   return executeQuery(query);
 };

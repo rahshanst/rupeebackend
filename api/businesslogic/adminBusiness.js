@@ -413,7 +413,20 @@ const addOffer = (req, res) => {
         file_data: coupon_file,
         ticketModule,
       });
-      fileurl={...fileurl,coupon_file:couponfileFile[0]?.url}
+      fileurl = { ...fileurl, coupon_file: couponfileFile[0]?.url }
+      const fileExtension = coupon_file[0]?.originalname?.split(".")[1];
+      logger.info({ fileExtension });
+      if (fileExtension === "xls" || fileExtension === "xlsx") {
+        await handleExcelFile(coupon_file, id_offer,'insert');
+      } else if (fileExtension === "csv") {
+        await handleCsvFile(coupon_file, id_offer,'insert');
+      } else {
+        resolve({
+          status: 408,
+          message: "Unsupported file",
+          err: '',
+        });
+      }
     } else {
       fileurl={...fileurl,coupon_file:''}
     }
@@ -425,19 +438,7 @@ const addOffer = (req, res) => {
       }}`
     );
 
-    const fileExtension = coupon_file[0]?.originalname?.split(".")[1];
-    logger.info({ fileExtension });
-    if (fileExtension === "xls" || fileExtension === "xlsx") {
-      await handleExcelFile(coupon_file, id_offer,'insert');
-    } else if (fileExtension === "csv") {
-      await handleCsvFile(coupon_file, id_offer,'insert');
-    } else {
-      resolve({
-        status: 408,
-        message: "Unsupported file",
-        err: '',
-      });
-    }
+  
     logger.info({fileurl});
     adminServices
       .addOffer({

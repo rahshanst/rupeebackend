@@ -997,6 +997,36 @@ module.exports.searchCategory = async (req, res) => {
     }
   });
 };
+
+module.exports.filterByBrand = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await dashboardServices.filterByBrand(req.body);
+      logger.info([result]);
+      if (result.error) {
+        resolve({
+          status: "500",
+          data: [],
+          error: result.error.info,
+          message: "Internal server error",
+        });
+      }
+      resolve({
+        status: "200",
+        data: result.recordset || [],
+        message: "Success",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
 module.exports.searchDeals = async (req, res) => {
   console.log(req.body);
   return new Promise(async (resolve, reject) => {
