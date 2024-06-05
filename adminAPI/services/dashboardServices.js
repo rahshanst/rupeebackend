@@ -559,6 +559,10 @@ module.exports.filterByBrand = (val) => {
 };
 
 
+module.exports.getBrandName = () => {
+  const query = `  select distinct(brand_name) from offers`;
+  return executeQuery(query);
+};
 module.exports.searchDeals = (searchValue) => {
   const query = ` SELECT o.*, c.category_name
   FROM offers o

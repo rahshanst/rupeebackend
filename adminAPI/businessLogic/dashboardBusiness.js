@@ -968,6 +968,29 @@ module.exports.searchTransactions = async (req, res) => {
     }
   });
 };
+module.exports.getBrandName = async (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let brand_name = await dashboardServices.getBrandName();
+      logger.info([brand_name]);
+      resolve({
+        status: "200",
+        data: {
+          brandName: brand_name.recordset,
+        },
+        message: "Record fetched successfully",
+      });
+    } catch (error) {
+      logger.info("Error making API request:", error);
+      resolve({
+        status: "500",
+        data: [],
+        error,
+        message: error.code,
+      });
+    }
+  });
+};
 module.exports.searchCategory = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
