@@ -81,7 +81,7 @@ async function getOfferDetails(incomingData) {
 }
 
 async function getUserId(incomingData) {
-  const query = `SELECT id_user FROM user_details WHERE token='${incomingData}'`;
+  const query = `SELECT id_user, bank_name FROM user_details WHERE token='${incomingData}'`;
 
   return executeQuery(query);
 }
@@ -89,12 +89,17 @@ async function getUserId(incomingData) {
 async function putUserOffer(incomingData) {
   const query = `
   INSERT INTO useroffers 
-  (user_id, offer_id, redeem_code) 
+  (user_id, offer_id, redeem_code, order_id, paid_amnt, pay_mode, bank_name, redeem_status) 
   VALUES 
   (
       '${incomingData.user_id}', 
       ${incomingData.offer_id}, 
-      '${incomingData.redeem_code}'
+      '${incomingData.redeem_code}',
+      '${incomingData.order_id}',
+      '${incomingData.amt}',
+      '${incomingData.pay_mode}',
+      '${incomingData.bank}',
+      '${incomingData.redeem_status}'
 
   )
 `;
@@ -105,7 +110,7 @@ async function putUserOffer(incomingData) {
 async function putUserOfferPaid(incomingData) {
   const query = `
   INSERT INTO useroffers 
-  (user_id, offer_id, redeem_code, transactionId, order_id, paid_amnt) 
+  (user_id, offer_id, redeem_code, transactionId, order_id, paid_amnt, pay_mode, bank_name, redeem_status) 
   VALUES 
   (
       '${incomingData.user_id}', 
@@ -113,7 +118,10 @@ async function putUserOfferPaid(incomingData) {
       '${incomingData.redeem_code}',
       '${incomingData.transaction_id}',
       '${incomingData.order_id}',
-      '${incomingData.amt}'
+      '${incomingData.amt}',
+      '${incomingData.pay_mode}',
+      '${incomingData.bank}',
+      '${incomingData.redeem_status}'
       
   )
 `;
@@ -154,7 +162,7 @@ async function putInactivateCoupon(incomingData) {
 }
 
 async function getMyOffers(incomingData) {
-  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, offers.up_color, offers.down_color, offers.offer_url, useroffers.redeem_code, useroffers.redeem_status FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
+  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, offers.up_color, offers.down_color, offers.offer_url, useroffers.redeem_code, useroffers.redeem_status, useroffers.created_at, useroffers.pay_mode, useroffers.order_id FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
 
   return executeQuery(query);
 }

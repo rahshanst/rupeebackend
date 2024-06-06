@@ -409,6 +409,9 @@ const validationCheck = (req, res) => {
       payableAmount: 1, //parseInt(req.body.payableAmount),
       channel: "rupeestore", //req.body.mode,
     };
+    let random_number = Math.floor(100000000000000 + Math.random() * 900000000000000);
+    const order_id = 'W'+random_number;
+    const todayte = new Date().toString('en-US', {timeZone: 'Asia/Kolkata'})
     const authorizationHeader = req.headers["authorization"];
     const Cookie =
       "ARRAffinity=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e; ARRAffinitySameSite=ef9aa2e92a300f3166dc402f37bb3d300cbcfa0e93dee478dddb346c20cc359e";
@@ -424,6 +427,7 @@ const validationCheck = (req, res) => {
       if(result.data?.walletPoints > 0){
         try {
         DeductWalletPoints(req).then((result) => {
+          console.log("wallltdeduct", result)
           if(result.data === true){
             userServices.getCouponcode(offer_id).then((result) => {
               if (result.recordset[0]) {
@@ -458,6 +462,10 @@ const validationCheck = (req, res) => {
                 result.recordset[0].id_offer='';
                 //result.recordset[0].coupon_code='COUPON3THIS';
                 //result.recordset[0].redeem_url='https://myntra.com';
+                result.recordset[0].order_id=order_id;
+                result.recordset[0].purchase_time=todayte;
+                result.recordset[0].pay_mode=2;
+
                 let coupon_codee = result.recordset[0].coupon_code
                 let user_token = req.headers["authorization"]
             userServices.getUserId(user_token).then((result) => { 
@@ -468,6 +476,11 @@ const validationCheck = (req, res) => {
                   user_id: result.recordset[0].id_user,
                   offer_id: offer_id,
                   redeem_code: coupon_codee,
+                  order_id: order_id,
+                  pay_mode: 1,
+                  amt: 0,
+                  bank: result.recordset[0].bank_name,
+                  redeem_status: 1
 
                 }
                 userServices.putUserOffer(offerdata).then((result) => {
@@ -579,6 +592,7 @@ const checkPaymentStatus = (req, res) => {
     const offer_id = req.body.offer_id;
     const postData = req.body;
     const order_id = req.body.order_id;
+    const todayte = new Date().toString('en-US', {timeZone: 'Asia/Kolkata'})
     const transaction_id = req.body.razorpay_payment_id;
     const amt = req.body.razorpay_amount;
     const authorizationHeader = req.headers["authorization"];
@@ -634,6 +648,10 @@ const checkPaymentStatus = (req, res) => {
             result.recordset[0].id_offer='';
             //result.recordset[0].coupon_code='CO4PON3TH7S';
             //result.recordset[0].redeem_url='https://myntra.com';
+            result.recordset[0].order_id=order_id;
+            result.recordset[0].purchase_time=todayte;
+            result.recordset[0].pay_mode=1;
+
             let coupon_codee = result.recordset[0].coupon_code
             let user_token = req.headers["authorization"]
             userServices.getUserId(user_token).then((result) => { 
@@ -645,8 +663,11 @@ const checkPaymentStatus = (req, res) => {
                   offer_id: offer_id,
                   redeem_code: coupon_codee,
                   order_id: order_id,
+                  pay_mode: 1,
                   transaction_id: transaction_id,
-                  amt: amt
+                  amt: amt,
+                  bank: result.recordset[0].bank_name,
+                  redeem_status: 1
 
                 }
                 userServices.putUserOfferPaid(offerdata).then((result) => {
