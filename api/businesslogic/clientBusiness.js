@@ -310,6 +310,27 @@ const getCategories = (req, res) => {
   });
 };
 
+const getBanner = (req, res) => {
+  return new Promise((resolve, reject) => {
+    userServices.getBanner().then((result) => {
+      console.log(result.recordset)
+      if (result.recordset[0]) {
+        resolve({
+          status: 200,
+          data: result.recordset,
+          message: "Fetched Successfully",
+        });
+      } else {
+        resolve({
+          status: 400,
+          data: [],
+          message: "Data not found.",
+        });
+      }
+    });
+  });
+};
+
 const getOffers = (req, res) => {
   return new Promise((resolve, reject) => {
     userServices.getOffers().then((result) => {
@@ -960,6 +981,7 @@ module.exports = {
   initiateSession,
   validateToken,
   getCategories,
+  getBanner,
   getOffers,
   getOfferDetails,
   getCouponcode,

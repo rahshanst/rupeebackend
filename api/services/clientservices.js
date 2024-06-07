@@ -68,6 +68,12 @@ async function getCategories() {
   return executeQuery(query);
 }
 
+async function getBanner() {
+  const query = "SELECT file_data FROM bannerFiles WHERE ticketModule='banners'";
+
+  return executeQuery(query);
+}
+
 async function getOffers() {
   const query = "SELECT id, brand_name, product_name, original_price, offer_percentage, brand_logo, product_pic, offer_category, offer_type, down_color, up_color FROM offers WHERE is_active=1";
 
@@ -174,6 +180,7 @@ module.exports = {
   addTrip,
   initiateSession,
   getCategories,
+  getBanner,
   getOffers,
   getOfferDetails,
   getCouponcode,
