@@ -55,6 +55,12 @@ const getCategories = (_, res) => {
   });
 };
 
+const getBanner = (_, res) => {
+  clientBusiness.getBanner().then((result) => {
+    res.json(result);
+  });
+};
+
 const getOffers = (_, res) => {
   clientBusiness.getOffers().then((result) => {
     res.json(result);
@@ -121,6 +127,7 @@ module.exports = {
  // addTrip,
   initiateSession,
   getCategories,
+  getBanner,
   getOffers,
   getOfferDetails,
   getCouponcode,

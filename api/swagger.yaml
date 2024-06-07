@@ -312,6 +312,31 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
+  /getBanner:
+    get:
+      summary: Get banner
+      description: Get a banner of offers
+      operationId: getBanner
+      x-swagger-router-controller: clientController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeClient
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   /getOfferDetails:
     post:
       summary: Offer details
