@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - onerupee-store-API-stage
 on:
   push:
     branches:
-      - dev
+      - prod
   workflow_dispatch:
 
 jobs:
