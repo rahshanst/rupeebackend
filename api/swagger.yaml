@@ -150,7 +150,6 @@ paths:
           type: string
         - name: updator
           in: formData
-          required: true  
           type: string
       responses:
         default:
