@@ -453,18 +453,18 @@ const validationCheck = (req, res) => {
             userServices.getCouponcode(offer_id).then((result) => {
               if (result.recordset[0]) {
                 console.log(result)
-                // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
-                //   if(result){
-                //   console.log("couponremove", result)
-                //   }
-                //   else{
-                //     resolve({
-                //       status: 400,
-                //       data: [],
-                //       message: "Internal error. Please try again",
-                //     });
-                //   }
-                // })
+                userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+                  if(result){
+                  console.log("couponremove", result)
+                  }
+                  else{
+                    resolve({
+                      status: 400,
+                      data: [],
+                      message: "Internal error. Please try again",
+                    });
+                  }
+                })
                 if(!result.recordset[1]){
                   userServices.putInactivateCoupon(offer_id).then((result) => {
                   if(result){
@@ -639,18 +639,18 @@ const checkPaymentStatus = (req, res) => {
           if (result.recordset[0]) {
             console.log(result)
 
-            // userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
-            //   if(result){
-            //   console.log("couponremove", result)
-            //   }
-            //   else{
-            //     resolve({
-            //       status: 400,
-            //       data: [],
-            //       message: "Internal error. Please try again",
-            //     });
-            //   }
-            // })
+            userServices.putRemoveCoupon(result.recordset[0].id_offer).then((result) => {
+              if(result){
+              console.log("couponremove", result)
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Internal error. Please try again",
+                });
+              }
+            })
             if(!result.recordset[1]){
               userServices.putInactivateCoupon(offer_id).then((result) => {
               if(result){
