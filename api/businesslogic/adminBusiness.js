@@ -163,23 +163,38 @@ const updateCategory = (req, res) => {
     const folder = "category";
     console.log( typeof req.files);
     // return
-    let fileResult;
-    if(req.files){
-     fileResult = await uploadFilesToBlob({
-        ...req.body,
-        ...req.files,
-        timestamp,
-        folder,
-      });
-    }
-    logger.info({ file_data: fileResult?.url || "" });
+    let file_value = "";
+    let fileResult ="";
+      //console.log("fille", req.body.file_data);
+      if(typeof req.body.file_data == "string"){
+        file_value = req.body.file_data;
+      }
+      else{
+        fileResult = await uploadFilesToBlob({
+          ...req.body,
+          ...req.files,
+          timestamp,
+          folder,
+        });
+        logger.info({ fileResult });
+
+        file_value = fileResult[0]?.url
+
+      }
+  
+        logger.info(
+          `Executing query ${{
+            ...req.body,
+            file_data: file_value,
+          }}`
+        );
     adminServices
-      .updateCategory({ ...req.body, file_data: fileResult[0]?.url || undefined })
+      .updateCategory({ ...req.body, file_data: file_value })
       .then((result) => {
         if (result) {
           resolve({
             status: 200,
-            fileResult: fileResult || [],
+            fileResult: fileResult? fileResult : file_value || [],
 
             message: "Data Added Successfully",
           });
