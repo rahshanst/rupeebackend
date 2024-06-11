@@ -65,7 +65,6 @@ async function updateCategory(incomingData) {
   const query = ` UPDATE categories SET
   category_name='${incomingData.category_name}', 
   category_icon = '${incomingData.category_icon}',
-  file_data = '${incomingData.file_data}',
   ${incomingData.file_data ?` file_data = '${incomingData.file_data}',`:'' }
   ${incomingData.file_name ?` file_name = '${incomingData.file_name}',`:'' }
   ${incomingData.file_type ?` file_type = '${incomingData.file_type}',`:'' }
