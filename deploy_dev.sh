@@ -16,4 +16,3 @@ git pull origin dev
 
 # Push the changes to the Azure remote repository (assuming prod branch is mapped to master on Azure)
 git push azure dev:master
-
