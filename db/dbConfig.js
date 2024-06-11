@@ -2,7 +2,7 @@ const config = {
   user: "ticketAdmin",
   password: "LfFJMH0EFeHc6hKHcEMP",
   server: "ticket-booking.database.windows.net",
-  database: "ruppee_db_prod", 
+  database: "ruppee_db", 
   options: {
     trustedconnection: true,
     enableArithAbort: true,
