@@ -66,8 +66,9 @@ async function updateCategory(incomingData) {
   category_name='${incomingData.category_name}', 
   category_icon = '${incomingData.category_icon}',
   file_data = '${incomingData.file_data}',
-  file_name = '${incomingData.file_name}',
-  file_type = '${incomingData.file_type}',
+  ${incomingData.file_data ?` file_data = '${incomingData.file_data}',`:'' }
+  ${incomingData.file_name ?` file_name = '${incomingData.file_name}',`:'' }
+  ${incomingData.file_type ?` file_type = '${incomingData.file_type}',`:'' }
   updater = '${incomingData.updater}',
   updated_at= GETDATE()  where id= '${incomingData.id}'`;
 

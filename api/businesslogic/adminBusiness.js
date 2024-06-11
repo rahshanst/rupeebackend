@@ -161,15 +161,20 @@ const updateCategory = (req, res) => {
     let incomingData = { ...req.body };
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     const folder = "category";
-    const fileResult = await uploadFilesToBlob({
-      ...req.body,
-      ...req.files,
-      timestamp,
-      folder,
-    });
+    console.log( typeof req.files);
+    // return
+    let fileResult;
+    if(req.files){
+     fileResult = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder,
+      });
+    }
     logger.info({ file_data: fileResult?.url || "" });
     adminServices
-      .updateCategory({ ...req.body, file_data: fileResult[0]?.url || "" })
+      .updateCategory({ ...req.body, file_data: fileResult[0]?.url || undefined })
       .then((result) => {
         if (result) {
           resolve({

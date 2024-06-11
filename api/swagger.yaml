@@ -138,11 +138,9 @@ paths:
           type: string
         - name: category_name
           in: formData
-          required: true  
           type: string
         - name: file_name
           in: formData
-          required: true  
           type: string
         - name: file_data
           in: formData
@@ -152,7 +150,6 @@ paths:
           type: string
         - name: updator
           in: formData
-          required: true  
           type: string
       responses:
         default:
