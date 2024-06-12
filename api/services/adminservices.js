@@ -103,16 +103,21 @@ async function addOffer(incomingData) {
 
 const url = `<click>${incomingData.offer_url}?type=hyperlink</click>`;
 const base64Url = urlToBase64(url);
-console.log(base64Url);
+  console.log(base64Url);
+  
+const url_banner_click_link = `<click>${incomingData.banner_click_link}?type=hyperlink</click>`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
 
 
   const query = `
   INSERT INTO offers 
   (brand_name, brand_description, product_name, original_price,
-    offer_validity, offer_percentage, min_order,brand_logo,product_pic,
+    offer_validity, offer_percentage, min_order,brand_logo,product_pic,coupon_page_logo,
     offer_category, offer_type, tnc, no_of_coupons,
     is_active,
     offer_url,
+    banner_click_link,
     up_color,
     down_color,
     coupon_file,
@@ -128,12 +133,14 @@ console.log(base64Url);
       '${incomingData.min_order}',
       '${incomingData.brand_logo}',
       '${incomingData.product_pic}',
+      '${incomingData.coupon_page_logo}',
       '${incomingData.offer_category}',
       '${incomingData.offer_type}',
       '${incomingData.tnc}',
       '${incomingData.no_of_coupons}',
       '${incomingData.is_active}',
       '${base64Url}',
+      '${base64Url2}',
       '${incomingData.up_color}',
       '${incomingData.down_color}',
       '${incomingData.coupon_file}',

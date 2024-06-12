@@ -387,9 +387,10 @@ const addOffer = (req, res) => {
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
-      couponfileFile = "";
-    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
-    const { brand_logo, product_pic, coupon_file } = req.files;
+      couponfileFile = "",
+    coupon_page_logoFile = "";
+    const {is_brand_logo, is_product_pic, is_coupon_file, is_coupon_page_logo} = req.body
+    const { brand_logo, product_pic, coupon_file, coupon_page_logo} = req.files;
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
@@ -420,6 +421,22 @@ const addOffer = (req, res) => {
       fileurl={...fileurl,product_pic:product_picFile[0]?.url}
     } else {
       fileurl={...fileurl,product_pic:''}
+    }
+
+    if (is_coupon_page_logo == '1' && coupon_page_logo) {
+      ticketModule = "coupon_page_logo";
+      coupon_page_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: coupon_page_logo,
+        ticketModule,
+      });
+      fileurl={...fileurl,coupon_page_logo:coupon_page_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_page_logo:''}
     }
 
     if (is_coupon_file == '1' && coupon_file) {
@@ -454,7 +471,7 @@ const addOffer = (req, res) => {
       `Executing query ${{
         ...req.body,
         ...fileurl,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       }}`
     );
 
@@ -465,7 +482,7 @@ const addOffer = (req, res) => {
         ...req.body,
         ...fileurl,
         coupon_id: id_offer,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       })
       .then((result) => {
         if (result) {
@@ -493,9 +510,10 @@ const updateOffer = (req, res) => {
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
+      coupon_page_logoFile="",
       couponfileFile = "";
-    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
-    const { brand_logo, product_pic, coupon_file, } = req.files;
+    const {is_brand_logo, is_product_pic, is_coupon_file,is_coupon_page_logo} = req.body
+    const { brand_logo, product_pic, coupon_file,coupon_page_logo } = req.files;
     logger.info(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
@@ -543,6 +561,21 @@ const updateOffer = (req, res) => {
       fileurl={...fileurl,coupon_file:couponfileFile[0]?.url}
     } else {
       fileurl={...fileurl,coupon_file:undefined}
+    }
+    if (is_coupon_page_logo == '1' && coupon_page_logo) {
+      ticketModule = "coupon_page_logo";
+      coupon_page_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: coupon_page_logo,
+        ticketModule,
+      });
+      fileurl={...fileurl,coupon_page_logo:coupon_page_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_page_logo:''}
     }
     logger.info(
       `Executing query ${{
