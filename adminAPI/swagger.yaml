@@ -537,6 +537,9 @@ paths:
           in: formData
           required: true
           type: integer 
+        - name: banner_click_link
+          in: formData
+          type: string 
       responses:
         200:
           description: Successful operation
@@ -684,6 +687,9 @@ paths:
           in: formData
           required: true
           type: integer 
+        - name: banner_click_link
+          in: formData
+          type: string 
       responses:
         200:
           description: Successful operation
