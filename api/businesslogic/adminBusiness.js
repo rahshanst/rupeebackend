@@ -581,7 +581,7 @@ const updateOffer = (req, res) => {
       `Executing query ${{
         ...req.body,
         ...fileurl,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       }}`
     );
 

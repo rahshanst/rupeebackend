@@ -94,18 +94,18 @@ async function deleteCategoryById(incomingData) {
 
   return executeQuery(query);
 }
+function urlToBase64(url) {
+  return btoa(url);
+}
+
 async function addOffer(incomingData) {
   console.log({ incomingData });
  
-  function urlToBase64(url) {
-    return btoa(url);
-}
-
-const url = `<click>${incomingData.offer_url}?type=hyperlink</click>`;
+const url = `${incomingData.offer_url}`;
 const base64Url = urlToBase64(url);
   console.log(base64Url);
   
-const url_banner_click_link = `<click>${incomingData.banner_click_link}?type=hyperlink</click>`;
+const url_banner_click_link = `${incomingData.banner_click_link}`;
 const base64Url2 = urlToBase64(url_banner_click_link);
 console.log(base64Url2);
 
@@ -154,14 +154,26 @@ console.log(base64Url2);
 }
 
 async function updateOfferById(dealData) {
-  const { id, is_brand_logo, is_product_pic, is_coupon_file, ...updatedData } = dealData;
+  const { id, is_brand_logo, is_product_pic, is_coupon_file,offer_url,banner_click_link,is_coupon_page_logo, ...updatedData } = dealData;
 
   console.log({ id, updatedData });
 
-  // Filter out undefined values
-  const validEntries = Object.entries(updatedData).filter(([key, value]) => value !== undefined);
 
-  console.log({validEntries});
+const url = `${offer_url}`;
+const base64Url = urlToBase64(url);
+  console.log(base64Url);
+  
+const url_banner_click_link = `${banner_click_link}`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
+
+// Filter out undefined values
+let validEntries = Object.entries(updatedData).filter(([key, value]) => value !== undefined);
+
+// Add base64Url2 and base64Url to the validEntries array
+validEntries = [...validEntries, ['banner_click_link', base64Url2], ['offer_url', base64Url]];
+
+  console.log({ validEntries });
   // Map to key-value pairs for the SQL query
   const updateValues = validEntries
     .map(([key, value]) => `${key} = '${value}'`)
