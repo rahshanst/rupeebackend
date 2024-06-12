@@ -207,7 +207,34 @@ module.exports.createDeal = (dealData) => {
 
 // Read all deals
 module.exports.getAllDeals = (filter) => {
-  const query = `SELECT o.*, c.category_name
+  const query = ` select o.id,
+  o.brand_name,
+  o.brand_description,
+  o.product_name,
+  o.original_price,
+  o.offer_validity,
+  o.offer_percentage,
+  o.min_order,
+  o.brand_logo,
+  o.product_pic,
+  o.offer_category,
+  o.offer_type,
+  o.tnc,
+  o.no_of_coupons,
+  o.up_color,
+  o.down_color,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.offer_url"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS offer_url,
+  o.is_active,
+  o.created_at,
+  o.updated_at,
+  o.creator,
+  o.updater,
+  o.coupon_counter,
+  o.coupon_file,
+  o.coupon_id,
+  o.coupon_page_logo,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link,
+  c.category_name
   FROM offers o
   LEFT JOIN categories c ON o.offer_category = c.id
   WHERE 1 = 1
@@ -232,9 +259,38 @@ module.exports.getAllDeals = (filter) => {
 
 // Read a deal by ID
 module.exports.getDealById = (id) => {
-  const query = `SELECT o.*, c.category_name
-  FROM offers o
-  LEFT JOIN categories c ON o.offer_category = c.id WHERE o.id = ${id}`;
+  const query = `SELECT 
+  o.id,
+  o.brand_name,
+  o.brand_description,
+  o.product_name,
+  o.original_price,
+  o.offer_validity,
+  o.offer_percentage,
+  o.min_order,
+  o.brand_logo,
+  o.product_pic,
+  o.offer_category,
+  o.offer_type,
+  o.tnc,
+  o.no_of_coupons,
+  o.up_color,
+  o.down_color,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.offer_url"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS offer_url,
+  o.is_active,
+  o.created_at,
+  o.updated_at,
+  o.creator,
+  o.updater,
+  o.coupon_counter,
+  o.coupon_file,
+  o.coupon_id,
+  o.coupon_page_logo,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link,
+  c.category_name
+FROM offers o
+LEFT JOIN categories c ON o.offer_category = c.id
+WHERE o.id = ${id}`;
   return executeQuery(query);
 };
 
