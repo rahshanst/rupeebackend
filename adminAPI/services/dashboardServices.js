@@ -443,6 +443,40 @@ console.log(base64Url2);
     occation,
     file_name,
     file_data,
+    file_type,  
+    createdBy,
+    createdAt,
+    updatedBy,
+    banner_click_link,
+    updatedAt
+) VALUES (
+    ${data.id_user},
+    '${data.bankName}',
+    '${data.ticketModule}',
+    '${data.occation}',
+    '${data.file_name}',
+    '${data.file_data}',
+    '${data.file_type}',
+    '${data.createdBy}',
+    GETDATE(),
+    '${data.updatedBy}',
+    ${data.banner_click_link ?`'${base64Url2}',`:',' }
+    GETDATE()
+);`;
+  return executeQuery(query);
+};
+
+module.exports.updatedBannerFile = (data) => {
+  const url_banner_click_link = `${data.banner_click_link}`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
+  const query = `INSERT INTO bannerFiles (
+    id_user,
+    bankName,
+    ticketModule,
+    occation,
+    file_name,
+    file_data,
     file_type,
     createdBy,
     createdAt,
@@ -465,7 +499,6 @@ console.log(base64Url2);
 );`;
   return executeQuery(query);
 };
-
 module.exports.deleteBannerFile = (data) => {
   const query = `delete from bannerFiles WHERE ticketModule = '${data.ticketModule}' and  id= '${data.id}';
 `;
