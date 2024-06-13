@@ -73,6 +73,31 @@ const deleteCategoryById = (req, res) => {
   });
 };
 
+const addBannerFile = (req, res) => {
+  adminBusiness.addBannerFile(req).then((result) => {
+    logger.info(`CONTROLLER | addCategory | result | ${result}`)
+    res.status(201).json(result);
+  });
+};
+
+const updateBannerFile = (req, res) => {
+  adminBusiness.updateBannerFile(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const getBannerFileById = (req, res) => {
+  adminBusiness.getBannerFileById(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
+const deleteBannerFileById = (req, res) => {
+  adminBusiness.deleteBannerFileById(req).then((result) => {
+    res.status(201).json(result);
+  });
+};
+
 const addOffer = (req, res) => {
 
   adminBusiness.addOffer(req).then((result) => {
@@ -84,7 +109,11 @@ const addOffer = (req, res) => {
 module.exports = {
  // getTrips,
  // getTripById,
- // addTrip,
+  // addTrip,
+  addBannerFile,
+  updateBannerFile,
+  getBannerFileById,
+  deleteBannerFileById,
   addCategory,
   updateCategory,
   getCategoryById,
