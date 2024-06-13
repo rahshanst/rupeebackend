@@ -248,6 +248,160 @@ const deleteCategoryById = (req, res) => {
   });
 };
 
+
+const addBannerFile = async (req, res) => {
+  try {
+    return await new Promise(async (resolve, reject) => {
+      let incomingData = { ...req.body };
+      logger.info(`Beofre timestamp ${timestamp}`);
+      // logger.info({ incomingData });
+      logger.info({ timestamp });
+      const folder = "banner";
+      logger.info({
+        timestamp,
+        folder,
+      });
+      const fileResult = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder,
+      });
+      logger.info({ fileResult });
+
+      logger.info(
+        `Executing query ${{
+          ...req.body,
+          file_data: fileResult[0]?.url || "",
+        }}`
+      );
+      adminServices
+        .addBannerFile({ ...req.body, file_data: fileResult[0]?.url || "" })
+        .then((result) => {
+          if (result) {
+            resolve({
+              status: 200,
+              fileResult: fileResult || [],
+              message: "Data Added Successfully",
+            });
+          } else {
+            resolve({
+              status: 500,
+              fileResult: [],
+              message: `${result}`,
+            });
+          }
+        })
+        .catch((err) => {
+          logger.info(`bb ${err}`);
+          resolve({
+            status: 500,
+            data: [],
+            message: `${err}`,
+          });
+        });
+    });
+  } catch (err_1) {
+    logger.info(`catch ${err_1}`);
+    resolve({
+      status: 500,
+      data: [],
+      message: `${err_1}`,
+    });
+  }
+};
+const updateBannerFile = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const folder = "banner";
+    console.log( typeof req.files);
+    // return
+    let file_value = "";
+    let fileResult ="";
+      //console.log("fille", req.body.file_data);
+      if(typeof req.body.file_data == "string"){
+        file_value = req.body.file_data;
+      }
+      else{
+        fileResult = await uploadFilesToBlob({
+          ...req.body,
+          ...req.files,
+          timestamp,
+          folder,
+        });
+        logger.info({ fileResult });
+
+        file_value = fileResult[0]?.url
+
+      }
+  
+        logger.info(
+          `Executing query ${{
+            ...req.body,
+            file_data: file_value,
+          }}`
+        );
+    adminServices
+      .updateBannerFile({ ...req.body, file_data: file_value })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            fileResult: fileResult? fileResult : file_value || [],
+
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
+  });
+};
+const getBannerFileById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.getBannerFileById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data: result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
+  });
+};
+const deleteBannerFileById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.deleteBannerFileById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data: result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
+  });
+};
+
+
 async function handleExcelFile(file, id_offer,type,id) {
   const tempFileName = `${Date.now()}_${file[0]?.originalname}`;
   logger.info({ tempFileName });
@@ -787,6 +941,10 @@ module.exports = {
   // getTrips,
   // getTripById,
   // addTrip,
+  addBannerFile,
+  updateBannerFile,
+  getBannerFileById,
+  deleteBannerFileById,
   addCategory,
   updateCategory,
   getCategoryById,
