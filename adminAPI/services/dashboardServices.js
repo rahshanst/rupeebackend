@@ -429,7 +429,13 @@ module.exports.getBannerFileAdmin = (data) => {
 `;
   return executeQuery(query);
 };
+function urlToBase64(url) {
+  return btoa(url);
+}
 module.exports.addBannerFile = (data) => {
+  const url_banner_click_link = `${data.banner_click_link}`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
   const query = `INSERT INTO bannerFiles (
     id_user,
     bankName,
@@ -441,6 +447,7 @@ module.exports.addBannerFile = (data) => {
     createdBy,
     createdAt,
     updatedBy,
+    banner_click_link,
     updatedAt
 ) VALUES (
     ${data.id_user},
@@ -453,6 +460,7 @@ module.exports.addBannerFile = (data) => {
     '${data.createdBy}',
     GETDATE(),
     '${data.updatedBy}',
+    ${data.banner_click_link ?` banner_click_link = '${base64Url2}',`:'' }
     GETDATE()
 );`;
   return executeQuery(query);

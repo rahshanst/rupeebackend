@@ -117,7 +117,6 @@ console.log(base64Url2);
     offer_category, offer_type, tnc, no_of_coupons,
     is_active,
     offer_url,
-    banner_click_link,
     up_color,
     down_color,
     coupon_file,
@@ -140,7 +139,6 @@ console.log(base64Url2);
       '${incomingData.no_of_coupons}',
       '${incomingData.is_active}',
       '${base64Url}',
-      '${base64Url2}',
       '${incomingData.up_color}',
       '${incomingData.down_color}',
       '${incomingData.coupon_file}',
@@ -161,17 +159,13 @@ async function updateOfferById(dealData) {
 
 const url = `${offer_url}`;
 const base64Url = urlToBase64(url);
-  console.log(base64Url);
+console.log(base64Url);
   
-const url_banner_click_link = `${banner_click_link}`;
-const base64Url2 = urlToBase64(url_banner_click_link);
-console.log(base64Url2);
-
 // Filter out undefined values
 let validEntries = Object.entries(updatedData).filter(([key, value]) => value !== undefined);
 
 // Add base64Url2 and base64Url to the validEntries array
-validEntries = [...validEntries, ['banner_click_link', base64Url2], ['offer_url', base64Url]];
+validEntries = [...validEntries, ['offer_url', base64Url]];
 
   console.log({ validEntries });
   // Map to key-value pairs for the SQL query

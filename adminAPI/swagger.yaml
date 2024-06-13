@@ -537,9 +537,6 @@ paths:
           in: formData
           required: true
           type: integer 
-        - name: banner_click_link
-          in: formData
-          type: string 
       responses:
         200:
           description: Successful operation
@@ -687,9 +684,6 @@ paths:
           in: formData
           required: true
           type: integer 
-        - name: banner_click_link
-          in: formData
-          type: string 
       responses:
         200:
           description: Successful operation
@@ -1388,6 +1382,10 @@ definitions:
         type: string
         description: User who last updated the banner file.
         example: "Jane Doe"
+      banner_click_link:
+        type: string
+        example: "<click>dasdasd.com?type=hyperlink</click>"
+          
   BannerFileDelete:
     type: object
     properties:

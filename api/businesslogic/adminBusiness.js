@@ -514,7 +514,7 @@ const updateOffer = (req, res) => {
       couponfileFile = "";
     const {is_brand_logo, is_product_pic, is_coupon_file,is_coupon_page_logo} = req.body
     const { brand_logo, product_pic, coupon_file,coupon_page_logo } = req.files;
-    logger.info(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
+    logger.info(is_coupon_file, { is_coupon_file, is_coupon_file: is_coupon_file == 1 });
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
@@ -575,7 +575,7 @@ const updateOffer = (req, res) => {
       });
       fileurl={...fileurl,coupon_page_logo:coupon_page_logoFile[0]?.url}
     } else {
-      fileurl={...fileurl,coupon_page_logo:''}
+      fileurl={...fileurl,coupon_page_logo:undefined}
     }
     logger.info(
       `Executing query ${{
