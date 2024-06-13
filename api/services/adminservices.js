@@ -138,7 +138,7 @@ async function updateBannerFile(incomingData) {
 }
 async function getBannerFileById(incomingData) {
   console.log({ incomingData });
-  const query = ` select * from bannerFiles where id= '${incomingData.id}'`;
+  const query = ` select id, file_data,ticketModule,createdAt,updatedBy,updatedAt,createdBy, CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link from bannerFiles where id= '${incomingData.id}'`;
 
   return executeQuery(query);
 }
