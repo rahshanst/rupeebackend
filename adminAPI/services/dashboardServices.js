@@ -425,7 +425,7 @@ module.exports.getBannerFile = (data) => {
   return executeQuery(query);
 };
 module.exports.getBannerFileAdmin = (data) => {
-  const query = `SELECT id, file_data,ticketModule,createdAt,updatedBy,updatedAt,createdBy, CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link from bannerFiles WHERE ticketModule = '${data.ticketModule}';
+  const query = `SELECT id, file_data,ticketModule,createdAt,updatedBy,updatedAt,createdBy,file_name, CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link from bannerFiles WHERE ticketModule = '${data.ticketModule}';
 `;
   return executeQuery(query);
 };
