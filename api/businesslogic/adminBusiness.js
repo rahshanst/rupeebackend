@@ -417,7 +417,7 @@ async function handleExcelFile(file, id_offer,type,id) {
   logger.info({ results });
 
   if (type == 'update') {
-    const offerId = await adminServices.getCouponIdByOfferId({ id: id })
+    //const offerId = await adminServices.getCouponIdByOfferId({ id: id })
     logger.info({ offerId }, offerId?.recordset[0]?.coupon_id);
     for (const row of results) {
       logger.info({ offerId }, row);
@@ -431,7 +431,7 @@ async function handleExcelFile(file, id_offer,type,id) {
           const is_active = nextRow['Active'] || nextRow['__EMPTY_2'];
     
           await adminServices.updateCouponOfferById({
-            id_offer: offerId?.recordset[0]?.coupon_id,
+            id_offer: id_offer, //offerId?.recordset[0]?.coupon_id,
             brand_name: brand_name,
             coupon_code: coupon_code,
             is_active: is_active || 0,
@@ -509,11 +509,11 @@ async function handleCsvFile(file, id_offer,type) {
       .on("end", async () => {
         try {
           if (type == 'update') {
-            const offerId = await adminServices.getCouponIdByOfferId({ id: id })
+            //const offerId = await adminServices.getCouponIdByOfferId({ id: id })
             logger.info({offerId}); 
             for (const row of results) {
               await adminServices.updateCouponOfferById({
-                id_offer: offerId?.recordset[0]?.coupon_id,
+                id_offer: id_offer,//offerId?.recordset[0]?.coupon_id,
                 brand_name: row["Brand Name"],
                 coupon_code: row["Coupon Code"],
                 is_active: row["Active"],
