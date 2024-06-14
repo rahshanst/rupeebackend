@@ -8,14 +8,14 @@ module.exports.getDashboardCount = (condition) => {
   console.log({condition});
   const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
   UNION ALL
-SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers
+SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where and is_active = 1
   UNION ALL
 SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
         inner join offers o on o.id = uo.offer_id
         inner join user_details ud on ud.id_user = uo.user_id 
         GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
    UNION ALL
-SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM offers  
+SELECT 'noOfActiveBrands' AS QueryType, COUNT(DISTINCT brand_name) AS Result FROM offers  
   UNION ALL
 SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
         inner join offers o on o.id = uo.offer_id
@@ -661,14 +661,14 @@ module.exports.filterByBrand = (val) => {
   const query = ` 
   SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
     UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where brand_name='${val}'
+  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where brand_name='${val}' and is_active = 1
     UNION ALL
   SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
           inner join offers o on o.id = uo.offer_id
           inner join user_details ud on ud.id_user = uo.user_id where o.brand_name='${val}'
           GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
      UNION ALL
-  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM offers  
+  SELECT 'noOfActiveBrands' AS QueryType,COUNT(DISTINCT brand_name)  AS Result FROM offers  
     UNION ALL
   SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
           inner join offers o on o.id = uo.offer_id
