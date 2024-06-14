@@ -491,9 +491,15 @@ async function handleExcelFile(file, id_offer,type,id) {
 }
 
 async function handleCsvFile(file, id_offer,type) {
+  //console.log("fdddd",file)
   const results = [];
   const readableStream = new Readable();
+  if(Array.isArray(file)){
   readableStream.push(file[0].buffer);
+  }
+  else{
+    readableStream.push(file.buffer);
+  }
   readableStream.push(null);
 
   return new Promise((resolve, reject) => {
