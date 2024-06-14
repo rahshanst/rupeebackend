@@ -8,7 +8,7 @@ module.exports.getDashboardCount = (condition) => {
   console.log({condition});
   const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
   UNION ALL
-SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where and is_active = 1
+SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where is_active = 1
   UNION ALL
 SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
         inner join offers o on o.id = uo.offer_id
