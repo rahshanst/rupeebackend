@@ -69,7 +69,7 @@ async function getCategories() {
 }
 
 async function getBanner() {
-  const query = "SELECT file_data FROM bannerFiles WHERE ticketModule='banners'";
+  const query = "SELECT file_data, banner_click_link FROM bannerFiles WHERE ticketModule='banners'";
 
   return executeQuery(query);
 }
@@ -168,7 +168,7 @@ async function putInactivateCoupon(incomingData) {
 }
 
 async function getMyOffers(incomingData) {
-  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, offers.up_color, offers.down_color, offers.offer_url, useroffers.redeem_code, useroffers.redeem_status, useroffers.created_at, useroffers.pay_mode, useroffers.order_id FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
+  const query = `SELECT offers.id, offers.brand_name, offers.product_name, offers.offer_validity, offers.offer_percentage, offers.min_order, offers.brand_logo, offers.offer_type, offers.up_color, offers.down_color, offers.offer_url, offers.coupon_page_logo, useroffers.redeem_code, useroffers.redeem_status, useroffers.created_at, useroffers.pay_mode, useroffers.order_id FROM useroffers INNER JOIN offers ON useroffers.offer_id=offers.id WHERE useroffers.user_id='${incomingData}'`;
 
   return executeQuery(query);
 }
