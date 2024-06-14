@@ -6,20 +6,40 @@ const today = moment().format('L');
 
 module.exports.getDashboardCount = (condition) => {
   console.log({condition});
-  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
-  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
+  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
   UNION ALL
-  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
-    SELECT id_user
-    FROM user_details
-    GROUP BY id_user
-    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
-  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
+SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where and is_active = 1
   UNION ALL
-  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
-  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
-  WHERE bank_name IS NOT NULL; `;
+SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+        inner join offers o on o.id = uo.offer_id
+        inner join user_details ud on ud.id_user = uo.user_id 
+        GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
+   UNION ALL
+SELECT 'noOfActiveBrands' AS QueryType, COUNT(DISTINCT brand_name) AS Result FROM offers  
+  UNION ALL
+SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+        inner join offers o on o.id = uo.offer_id
+        inner join user_details ud on ud.id_user = uo.user_id  ) AS repeated_customers 
+    UNION ALL 
+SELECT 'Lifetime_Sales_No_Of_orders_coupons_purchased' AS QueryType, COUNT(*) AS Result FROM userOffers 
+  UNION ALL 
+      SELECT 'Lifetime_Sales_revenue' AS QueryType,( SELECT COUNT(*) AS Result FROM userOffers uo
+     INNER join offers o ON o.id=  uo.offer_id
+     where uo.redeem_status=1 ) as 'Lifetime_Sales_revenue'
+        UNION ALL 
+
+SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+FROM userOffers uo
+INNER JOIN offers o ON o.id = uo.offer_id
+WHERE  uo.redeem_status=1 
+  AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_revenue_30_days'
+  UNION ALL 
+SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+FROM userOffers uo
+INNER JOIN offers o ON o.id = uo.offer_id
+WHERE  uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_Orders_30_days'
+  UNION ALL
+  SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details  WHERE bank_name IS NOT NULL; `;
   return executeQuery(query);
 };
 
@@ -638,20 +658,42 @@ module.exports.searchCategory = (val) => {
 
 module.exports.filterByBrand = (val) => {
   console.log({val});
-  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
-  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
-  UNION ALL
-  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
-    SELECT id_user
-    FROM user_details
-    GROUP BY id_user
-    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
-  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
-  UNION ALL
-  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
-  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
-  WHERE bank_name IS NOT NULL; `;
+  const query = ` 
+  SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
+    UNION ALL
+  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where brand_name='${val}' and is_active = 1
+    UNION ALL
+  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+          inner join offers o on o.id = uo.offer_id
+          inner join user_details ud on ud.id_user = uo.user_id where o.brand_name='${val}'
+          GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
+     UNION ALL
+  SELECT 'noOfActiveBrands' AS QueryType,COUNT(DISTINCT brand_name)  AS Result FROM offers  
+    UNION ALL
+  SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+          inner join offers o on o.id = uo.offer_id
+          inner join user_details ud on ud.id_user = uo.user_id where o.brand_name='${val}' ) AS repeated_customers 
+      UNION ALL 
+  SELECT 'Lifetime_Sales_No_Of_orders_coupons_purchased' AS QueryType, COUNT(*) AS Result FROM userOffers 
+    UNION ALL 
+        SELECT 'Lifetime_Sales_revenue' AS QueryType,( SELECT COUNT(*) AS Result FROM userOffers uo
+       INNER join offers o ON o.id=  uo.offer_id
+       where uo.redeem_status=1 and o.brand_name='${val}') as 'Lifetime_Sales_revenue'
+          UNION ALL 
+  
+  SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+  FROM userOffers uo
+  INNER JOIN offers o ON o.id = uo.offer_id
+  WHERE  uo.redeem_status=1 and o.brand_name = '${val}' 
+    AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_revenue_30_days'
+    UNION ALL 
+  SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+  FROM userOffers uo
+  INNER JOIN offers o ON o.id = uo.offer_id
+  WHERE o.brand_name = '${val}' 
+    AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_Orders_30_days'
+    UNION ALL
+    SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details  WHERE bank_name IS NOT NULL; `;
   return executeQuery(query);
 };
 
