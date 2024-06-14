@@ -665,7 +665,8 @@ const updateOffer = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
     //const id_offer = uuidv4();
-    const id_offer = await adminServices.getCouponIdByOfferId({ id: req.body.id })
+    let id_offer_set = await adminServices.getCouponIdByOfferId({ id: req.body.id })
+    const id_offer = id_offer_set?.recordset[0]?.coupon_id
 
     let fileurl = {};
     let ticketModule = "",
