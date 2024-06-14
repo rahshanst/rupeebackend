@@ -248,6 +248,160 @@ const deleteCategoryById = (req, res) => {
   });
 };
 
+
+const addBannerFile = async (req, res) => {
+  try {
+    return await new Promise(async (resolve, reject) => {
+      let incomingData = { ...req.body };
+      logger.info(`Beofre timestamp ${timestamp}`);
+      // logger.info({ incomingData });
+      logger.info({ timestamp });
+      const folder = "banner";
+      logger.info({
+        timestamp,
+        folder,
+      });
+      const fileResult = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        folder,
+      });
+      logger.info({ fileResult });
+
+      logger.info(
+        `Executing query ${{
+          ...req.body,
+          file_data: fileResult[0]?.url || "",
+        }}`
+      );
+      adminServices
+        .addBannerFile({ ...req.body, file_data: fileResult[0]?.url || "" })
+        .then((result) => {
+          if (result) {
+            resolve({
+              status: 200,
+              fileResult: fileResult || [],
+              message: "Data Added Successfully",
+            });
+          } else {
+            resolve({
+              status: 500,
+              fileResult: [],
+              message: `${result}`,
+            });
+          }
+        })
+        .catch((err) => {
+          logger.info(`bb ${err}`);
+          resolve({
+            status: 500,
+            data: [],
+            message: `${err}`,
+          });
+        });
+    });
+  } catch (err_1) {
+    logger.info(`catch ${err_1}`);
+    resolve({
+      status: 500,
+      data: [],
+      message: `${err_1}`,
+    });
+  }
+};
+const updateBannerFile = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
+    const folder = "banner";
+    console.log( typeof req.files);
+    // return
+    let file_value = "";
+    let fileResult ="";
+      //console.log("fille", req.body.file_data);
+      if(typeof req.body.file_data == "string"){
+        file_value = req.body.file_data;
+      }
+      else{
+        fileResult = await uploadFilesToBlob({
+          ...req.body,
+          ...req.files,
+          timestamp,
+          folder,
+        });
+        logger.info({ fileResult });
+
+        file_value = fileResult[0]?.url
+
+      }
+  
+        logger.info(
+          `Executing query ${{
+            ...req.body,
+            file_data: file_value,
+          }}`
+        );
+    adminServices
+      .updateBannerFile({ ...req.body, file_data: file_value })
+      .then((result) => {
+        if (result) {
+          resolve({
+            status: 200,
+            fileResult: fileResult? fileResult : file_value || [],
+
+            message: "Data Added Successfully",
+          });
+        }
+        resolve({
+          status: 400,
+          data: result,
+          message: "Unable to insert record",
+        });
+      });
+  });
+};
+const getBannerFileById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.getBannerFileById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data: result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
+  });
+};
+const deleteBannerFileById = (req, res) => {
+  return new Promise(async (resolve, reject) => {
+    let incomingData = { ...req.body };
+
+    let result = await adminServices.deleteBannerFileById(incomingData);
+
+    if (result) {
+      resolve({
+        status: 200,
+        data: result?.recordsets,
+        message: " Success",
+      });
+    } else {
+      resolve({
+        status: 404,
+        message: "No data found",
+      });
+    }
+  });
+};
+
+
 async function handleExcelFile(file, id_offer,type,id) {
   const tempFileName = `${Date.now()}_${file[0]?.originalname}`;
   logger.info({ tempFileName });
@@ -387,9 +541,10 @@ const addOffer = (req, res) => {
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
-      couponfileFile = "";
-    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
-    const { brand_logo, product_pic, coupon_file } = req.files;
+      couponfileFile = "",
+    coupon_page_logoFile = "";
+    const {is_brand_logo, is_product_pic, is_coupon_file, is_coupon_page_logo} = req.body
+    const { brand_logo, product_pic, coupon_file, coupon_page_logo} = req.files;
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
@@ -420,6 +575,22 @@ const addOffer = (req, res) => {
       fileurl={...fileurl,product_pic:product_picFile[0]?.url}
     } else {
       fileurl={...fileurl,product_pic:''}
+    }
+
+    if (is_coupon_page_logo == '1' && coupon_page_logo) {
+      ticketModule = "coupon_page_logo";
+      coupon_page_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: coupon_page_logo,
+        ticketModule,
+      });
+      fileurl={...fileurl,coupon_page_logo:coupon_page_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_page_logo:''}
     }
 
     if (is_coupon_file == '1' && coupon_file) {
@@ -454,7 +625,7 @@ const addOffer = (req, res) => {
       `Executing query ${{
         ...req.body,
         ...fileurl,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       }}`
     );
 
@@ -465,7 +636,7 @@ const addOffer = (req, res) => {
         ...req.body,
         ...fileurl,
         coupon_id: id_offer,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       })
       .then((result) => {
         if (result) {
@@ -493,10 +664,11 @@ const updateOffer = (req, res) => {
     let ticketModule = "",
       brand_logoFile = "",
       product_picFile = "",
+      coupon_page_logoFile="",
       couponfileFile = "";
-    const {is_brand_logo, is_product_pic, is_coupon_file} = req.body
-    const { brand_logo, product_pic, coupon_file, } = req.files;
-    logger.info(is_coupon_file,{ is_coupon_file, is_coupon_file: is_coupon_file == 1 });
+    const {is_brand_logo, is_product_pic, is_coupon_file,is_coupon_page_logo} = req.body
+    const { brand_logo, product_pic, coupon_file,coupon_page_logo } = req.files;
+    logger.info(is_coupon_file, { is_coupon_file, is_coupon_file: is_coupon_file == 1 });
     logger.info({ coupon_file });
     if (is_brand_logo == '1' && brand_logo) {
       ticketModule = "brand_logo";
@@ -544,11 +716,26 @@ const updateOffer = (req, res) => {
     } else {
       fileurl={...fileurl,coupon_file:undefined}
     }
+    if (is_coupon_page_logo == '1' && coupon_page_logo) {
+      ticketModule = "coupon_page_logo";
+      coupon_page_logoFile = await uploadFilesToBlob({
+        ...req.body,
+        ...req.files,
+        timestamp,
+        timestamp,
+        folder: "Deals",
+        file_data: coupon_page_logo,
+        ticketModule,
+      });
+      fileurl={...fileurl,coupon_page_logo:coupon_page_logoFile[0]?.url}
+    } else {
+      fileurl={...fileurl,coupon_page_logo:undefined}
+    }
     logger.info(
       `Executing query ${{
         ...req.body,
         ...fileurl,
-        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,
+        is_brand_logo:undefined, is_product_pic:undefined, is_coupon_file:undefined,is_coupon_page_logo:undefined
       }}`
     );
 
@@ -754,6 +941,10 @@ module.exports = {
   // getTrips,
   // getTripById,
   // addTrip,
+  addBannerFile,
+  updateBannerFile,
+  getBannerFileById,
+  deleteBannerFileById,
   addCategory,
   updateCategory,
   getCategoryById,

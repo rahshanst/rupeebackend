@@ -482,6 +482,9 @@ paths:
         - name: coupon_file
           in: formData
           type: file
+        - name: coupon_page_logo
+          in: formData
+          type: file
         - name: offer_category
           in: formData
           required: true
@@ -527,6 +530,10 @@ paths:
           required: true
           type: integer          
         - name: is_coupon_file
+          in: formData
+          required: true
+          type: integer 
+        - name: is_coupon_page_logo
           in: formData
           required: true
           type: integer 
@@ -622,6 +629,9 @@ paths:
         - name: coupon_file
           in: formData
           type: file
+        - name: coupon_page_logo
+          in: formData
+          type: file
         - name: offer_category
           in: formData
           required: true
@@ -670,6 +680,10 @@ paths:
           in: formData
           required: true
           type: string
+        - name: is_coupon_page_logo
+          in: formData
+          required: true
+          type: integer 
       responses:
         200:
           description: Successful operation
@@ -1368,6 +1382,10 @@ definitions:
         type: string
         description: User who last updated the banner file.
         example: "Jane Doe"
+      banner_click_link:
+        type: string
+        example: "<click>dasdasd.com?type=hyperlink</click>"
+          
   BannerFileDelete:
     type: object
     properties:

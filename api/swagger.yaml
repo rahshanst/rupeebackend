@@ -223,6 +223,159 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
+  /addBannerFile:
+    post:
+      summary: category adding
+      description: ruppee store addBannerFile
+      operationId: addBannerFile
+      x-swagger-router-controller: adminController
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - name: banner_click_link
+          in: formData
+          type: string
+        - name: file_name
+          in: formData
+          type: string
+        - name: file_data
+          in: formData
+          type: file
+        - name: file_type
+          in: formData
+          type: string
+        - name: createdBy
+          in: formData
+          type: string
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+
+  /updateBannerFile:
+    post:
+      summary: category adding
+      description: ruppee store updateBannerFile
+      operationId: updateBannerFile
+      x-swagger-router-controller: adminController
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - name: id
+          in: formData
+          required: true  
+          type: string
+        - name: banner_click_link
+          in: formData
+          type: string
+        - name: file_name
+          in: formData
+          type: string
+        - name: file_data
+          in: formData
+          type: file
+        - name: file_type
+          in: formData
+          type: string
+        - name: updatedBy
+          in: formData
+          type: string
+      responses:
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /getBannerFileById:
+    post:
+      summary: category adding
+      description: ruppee store getBannerFileById
+      operationId: getBannerFileById
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get categoryData
+          description:  categoryData
+          required: true
+          schema:
+            $ref: "#/definitions/getCategoryData"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /deleteBannerFileById:
+    post:
+      summary: category adding
+      description: ruppee store deleteBannerFileById
+      operationId: deleteBannerFileById
+      x-swagger-router-controller: adminController
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - RupeeAdmin
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          format: Bearer
+          required: true
+          description: Bearer token for authentication
+        - in: body
+          name: Get categoryData
+          description:  categoryData
+          required: true
+          schema:
+            $ref: "#/definitions/getCategoryData"
+      responses:
+        200:
+          description: Successful operation
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   
   /getCategories:
     get:
