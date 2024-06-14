@@ -664,7 +664,8 @@ const addOffer = (req, res) => {
 const updateOffer = (req, res) => {
   return new Promise(async (resolve, reject) => {
     const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
-    const id_offer = uuidv4();
+    //const id_offer = uuidv4();
+    const id_offer = await adminServices.getCouponIdByOfferId({ id: req.body.id })
 
     let fileurl = {};
     let ticketModule = "",
