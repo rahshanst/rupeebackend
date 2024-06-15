@@ -258,7 +258,9 @@ module.exports.deleteBannerFile = async (req, res) => {
 module.exports.getBannerFile = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let result = await dashboardServices.getBannerFileAdmin({ticketModule:'banners'});
+      let result = await dashboardServices.getBannerFileAdmin({
+        ticketModule: "banners",
+      });
       logger.info([result]);
       resolve({
         status: "200",
@@ -590,7 +592,8 @@ module.exports.addDeals = async (req, res) => {
   const timestamp = dayjs().format("DDMMYYYYHmmss"); // Get current timestamp
   return new Promise(async (resolve, reject) => {
     try {
-      const { offer_banner_sm, offer_banner_lg, offer_banner_xl,...rest } = req.files;
+      const { offer_banner_sm, offer_banner_lg, offer_banner_xl, ...rest } =
+        req.files;
 
       // if (offer_banner_sm) {
       //   ticketModule = sizeImage["offer_banner_sm"];
@@ -728,6 +731,13 @@ module.exports.deleteDealsById = async (req, res) => {
   return new Promise(async (resolve, reject) => {
     try {
       let result = await dashboardServices.deleteDealById(req.body.id);
+      let id_offer_set = await adminServices.getCouponIdByOfferId({
+        id: req.body.id,
+      });
+      const id_offer = id_offer_set?.recordset[0]?.coupon_id;
+      await adminServices.deleteCouponOfferById({
+        id_offer: id_offer,
+      });
       logger.info([result]);
       if (result.error) {
         resolve({

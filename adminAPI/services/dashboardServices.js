@@ -28,7 +28,7 @@ SELECT 'Lifetime_Sales_No_Of_orders_coupons_purchased' AS QueryType, COUNT(*) AS
      where uo.redeem_status=1 ) as 'Lifetime_Sales_revenue'
         UNION ALL 
 
-SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+SELECT 'No_of_revenue_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
 FROM userOffers uo
 INNER JOIN offers o ON o.id = uo.offer_id
 WHERE  uo.redeem_status=1 
@@ -681,7 +681,7 @@ module.exports.filterByBrand = (val) => {
        where uo.redeem_status=1 and o.brand_name='${val}') as 'Lifetime_Sales_revenue'
           UNION ALL 
   
-  SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+  SELECT 'No_of_revenue_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
   FROM userOffers uo
   INNER JOIN offers o ON o.id = uo.offer_id
   WHERE  uo.redeem_status=1 and o.brand_name = '${val}' 
