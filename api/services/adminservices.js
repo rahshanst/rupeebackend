@@ -278,7 +278,16 @@ async function updateCouponOfferById(dealData) {
   return executeQuery(query);
 }
 
+async function deleteCouponOfferById(dealData) {
+  console.log({ dealData });
+  const { id_offer} = dealData;
+  const query = `delete from coupon WHERE id_offer = '${id_offer}'`;
+
+  return executeQuery(query);
+}
+
 module.exports = {
+  deleteCouponOfferById,
   addBannerFile,
   updateBannerFile,
   getBannerFileById,
