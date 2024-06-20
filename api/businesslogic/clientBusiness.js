@@ -731,7 +731,92 @@ const checkPaymentStatus = (req, res) => {
         });
 
       }
+      else if(response.data?.errorstring === 'created'){
+        let user_token = req.headers["authorization"]
+        userServices.getUserId(user_token).then((result) => { 
+          if(result.recordset[0]){
+            console.log("userr",result.recordset[0].id_user)
+
+            let offerdata = {
+              user_id: result.recordset[0].id_user,
+              offer_id: offer_id,
+              redeem_code: '',
+              order_id: order_id,
+              pay_mode: 1,
+              transaction_id: transaction_id,
+              amt: amt,
+              bank: result.recordset[0].bank_name,
+              redeem_status: 2
+            }
+            userServices.putUserOfferPaid(offerdata).then((result) => {
+              if(result){
+              console.log("offput", result)
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to write offer",
+                });
+              }
+             })
+
+          }
+          else{
+            resolve({
+              status: 400,
+              data: [],
+              message: "Unable to fetch user",
+            });
+          }
+        })
+        resolve({
+          status: 402,
+          data: [],
+          message: "Payment Pending",
+        });
+
+
+      }
       else{
+        let user_token = req.headers["authorization"]
+        userServices.getUserId(user_token).then((result) => { 
+          if(result.recordset[0]){
+            console.log("userr",result.recordset[0].id_user)
+
+            let offerdata = {
+              user_id: result.recordset[0].id_user,
+              offer_id: offer_id,
+              redeem_code: '',
+              order_id: order_id,
+              pay_mode: 1,
+              transaction_id: transaction_id,
+              amt: amt,
+              bank: result.recordset[0].bank_name,
+              redeem_status: 0
+            }
+            userServices.putUserOfferPaid(offerdata).then((result) => {
+              if(result){
+              console.log("offput", result)
+              }
+              else{
+                resolve({
+                  status: 400,
+                  data: [],
+                  message: "Unable to write offer",
+                });
+              }
+             })
+
+          }
+          else{
+            resolve({
+              status: 400,
+              data: [],
+              message: "Unable to fetch user",
+            });
+          }
+        })
       resolve({
         status: 402,
         data: [],
