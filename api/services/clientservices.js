@@ -1,43 +1,7 @@
 const { executeQuery } = require("../../db/executeQuery");
 const sql = require("mssql");
 
-async function getTrips() {
-  const query = "SELECT * FROM Trips";
-  return executeQuery(query);
-}
 
-async function getTrip(tripId) {
-  const query = `SELECT * FROM Trips WHERE id ='${tripId}' `;
-  return executeQuery(query);
-}
-
-async function addTrip(trip) {
-  console.log({ trip });
-  const query = `
-    INSERT INTO Trips 
-    (tripId, userId, tripType, tripFrom, tripTo, tripDeparture, tripReturn, travellersNum, adults, childrens, class, createdAt, createdBy, updatedAt, updatedBy) 
-    VALUES 
-    (
-        ${trip.tripId}, 
-        ${trip.userId}, 
-        '${trip.tripType}', 
-        '${trip.tripFrom}', 
-        '${trip.tripTo}', 
-        '${trip.tripDeparture}', 
-        '${trip.tripReturn}', 
-        ${trip.travellersNum}, 
-        ${trip.adults}, 
-        ${trip.childrens}, 
-        '${trip.class}', 
-        GETDATE(), 
-        ${trip.createdBy}, 
-        GETDATE(), 
-        ${trip.updatedBy}
-    ) 
-`;
-
-  return executeQuery(query);
-}
 
 async function initiateSession(userDetails) {
   console.log({ userDetails });
@@ -175,9 +139,6 @@ async function getMyOffers(incomingData) {
 
 
 module.exports = {
-  getTrips,
-  getTrip,
-  addTrip,
   initiateSession,
   getCategories,
   getBanner,
