@@ -229,17 +229,27 @@ async function updateOfferById(dealData) {
 
   logger.info({ id, updatedData });
 
-  const url = `${offer_url}`;
-  const base64Url = urlToBase64(url);
+  const base64Url = urlToBase64(offer_url);
   logger.info(base64Url);
 
-  // Filter out undefined values
-  let validEntries = Object.entries(updatedData).filter(
-    ([key, value]) => value !== undefined
-  );
+  // Create an array for storing valid entries
+  let validEntries = [];
 
-  // Add base64Url2 and base64Url to the validEntries array
-  validEntries = [...validEntries, ["offer_url", base64Url]];
+  // Specific fields to check and include if defined
+  const specificFields = ['brand_name', 'brand_description', 'product_name', 'tnc'];
+
+  // Filter out undefined values, escape strings if necessary, and include specific fields
+  for (let [key, value] of Object.entries(updatedData)) {
+    if (value !== undefined) {
+      if (specificFields.includes(key)) {
+        value = escapeString(value);
+      }
+      validEntries.push([key, value]);
+    }
+  }
+
+  // Add base64Url to the validEntries array
+  validEntries.push(['offer_url', base64Url]);
 
   logger.info({ validEntries });
   // Map to key-value pairs for the SQL query
