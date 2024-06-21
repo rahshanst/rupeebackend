@@ -6,20 +6,40 @@ const today = moment().format('L');
 
 module.exports.getDashboardCount = (condition) => {
   console.log({condition});
-  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
-  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
+  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
   UNION ALL
-  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
-    SELECT id_user
-    FROM user_details
-    GROUP BY id_user
-    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
-  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
+SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where is_active = 1
   UNION ALL
-  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
-  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
-  WHERE bank_name IS NOT NULL; `;
+SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+        inner join offers o on o.id = uo.offer_id
+        inner join user_details ud on ud.id_user = uo.user_id 
+        GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
+   UNION ALL
+SELECT 'noOfActiveBrands' AS QueryType, COUNT(DISTINCT brand_name) AS Result FROM offers  
+  UNION ALL
+SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+        inner join offers o on o.id = uo.offer_id
+        inner join user_details ud on ud.id_user = uo.user_id  ) AS repeated_customers 
+    UNION ALL 
+SELECT 'Lifetime_Sales_No_Of_orders_coupons_purchased' AS QueryType, COUNT(*) AS Result FROM userOffers 
+  UNION ALL 
+      SELECT 'Lifetime_Sales_revenue' AS QueryType,( SELECT COUNT(*) AS Result FROM userOffers uo
+     INNER join offers o ON o.id=  uo.offer_id
+     where uo.redeem_status=1 ) as 'Lifetime_Sales_revenue'
+        UNION ALL 
+
+SELECT 'No_of_revenue_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+FROM userOffers uo
+INNER JOIN offers o ON o.id = uo.offer_id
+WHERE  uo.redeem_status=1 
+  AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_revenue_30_days'
+  UNION ALL 
+SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+FROM userOffers uo
+INNER JOIN offers o ON o.id = uo.offer_id
+WHERE  uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_Orders_30_days'
+  UNION ALL
+  SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details  WHERE bank_name IS NOT NULL; `;
   return executeQuery(query);
 };
 
@@ -207,7 +227,34 @@ module.exports.createDeal = (dealData) => {
 
 // Read all deals
 module.exports.getAllDeals = (filter) => {
-  const query = `SELECT o.*, c.category_name
+  const query = ` select o.id,
+  o.brand_name,
+  o.brand_description,
+  o.product_name,
+  o.original_price,
+  o.offer_validity,
+  o.offer_percentage,
+  o.min_order,
+  o.brand_logo,
+  o.product_pic,
+  o.offer_category,
+  o.offer_type,
+  o.tnc,
+  o.no_of_coupons,
+  o.up_color,
+  o.down_color,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.offer_url"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS offer_url,
+  o.is_active,
+  o.created_at,
+  o.updated_at,
+  o.creator,
+  o.updater,
+  o.coupon_counter,
+  o.coupon_file,
+  o.coupon_id,
+  o.coupon_page_logo,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link,
+  c.category_name
   FROM offers o
   LEFT JOIN categories c ON o.offer_category = c.id
   WHERE 1 = 1
@@ -232,9 +279,38 @@ module.exports.getAllDeals = (filter) => {
 
 // Read a deal by ID
 module.exports.getDealById = (id) => {
-  const query = `SELECT o.*, c.category_name
-  FROM offers o
-  LEFT JOIN categories c ON o.offer_category = c.id WHERE o.id = ${id}`;
+  const query = `SELECT 
+  o.id,
+  o.brand_name,
+  o.brand_description,
+  o.product_name,
+  o.original_price,
+  o.offer_validity,
+  o.offer_percentage,
+  o.min_order,
+  o.brand_logo,
+  o.product_pic,
+  o.offer_category,
+  o.offer_type,
+  o.tnc,
+  o.no_of_coupons,
+  o.up_color,
+  o.down_color,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.offer_url"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS offer_url,
+  o.is_active,
+  o.created_at,
+  o.updated_at,
+  o.creator,
+  o.updater,
+  o.coupon_counter,
+  o.coupon_file,
+  o.coupon_id,
+  o.coupon_page_logo,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link,
+  c.category_name
+FROM offers o
+LEFT JOIN categories c ON o.offer_category = c.id
+WHERE o.id = ${id}`;
   return executeQuery(query);
 };
 
@@ -369,11 +445,17 @@ module.exports.getBannerFile = (data) => {
   return executeQuery(query);
 };
 module.exports.getBannerFileAdmin = (data) => {
-  const query = `SELECT * FROM bannerFiles WHERE ticketModule = '${data.ticketModule}';
+  const query = `SELECT id, file_data,ticketModule,createdAt,updatedBy,updatedAt,createdBy,file_name, CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link from bannerFiles WHERE ticketModule = '${data.ticketModule}';
 `;
   return executeQuery(query);
 };
+function urlToBase64(url) {
+  return btoa(url);
+}
 module.exports.addBannerFile = (data) => {
+  const url_banner_click_link = `${data.banner_click_link}`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
   const query = `INSERT INTO bannerFiles (
     id_user,
     bankName,
@@ -381,10 +463,11 @@ module.exports.addBannerFile = (data) => {
     occation,
     file_name,
     file_data,
-    file_type,
+    file_type,  
     createdBy,
     createdAt,
     updatedBy,
+    banner_click_link,
     updatedAt
 ) VALUES (
     ${data.id_user},
@@ -397,11 +480,45 @@ module.exports.addBannerFile = (data) => {
     '${data.createdBy}',
     GETDATE(),
     '${data.updatedBy}',
+    ${data.banner_click_link ?`'${base64Url2}',`:',' }
     GETDATE()
 );`;
   return executeQuery(query);
 };
 
+module.exports.updatedBannerFile = (data) => {
+  const url_banner_click_link = `${data.banner_click_link}`;
+const base64Url2 = urlToBase64(url_banner_click_link);
+console.log(base64Url2);
+  const query = `INSERT INTO bannerFiles (
+    id_user,
+    bankName,
+    ticketModule,
+    occation,
+    file_name,
+    file_data,
+    file_type,
+    createdBy,
+    createdAt,
+    updatedBy,
+    banner_click_link,
+    updatedAt
+) VALUES (
+    ${data.id_user},
+    '${data.bankName}',
+    '${data.ticketModule}',
+    '${data.occation}',
+    '${data.file_name}',
+    '${data.file_data}',
+    '${data.file_type}',
+    '${data.createdBy}',
+    GETDATE(),
+    '${data.updatedBy}',
+    ${data.banner_click_link ?` banner_click_link = '${base64Url2}',`:'' }
+    GETDATE()
+);`;
+  return executeQuery(query);
+};
 module.exports.deleteBannerFile = (data) => {
   const query = `delete from bannerFiles WHERE ticketModule = '${data.ticketModule}' and  id= '${data.id}';
 `;
@@ -541,20 +658,42 @@ module.exports.searchCategory = (val) => {
 
 module.exports.filterByBrand = (val) => {
   console.log({val});
-  const query = ` SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details 
-  WHERE CONVERT(DATE, created_at) = '${today}' UNION ALL
-  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM deals
-  UNION ALL
-  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (
-    SELECT id_user
-    FROM user_details
-    GROUP BY id_user
-    HAVING COUNT(*) > 1 ) AS repeated_customers UNION ALL
-  SELECT 'noOfActiveBrands' AS QueryType, COUNT(*) AS Result FROM brands
-  UNION ALL
-  SELECT 'noOfCustomers' AS QueryType, COUNT(DISTINCT id_user) AS Result FROM user_details 
-  UNION ALL SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details 
-  WHERE bank_name IS NOT NULL; `;
+  const query = ` 
+  SELECT 'dailyActiveUsers' AS QueryType, COUNT(*) AS Result FROM user_details WHERE CONVERT(DATE, created_at) = '${today}' 
+    UNION ALL
+  SELECT 'noOfActiveDeals' AS QueryType, COUNT(*) AS Result FROM offers where brand_name='${val}' and is_active = 1
+    UNION ALL
+  SELECT 'totalRepeatedCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+          inner join offers o on o.id = uo.offer_id
+          inner join user_details ud on ud.id_user = uo.user_id where o.brand_name='${val}'
+          GROUP BY ud.id_user,o.brand_name HAVING COUNT(*) > 1 ) AS repeated_customers 
+     UNION ALL
+  SELECT 'noOfActiveBrands' AS QueryType,COUNT(DISTINCT brand_name)  AS Result FROM offers  
+    UNION ALL
+  SELECT 'noOfCustomers' AS QueryType, COUNT(*) AS Result FROM (SELECT distinct(ud.id_user),o.brand_name from userOffers uo
+          inner join offers o on o.id = uo.offer_id
+          inner join user_details ud on ud.id_user = uo.user_id where o.brand_name='${val}' ) AS repeated_customers 
+      UNION ALL 
+  SELECT 'Lifetime_Sales_No_Of_orders_coupons_purchased' AS QueryType, COUNT(*) AS Result FROM userOffers 
+    UNION ALL 
+        SELECT 'Lifetime_Sales_revenue' AS QueryType,( SELECT COUNT(*) AS Result FROM userOffers uo
+       INNER join offers o ON o.id=  uo.offer_id
+       where uo.redeem_status=1 and o.brand_name='${val}') as 'Lifetime_Sales_revenue'
+          UNION ALL 
+  
+  SELECT 'No_of_revenue_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+  FROM userOffers uo
+  INNER JOIN offers o ON o.id = uo.offer_id
+  WHERE  uo.redeem_status=1 and o.brand_name = '${val}' 
+    AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_revenue_30_days'
+    UNION ALL 
+  SELECT 'No_of_Orders_30_days' AS QueryType,( SELECT  COUNT(*) AS purchase_count
+  FROM userOffers uo
+  INNER JOIN offers o ON o.id = uo.offer_id
+  WHERE o.brand_name = '${val}' 
+    AND uo.created_at >= DATEADD(DAY, -30, GETDATE())) as 'No_of_Orders_30_days'
+    UNION ALL
+    SELECT 'noOfActiveBanks' AS QueryType, COUNT(DISTINCT bank_name) AS Result FROM user_details  WHERE bank_name IS NOT NULL; `;
   return executeQuery(query);
 };
 
@@ -564,7 +703,35 @@ module.exports.getBrandName = () => {
   return executeQuery(query);
 };
 module.exports.searchDeals = (searchValue) => {
-  const query = ` SELECT o.*, c.category_name
+  const query = ` SELECT 
+  o.id,
+  o.brand_name,
+  o.brand_description,
+  o.product_name,
+  o.original_price,
+  o.offer_validity,
+  o.offer_percentage,
+  o.min_order,
+  o.brand_logo,
+  o.product_pic,
+  o.offer_category,
+  o.offer_type,
+  o.tnc,
+  o.no_of_coupons,
+  o.up_color,
+  o.down_color,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.offer_url"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS offer_url,
+  o.is_active,
+  o.created_at,
+  o.updated_at,
+  o.creator,
+  o.updater,
+  o.coupon_counter,
+  o.coupon_file,
+  o.coupon_id,
+  o.coupon_page_logo,
+  CAST(CAST('' AS XML).value('xs:base64Binary(sql:column("o.banner_click_link"))', 'VARBINARY(MAX)') AS VARCHAR(MAX)) AS banner_click_link,
+  c.category_name
   FROM offers o
   LEFT JOIN categories c ON o.offer_category = c.id
   WHERE 
