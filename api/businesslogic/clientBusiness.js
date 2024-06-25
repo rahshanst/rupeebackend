@@ -131,17 +131,17 @@ const validateToken = function (req) {
     try {
       let response, apiData, logData, genSessionData;
       console.log({ dd: req.body.token !== "" });
-      if (req.body.GenerateSessionInfo) {
-        const { bName, virtualId } = req.body;
-        let sessionApiData = {
-          url: GENERATE_SESSION_INFO,
-          method: "POST",
-          data: { bName, virtualId },
-        };
-        console.log({ sessionApiData: sessionApiData.data });
-        genSessionData = await axios(sessionApiData);
-      }
-      console.log({ genSessionData });
+      //if (req.body.GenerateSessionInfo) {
+      //  const { bName, virtualId } = req.body;
+      //  let sessionApiData = {
+      //    url: GENERATE_SESSION_INFO,
+      //    method: "POST",
+      //    data: { bName, virtualId },
+      //  };
+      //  console.log({ sessionApiData: sessionApiData.data });
+      //  genSessionData = await axios(sessionApiData);
+      //}
+      //console.log({ genSessionData });
       if (req.body.token !== "") {
         apiData = {
           url: VALIDATE_TOKEN,
